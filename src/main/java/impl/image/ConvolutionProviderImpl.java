@@ -4,6 +4,9 @@ import api.image.ConvolutionProvider;
 
 import java.awt.*;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 public class ConvolutionProviderImpl implements ConvolutionProvider {
 
     @Override
@@ -19,7 +22,7 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
     }
 
     private Color applyKernelToPixel(Color[][] image, double[][] kernel, int pixelRow, int pixelColumn) {
-        Color filteredPixel = Color.BLACK;
+        ConvolutionPixel convolutionPixel = new ConvolutionPixel();
         int kernelHalfSize = kernel.length / 2;
         for (int rowShift = -kernelHalfSize; rowShift <= kernelHalfSize; rowShift++) {
             for (int columnShift = -kernelHalfSize; columnShift <= kernelHalfSize; columnShift++) {
@@ -31,13 +34,28 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
 
                 Color imagePixel = image[currentPixelRow][currentPixelColumn];
                 double kernelElement = kernel[kernelHalfSize + rowShift][kernelHalfSize + columnShift];
-                filteredPixel = new Color(
-                        (int) (filteredPixel.getRed() + kernelElement * imagePixel.getRed()),
-                        (int) (filteredPixel.getGreen() + kernelElement * imagePixel.getGreen()),
-                        (int) (filteredPixel.getBlue() + kernelElement * imagePixel.getBlue())
-                );
+                convolutionPixel.apply(imagePixel, kernelElement);
             }
         }
-        return filteredPixel;
+        return convolutionPixel.toColor();
+    }
+
+    private static class ConvolutionPixel {
+        private int red;
+        private int green;
+        private int blue;
+
+        public void apply(Color imagePixel, double kernelElement) {
+            red += imagePixel.getRed() * kernelElement;
+            green += imagePixel.getGreen() * kernelElement;
+            blue += imagePixel.getBlue() * kernelElement;
+        }
+
+        public Color toColor() {
+            int red = max(0, min(this.red, 255));
+            int green = max(0, min(this.green, 255));
+            int blue = max(0, min(this.blue, 255));
+            return new Color(red, green, blue);
+        }
     }
 }
