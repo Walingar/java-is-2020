@@ -6,9 +6,6 @@ import java.awt.*;
 public class RgbImageConverter implements ImageConverter {
     @Override
     public Color[][] convertToColor(int[][] image) {
-        if (image == null || image.length <= 0)
-            return null;
-
         var rows = image.length;
         var columns = image[0].length;
         var imageColors = new Color[rows][columns];
@@ -22,9 +19,6 @@ public class RgbImageConverter implements ImageConverter {
 
     @Override
     public int[][] convertToRgb(Color[][] image) {
-        if (image == null || image.length <= 0)
-            return null;
-
         var rows = image.length;
         var columns = image[0].length;
         var imageColors = new int[rows][columns];
