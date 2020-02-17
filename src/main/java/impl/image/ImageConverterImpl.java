@@ -12,13 +12,14 @@ import java.util.function.Function;
 public class ImageConverterImpl implements ImageConverter {
 
     private Function<Color, Integer> colorValueGetter;
-
+    private Function<Integer, Color> colorValueSetter;
+    private boolean valueIsPrivate = true;
 
     private int set8Bits(int value, int pos) {
         return value << (24 - pos);
     }
 
-    private int getBits(int value, int pos) {
+    private int get8Bits(int value, int pos) {
         return (value >> (24 - pos)) & 0xFF;
     }
 
@@ -28,35 +29,100 @@ public class ImageConverterImpl implements ImageConverter {
     }
 
     private Color constructColor(int pixel) {
-        return new Color(getBits(pixel, 8), getBits(pixel, 16), getBits(pixel, 24), getBits(pixel, 0));
+        return new Color(get8Bits(pixel, 8), get8Bits(pixel, 16), get8Bits(pixel, 24), get8Bits(pixel, 0));
     }
 
-    @NotNull
+    /**
+     * Works sorta like a one-time generated property with backing field
+     * Gets a function that gets value field of a Color object.
+     * If reflection access was OK - it's direct getting value of the private field of a given Color object
+     * The fallback just does what's obvious approach - sets various bit parts of a number.
+     */
     private Function<Color, Integer> getColorValueGetterFunction() {
-        Function<Color, Integer> colorValueGetter;
-        try {
-            Field privagteValueField = Color.class.getDeclaredField("value");
-            privagteValueField.setAccessible(true);
-            colorValueGetter = (Color color) -> {
-                try {
-                    return (int) privagteValueField.get(color);
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                    return 0;
+        if (colorValueGetter == null) {
+            try {
+                var field = Color.class.getDeclaredField("value");
+
+                if (valueIsPrivate) {
+//                  Yeah, the fun part about java is that if you get the field, `setAccessible` will never throw
+                    field.setAccessible(true);
+                    valueIsPrivate = false;
                 }
-            };
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-//            Yeah yeah. I can do bit stuff, bit that's no fun
-            colorValueGetter = this::deconstructColor;
+
+                colorValueGetter = (Color color) -> {
+                    try {
+                        return (int) field.get(color);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+//            Weird fallback, for some reason there's no way here to use it as a functor and apply like w'd really want.
+                        return deconstructColor(color);
+                    }
+                };
+            } catch (NoSuchFieldException e) {
+                colorValueGetter = this::deconstructColor;
+            }
         }
         return colorValueGetter;
     }
 
+    /**
+     * Works sorta like a one-time generated property with backing field
+     * Gets a function that sets value field of a Color object.
+     * If reflection access was OK - it's direct setting to the private field of a freshly created Color object
+     * The fallback just does what's obvious approach - gets different bit parts and constructs proper object
+     */
+    private Function<Integer, Color> getColorValueSetterFunction() {
+        if (colorValueSetter == null) {
+
+            try {
+                var field = Color.class.getDeclaredField("value");
+
+                if (valueIsPrivate) {
+//                  Yeah, the fun part about java is that if you get the field, `setAccessible` will never throw
+                    field.setAccessible(true);
+                    valueIsPrivate = false;
+                }
+
+                colorValueSetter = (Integer value) -> {
+                    try {
+                        var color = new Color(0);
+                        field.set(color, value);
+                        return color;
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+//            Weird fallback, for some reason there's no way here to use it as a functor and apply like w'd really want.
+                        return constructColor(value);
+                    }
+                };
+            } catch (NoSuchFieldException e) {
+                colorValueSetter = this::constructColor;
+            }
+        }
+        return colorValueSetter;
+    }
+
+
+    /**
+     * Transforms 2d array of type S to 2d array of type T
+     * @param <S> Source type
+     * @param <T> Target type
+     */
     private static class ArrayTransformer<S, T> {
+
+        /**
+         * Transforms 2d array of type S to 2d array of type T using given converter function that is applied element-wise
+         * @param source source 2d array of type S
+         * @param converter converter function that is applied to each element
+         * @param targetClass Class object of target type, needed to be able to access target ctor cause of type erasure.
+         * @return converted 2d array of type T
+         * @implNote probably not the best looking impl since I can imagine same s possible using streams but
+         * I couldn't get that right...
+         */
+        @SuppressWarnings("unchecked")
         public T[][] transform(S[][] source, Function<S, T> converter, Class<T> targetClass) {
 //            T[][] result = new T[source.length][]; //oh, yeah, type erasure, I can't do this...
 //            Ok, there's sorta workaround we can pass target class obj...
+//            And since we need nested Arrays... and Class<T[]> is not a thing.....
             Class targetArrayClass = Array.newInstance(targetClass, 0).getClass();
             T[][] result = (T[][]) Array.newInstance(targetArrayClass, source.length);
             int rowIndex = 0;
@@ -73,15 +139,15 @@ public class ImageConverterImpl implements ImageConverter {
         }
     }
 
-    private Integer[][] box2dArray(int[][] arr) {
-        return Arrays.stream(arr).map(
+    private Integer[][] box2dArray(int[][] array) {
+        return Arrays.stream(array).map(
                 (line) -> Arrays.stream(line).boxed().toArray(Integer[]::new)
         ).toArray(Integer[][]::new);
     }
 
 
-    private int[][] unbox2dArray(Integer[][] arr) {
-        return Arrays.stream(arr).map(
+    private int[][] unbox2dArray(Integer[][] array) {
+        return Arrays.stream(array).map(
                 line -> Arrays.stream(line).mapToInt(Integer::intValue).toArray()
         ).toArray(int[][]::new);
     }
@@ -92,13 +158,14 @@ public class ImageConverterImpl implements ImageConverter {
 //        DAMN, primitives can't be generic params! second bump =(
 //        How do I squeeze damn ints into all the generic thing without second n^2 iteration...
 //        screw this, I'm doing copy-paste... OR double iterating for boxing-unboxing... how do you...
-        return new ArrayTransformer<Integer, Color>().transform(box2dArray(image), this::constructColor, Color.class);
+//        That's why I don't like java that much... Too many inconveniences
+        colorValueSetter = getColorValueSetterFunction();
+        return new ArrayTransformer<Integer, Color>().transform(box2dArray(image), colorValueSetter, Color.class);
     }
 
     @Override
     public int[][] convertToRgb(Color[][] image) {
-        if (colorValueGetter == null)
-            colorValueGetter = getColorValueGetterFunction();
+        colorValueGetter = getColorValueGetterFunction();
         return unbox2dArray(new ArrayTransformer<Color, Integer>().transform(image, colorValueGetter, Integer.class));
     }
 }
