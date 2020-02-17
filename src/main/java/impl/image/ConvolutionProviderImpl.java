@@ -30,8 +30,9 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
                 int currentPixelColumn = pixelColumn + columnShift;
                 boolean currentPixelRowOutOfBounds = currentPixelRow < 0 || currentPixelRow >= image.length;
                 boolean currentPixelColumnOutOfBounds = currentPixelColumn < 0 || currentPixelColumn >= image[0].length;
-                if (currentPixelRowOutOfBounds || currentPixelColumnOutOfBounds) continue;
-
+                if (currentPixelRowOutOfBounds || currentPixelColumnOutOfBounds) {
+                    continue;
+                }
                 Color imagePixel = image[currentPixelRow][currentPixelColumn];
                 double kernelElement = kernel[kernelHalfSize + rowShift][kernelHalfSize + columnShift];
                 convolutionPixel.apply(imagePixel, kernelElement);
