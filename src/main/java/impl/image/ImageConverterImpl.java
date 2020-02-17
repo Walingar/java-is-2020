@@ -9,10 +9,11 @@ public class ImageConverterImpl implements ImageConverter {
     @Override
     public Color[][] convertToColor(int[][] image) {
         Color[][] colors = new Color[image.length][];
-        for (int i = 0; i < image.length; i++) {
-            colors[i] = new Color[image[i].length];
-            for (int j = 0; j < image[i].length; j++) {
-                colors[i][j] = new Color(image[i][j]);
+        for (int rowIndex = 0; rowIndex < image.length; rowIndex++) {
+            int[] row = image[rowIndex];
+            colors[rowIndex] = new Color[row.length];
+            for (int columnIndex = 0; columnIndex < row.length; columnIndex++) {
+                colors[rowIndex][columnIndex] = new Color(row[columnIndex]);
             }
         }
         return colors;
@@ -21,10 +22,11 @@ public class ImageConverterImpl implements ImageConverter {
     @Override
     public int[][] convertToRgb(Color[][] image) {
         int[][] rgbs = new int[image.length][];
-        for (int i = 0; i < image.length; i++) {
-            rgbs[i] = new int[image[i].length];
-            for (int j = 0; j < image[i].length; j++) {
-                rgbs[i][j] = image[i][j].getRGB();
+        for (int rowIndex = 0; rowIndex < image.length; rowIndex++) {
+            Color[] row = image[rowIndex];
+            rgbs[rowIndex] = new int[row.length];
+            for (int columnIndex = 0; columnIndex < row.length; columnIndex++) {
+                rgbs[rowIndex][columnIndex] = row[columnIndex].getRGB();
             }
         }
         return rgbs;
