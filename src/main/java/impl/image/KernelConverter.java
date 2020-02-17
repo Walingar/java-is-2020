@@ -13,47 +13,45 @@ public class KernelConverter implements ConvolutionProvider {
         int kernelHeight = kernel.length;
         int kernelWidth = kernel[0].length;
 
-        if(kernelWidth <=0 || (kernelWidth & 1) != 1)
+        if (kernelWidth <= 0 || (kernelWidth & 1) != 1) {
             throw new IllegalArgumentException("Kernel must have odd width");
+        }
 
-        if(kernelHeight <=0 || (kernelHeight & 1) != 1)
+        if (kernelHeight <= 0 || (kernelHeight & 1) != 1) {
             throw new IllegalArgumentException("Kernel must have odd height");
+        }
 
         int imageHeight = image.length;
         int imageWidth = image[0].length;
-        int redValue = 0;
-        int greenValue = 0;
-        int blueValue = 0;
-        int kernelWidthRadius = kernelWidth/2;
-        int kernelHeightRadius = kernelHeight/2;
+        int kernelWidthRadius = kernelWidth / 2;
+        int kernelHeightRadius = kernelHeight / 2;
 
         Color[][] output = new Color[imageHeight][imageWidth];
 
         for (int i = 0; i < imageHeight; i++) {
             for (int j = 0; j < imageWidth; j++) {
-                redValue = 0;
-                greenValue = 0;
-                blueValue = 0;
-                for (int k = 0; k <kernelHeight ; k++) {
+                int redValue = 0;
+                int greenValue = 0;
+                int blueValue = 0;
+                for (int k = 0; k < kernelHeight; k++) {
                     for (int l = 0; l < kernelWidth; l++) {
-                        if(!isInside(i+k-kernelHeightRadius,imageHeight,j+l-kernelWidthRadius,imageWidth))
+                        int curKernelRow = i + k - kernelHeightRadius;
+                        int curKernelColumn = j + l - kernelWidthRadius;
+                        if (!isInside(curKernelRow, imageHeight, curKernelColumn, imageWidth))
                             continue;
-                        redValue += kernel[k][l] * image[i+k-kernelHeightRadius][j+l-kernelWidthRadius].getRed();
-                        greenValue += kernel[k][l] * image[i+k-kernelHeightRadius][j+l-kernelWidthRadius].getGreen();
-                        blueValue += kernel[k][l] * image[i+k-kernelHeightRadius][j+l-kernelWidthRadius].getBlue();
+                        double currentKernel = kernel[k][l];
+                        redValue += currentKernel * image[curKernelRow][curKernelColumn].getRed();
+                        greenValue += currentKernel * image[curKernelRow][curKernelColumn].getGreen();
+                        blueValue += currentKernel * image[curKernelRow][curKernelColumn].getBlue();
                     }
                 }
-                output[i][j] = new Color(redValue,greenValue,blueValue);
+                output[i][j] = new Color(redValue, greenValue, blueValue);
             }
         }
         return output;
-
     }
 
-    private boolean isInside(int wValue,int width,int hValue, int height){
-        if(hValue < 0 || hValue >= height || wValue <0 || wValue >= width)
-            return false;
-
-        return true;
+    private boolean isInside(int hValue, int height, int wValue, int width) {
+        return hValue >= 0 && hValue < height && wValue >= 0 && wValue < width;
     }
 }
