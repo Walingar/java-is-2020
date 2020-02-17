@@ -12,10 +12,11 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
     @Override
     public Color[][] apply(Color[][] image, double[][] kernel) {
         Color[][] filteredImage = new Color[image.length][];
-        for (int i = 0; i < image.length; i++) {
-            filteredImage[i] = new Color[image[i].length];
-            for (int j = 0; j < image[i].length; j++) {
-                filteredImage[i][j] = applyKernelToPixel(image, kernel, i, j);
+        for (int rowIndex = 0; rowIndex < image.length; rowIndex++) {
+            Color[] row = image[rowIndex];
+            filteredImage[rowIndex] = new Color[row.length];
+            for (int columnIndex = 0; columnIndex < row.length; columnIndex++) {
+                filteredImage[rowIndex][columnIndex] = applyKernelToPixel(image, kernel, rowIndex, columnIndex);
             }
         }
         return filteredImage;
@@ -26,16 +27,15 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
         int kernelHalfSize = kernel.length / 2;
         for (int rowShift = -kernelHalfSize; rowShift <= kernelHalfSize; rowShift++) {
             for (int columnShift = -kernelHalfSize; columnShift <= kernelHalfSize; columnShift++) {
-                int currentPixelRow = pixelRow + rowShift;
-                int currentPixelColumn = pixelColumn + columnShift;
-                boolean currentPixelRowOutOfBounds = currentPixelRow < 0 || currentPixelRow >= image.length;
-                boolean currentPixelColumnOutOfBounds = currentPixelColumn < 0 || currentPixelColumn >= image[0].length;
-                if (currentPixelRowOutOfBounds || currentPixelColumnOutOfBounds) {
-                    continue;
+                int rowIndex = pixelRow + rowShift;
+                if (rowIndex >= 0 && rowIndex < image.length) {
+                    Color[] row = image[rowIndex];
+                    int columnIndex = pixelColumn + columnShift;
+                    if (columnIndex >= 0 && columnIndex < row.length) {
+                        double kernelElement = kernel[kernelHalfSize + rowShift][kernelHalfSize + columnShift];
+                        convolutionPixel.apply(row[columnIndex], kernelElement);
+                    }
                 }
-                Color imagePixel = image[currentPixelRow][currentPixelColumn];
-                double kernelElement = kernel[kernelHalfSize + rowShift][kernelHalfSize + columnShift];
-                convolutionPixel.apply(imagePixel, kernelElement);
             }
         }
         return convolutionPixel.toColor();
