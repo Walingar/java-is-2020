@@ -53,10 +53,14 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
         }
 
         public Color toColor() {
-            int red = max(0, min(this.red, 255));
-            int green = max(0, min(this.green, 255));
-            int blue = max(0, min(this.blue, 255));
+            int red = boundColorComponent(this.red);
+            int green = boundColorComponent(this.green);
+            int blue = boundColorComponent(this.blue);
             return new Color(red, green, blue);
+        }
+
+        private int boundColorComponent(int colorComponent) {
+            return max(0, min(colorComponent, 255));
         }
     }
 }
