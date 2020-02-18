@@ -8,8 +8,8 @@ public class RgbConvolutionProvider implements ConvolutionProvider {
     public Color[][] apply(Color[][] image, double[][] kernel) {
         var imageRows = image.length;
         var imageColumns = image[0].length;
-        var kernelRows = kernel.length;
-        var kernelColumns = kernel[0].length;
+        var kernelHeightRadius = kernel.length / 2;
+        var kernelWidthRadius = kernel[0].length / 2;
         var filteredImage = new Color[imageRows][imageColumns];
 
         for (var i = 0; i < imageRows; i++) {
@@ -18,14 +18,14 @@ public class RgbConvolutionProvider implements ConvolutionProvider {
                 var greenComponent = 0;
                 var blueComponent = 0;
 
-                for (var n = 0; n < kernelRows; n++) {
-                    for (var m = 0; m < kernelColumns; m++) {
-                        var rowIndex = i - n + 1;
-                        var columnIndex = j - m + 1;
+                for (var n = -kernelHeightRadius; n <= kernelHeightRadius; n++) {
+                    for (var m = -kernelWidthRadius; m <= kernelWidthRadius; m++) {
+                        var rowIndex = i + n;
+                        var columnIndex = j + m;
 
                         if (rowIndex >= 0 && rowIndex < imageRows && columnIndex >= 0 && columnIndex < imageColumns) {
                             var imageColor = image[rowIndex][columnIndex];
-                            var kernelValue = kernel[n][m];
+                            var kernelValue = kernel[n + kernelHeightRadius][m + kernelWidthRadius];
                             redComponent += imageColor.getRed() * kernelValue;
                             greenComponent += imageColor.getGreen() * kernelValue;
                             blueComponent += imageColor.getBlue() * kernelValue;
