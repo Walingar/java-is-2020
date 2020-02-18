@@ -10,9 +10,11 @@ public class RgbImageConverter implements ImageConverter {
         var columns = image[0].length;
         var imageColors = new Color[rows][columns];
 
-        for (var i = 0; i < rows; i++)
-            for (var j = 0; j < columns; j++)
+        for (var i = 0; i < rows; i++) {
+            for (var j = 0; j < columns; j++) {
                 imageColors[i][j] = new Color(image[i][j]);
+            }
+        }
 
         return imageColors;
     }
@@ -23,9 +25,11 @@ public class RgbImageConverter implements ImageConverter {
         var columns = image[0].length;
         var imageColors = new int[rows][columns];
 
-        for (var i = 0; i < rows; i++)
-            for (var j = 0; j < columns; j++)
+        for (var i = 0; i < rows; i++) {
+            for (var j = 0; j < columns; j++) {
                 imageColors[i][j] = image[i][j].getRGB();
+            }
+        }
 
         return imageColors;
     }
