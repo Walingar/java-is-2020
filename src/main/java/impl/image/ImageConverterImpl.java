@@ -1,7 +1,6 @@
 package impl.image;
 
 import api.image.ImageConverter;
-
 import java.awt.*;
 
 public class ImageConverterImpl implements ImageConverter {
