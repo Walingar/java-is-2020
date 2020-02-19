@@ -1,7 +1,6 @@
 package impl.image;
 
 import api.image.ConvolutionProvider;
-
 import java.awt.*;
 
 public class ConvolutionProviderImpl implements ConvolutionProvider {
@@ -15,24 +14,27 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
                 resultImage[row][column] = ConvolutionProviderImpl.applyToPixel(image, kernel, row, column);
             }
         }
-
-
-        return new Color[0][];
+        return resultImage;
     }
 
     private static Color applyToPixel(Color[][] image, double[][] kernel, int rowIdx, int columnIdx) {
-
         int halfKernel = kernel.length / 2;
         ConvolutionPixel convolutionPixel = new ConvolutionPixel();
-
-        for (int row = rowIdx - halfKernel; row < rowIdx + halfKernel; row++) {
-            int column = columnIdx - halfKernel;
-
-            for (column = columnIdx - halfKernel; column < columnIdx - halfKernel; column++) {
+        for (int shiftedRow = - halfKernel; shiftedRow <= halfKernel; shiftedRow++) {
+            int row = shiftedRow + rowIdx;
+            if (row < 0) {
+                continue;
+            } else if (row >= image.length) {
+                break;
+            }
+            for (int shiftedColumn =  - halfKernel; shiftedColumn <= halfKernel; shiftedColumn++) {
+                int column = shiftedColumn + columnIdx;
                 if (column < 0) {
                     continue;
+                } else if (column >= image[row].length) {
+                    break;
                 }
-                convolutionPixel.convolution(image[row][column], kernel[rowIdx - row][columnIdx - column]);
+                convolutionPixel.convolution(image[row][column], kernel[halfKernel + shiftedRow][halfKernel + shiftedColumn]);
             }
         }
 
@@ -41,9 +43,9 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
 
     private static class ConvolutionPixel {
 
-        public int red;
-        public int green;
-        public int blue;
+        private int red;
+        private int green;
+        private int blue;
 
         public void convolution(Color pixel, double kernelElement) {
             this.red += pixel.getRed() * kernelElement;
@@ -52,10 +54,9 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
         }
 
         public Color getColor() {
-            return new Color(this.red, this.blue, this.green);
+            return new Color(this.red, this.green, this.blue);
         }
     }
-
 }
 
 
