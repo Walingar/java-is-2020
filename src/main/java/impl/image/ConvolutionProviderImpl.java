@@ -4,6 +4,9 @@ import api.image.ConvolutionProvider;
 
 import java.awt.*;
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+
 class ConvolutionProviderImpl implements ConvolutionProvider {
 
     @Override
@@ -30,6 +33,10 @@ class ConvolutionProviderImpl implements ConvolutionProvider {
 
     private static boolean isOutside(int length, int index) {
         return index < 0 | index >= length;
+    }
+
+    private static int boundComponent(int colorComponent) {
+        return max(min(colorComponent, 255), 0);
     }
 
     private static Color applyKernelToPixel(ImageData image, KernelData kernel, int x, int y) {
@@ -61,7 +68,7 @@ class ConvolutionProviderImpl implements ConvolutionProvider {
             }
         }
 
-       return new Color(red, green, blue);
+       return new Color(boundComponent(red), boundComponent(green), boundComponent(blue));
     }
 
     private static class ImageData {
