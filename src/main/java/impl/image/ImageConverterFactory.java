@@ -4,7 +4,6 @@ import api.image.ImageConverter;
 
 public class ImageConverterFactory {
     public static ImageConverter getInstance() {
-
         return new ImageConverterImpl();
     }
 }

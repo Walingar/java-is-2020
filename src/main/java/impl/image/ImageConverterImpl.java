@@ -1,11 +1,9 @@
 package impl.image;
 
 import api.image.ImageConverter;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.lang.reflect.Array;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.function.Function;
 
@@ -102,6 +100,36 @@ public class ImageConverterImpl implements ImageConverter {
     }
 
 
+    private Integer[][] box2dArray(int[][] array) {
+        return Arrays.stream(array).map(
+                (line) -> Arrays.stream(line).boxed().toArray(Integer[]::new)
+        ).toArray(Integer[][]::new);
+    }
+
+
+    private int[][] unbox2dArray(Integer[][] array) {
+        return Arrays.stream(array).map(
+                line -> Arrays.stream(line).mapToInt(Integer::intValue).toArray()
+        ).toArray(int[][]::new);
+    }
+
+    @Override
+    public Color[][] convertToColor(int[][] image) {
+//        return new ArrayTransformer<Integer, Color>().transform(image, this::constructColor, Color.class);
+//        DAMN, primitives can't be generic params! second bump =(
+//        How do I squeeze damn ints into all the generic thing without second n^2 iteration...
+//        screw this, I'm doing copy-paste... OR double iterating for boxing-unboxing... how do you...
+//        That's why I don't like java that much... Too many inconveniences
+        colorValueSetter = getColorValueSetterFunction();
+        return new ArrayTransformer<Integer, Color>().transform(box2dArray(image), colorValueSetter, Color.class);
+    }
+
+    @Override
+    public int[][] convertToRgb(Color[][] image) {
+        colorValueGetter = getColorValueGetterFunction();
+        return unbox2dArray(new ArrayTransformer<Color, Integer>().transform(image, colorValueGetter, Integer.class));
+    }
+
     /**
      * Transforms 2d array of type S to 2d array of type T
      * @param <S> Source type
@@ -137,35 +165,5 @@ public class ImageConverterImpl implements ImageConverter {
             }
             return result;
         }
-    }
-
-    private Integer[][] box2dArray(int[][] array) {
-        return Arrays.stream(array).map(
-                (line) -> Arrays.stream(line).boxed().toArray(Integer[]::new)
-        ).toArray(Integer[][]::new);
-    }
-
-
-    private int[][] unbox2dArray(Integer[][] array) {
-        return Arrays.stream(array).map(
-                line -> Arrays.stream(line).mapToInt(Integer::intValue).toArray()
-        ).toArray(int[][]::new);
-    }
-
-    @Override
-    public Color[][] convertToColor(int[][] image) {
-//        return new ArrayTransformer<Integer, Color>().transform(image, this::constructColor, Color.class);
-//        DAMN, primitives can't be generic params! second bump =(
-//        How do I squeeze damn ints into all the generic thing without second n^2 iteration...
-//        screw this, I'm doing copy-paste... OR double iterating for boxing-unboxing... how do you...
-//        That's why I don't like java that much... Too many inconveniences
-        colorValueSetter = getColorValueSetterFunction();
-        return new ArrayTransformer<Integer, Color>().transform(box2dArray(image), colorValueSetter, Color.class);
-    }
-
-    @Override
-    public int[][] convertToRgb(Color[][] image) {
-        colorValueGetter = getColorValueGetterFunction();
-        return unbox2dArray(new ArrayTransformer<Color, Integer>().transform(image, colorValueGetter, Integer.class));
     }
 }
