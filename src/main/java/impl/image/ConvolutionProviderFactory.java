@@ -4,6 +4,6 @@ import api.image.ConvolutionProvider;
 
 public class ConvolutionProviderFactory {
     public static ConvolutionProvider getInstance() {
-        return null;  // возвращаем объект, в котором реализован интерфейс ConvolutionProvider
+        return new ConvolutionProviderImplementation();  // возвращаем объект, в котором реализован интерфейс ConvolutionProvider
     }
 }
