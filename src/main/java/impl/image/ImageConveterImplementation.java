@@ -69,22 +69,23 @@ public class ImageConveterImplementation implements ImageConverter {
                 try {
                     imageInt[i][j] = Integer.parseInt(tempStr, 2);
                 } catch (NumberFormatException e) {
-                    String tempStr2 = new String();
-                    for (int k = 0; k < tempStr.length(); k++) {
-                        if (tempStr.charAt(k) == '1') {
-                            tempStr2 += '0';
-                        } else if (tempStr.charAt(k) == '0') {
-                            tempStr2 += '1';
-                        } else {
-                            System.out.println("Error!");
-                            return null;
-                        }
+                String tempStr2 = "";
+                for (int k = 0; k < tempStr.length(); k++) {
+                    if (tempStr.charAt(k) == '1') {
+                        tempStr2 += '0';
+                    } else if (tempStr.charAt(k) == '0') {
+                        tempStr2 += '1';
+                    } else {
+                        System.out.println("Error!");
+                        return null;
                     }
-                    imageInt[i][j] = -(Integer.parseInt(tempStr2, 2) + 1);
+                }
+                imageInt[i][j] = -(Integer.parseInt(tempStr2, 2) + 1);
+                }finally {
+                System.out.println(image[i][j].toString() + "  " + imageInt[i][j]);
                 }
 
 
-                System.out.println(image[i][j].toString() + "  " + imageInt[i][j]);
 //                System.out.println(Integer.toBinaryString(-15985343) + " " + Integer.toBinaryString(imageInt[i][j]));
             }
             System.out.println();
