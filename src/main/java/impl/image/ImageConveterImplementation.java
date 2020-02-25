@@ -42,11 +42,11 @@ public class ImageConveterImplementation implements ImageConverter {
     @Override
     public int[][] convertToRgb(Color[][] image) {
         //формула: x = a*127/255  (a - как в Color[][], x - для записи в int[][])
-        int[][] imageInt = new int[10][10];
+        int[][] imageInt = new int[image.length][image[0].length];
         System.out.println("toRGB:");
         for (int i = 0; i < image.length; i++) {
             for (int j = 0; j < image[0].length; j++) {
-
+//                imageInt[i][j] = image[i][j].getRGB();
                 String alpha = Integer.toBinaryString(image[i][j].getAlpha());
                 String red = Integer.toBinaryString(image[i][j].getRed());
                 String green = Integer.toBinaryString(image[i][j].getGreen());
@@ -69,24 +69,24 @@ public class ImageConveterImplementation implements ImageConverter {
                 try {
                     imageInt[i][j] = Integer.parseInt(tempStr, 2);
                 } catch (NumberFormatException e) {
-                String tempStr2 = "";
-                for (int k = 0; k < tempStr.length(); k++) {
-                    if (tempStr.charAt(k) == '1') {
-                        tempStr2 += '0';
-                    } else if (tempStr.charAt(k) == '0') {
-                        tempStr2 += '1';
-                    } else {
-                        System.out.println("Error!");
-                        return null;
+                    String tempStr2 = "";
+                    for (int k = 0; k < tempStr.length(); k++) {
+                        if (tempStr.charAt(k) == '1') {
+                            tempStr2 += '0';
+                        } else if (tempStr.charAt(k) == '0') {
+                            tempStr2 += '1';
+                        } else {
+                            System.out.println("Error!");
+                            return null;
+                        }
                     }
-                }
-                imageInt[i][j] = -(Integer.parseInt(tempStr2, 2) + 1);
-                }finally {
-                System.out.println(image[i][j].toString() + "  " + imageInt[i][j]);
+                    imageInt[i][j] = -(Integer.parseInt(tempStr2, 2) + 1);
+                } finally {
+                    System.out.println(image[i][j].toString() + "  " + imageInt[i][j]);
                 }
 
 
-//                System.out.println(Integer.toBinaryString(-15985343) + " " + Integer.toBinaryString(imageInt[i][j]));
+////                System.out.println(Integer.toBinaryString(-15985343) + " " + Integer.toBinaryString(imageInt[i][j]));
             }
             System.out.println();
         }
