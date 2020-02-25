@@ -37,12 +37,14 @@ public class KernelConverter implements ConvolutionProvider {
                     for (int l = 0; l < kernelWidth; l++) {
                         int curKernelRow = i + k - kernelHeightRadius;
                         int curKernelColumn = j + l - kernelWidthRadius;
-                        if (!isInside(curKernelRow, imageHeight, curKernelColumn, imageWidth))
+                        if (!isInside(curKernelRow, imageHeight, curKernelColumn, imageWidth)){
                             continue;
+                        }
                         double currentKernel = kernel[k][l];
-                        redValue += currentKernel * image[curKernelRow][curKernelColumn].getRed();
-                        greenValue += currentKernel * image[curKernelRow][curKernelColumn].getGreen();
-                        blueValue += currentKernel * image[curKernelRow][curKernelColumn].getBlue();
+                        Color currentColor = image[curKernelRow][curKernelColumn];
+                        redValue += currentKernel * currentColor.getRed();
+                        greenValue += currentKernel * currentColor.getGreen();
+                        blueValue += currentKernel * currentColor.getBlue();
                     }
                 }
                 output[i][j] = new Color(redValue, greenValue, blueValue);
