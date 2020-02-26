@@ -9,11 +9,11 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
     public Color[][] apply(Color[][] image, double[][] kernel) {
         int rowNum = image.length;
         int colNum = image[0].length;
-        int kernelRadius = kernel.length/2;
         Color[][] filteredImage = new Color[rowNum][colNum];
         for (int row = 0; row < rowNum; row++) {
             for (int column = 0; column < colNum; column++) {
                 filteredImage[row][column] = ConvolutionProviderImpl.applyToPixel(image,kernel,row,column);
+                System.out.println(column);
             }
         }
         return filteredImage;
@@ -29,7 +29,7 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
                 int rowIndex = imageRow + rowShift;
                 int columnIndex = imageColumn + columnShift;
 
-                if (rowIndex >= 0 && rowIndex < imageRow && columnIndex >= 0 && columnIndex < imageColumn) {
+                if (rowIndex >= 0 && rowIndex < image.length && columnIndex >= 0 && columnIndex < image[0].length) {
                     Color imageColor = image[rowIndex][columnIndex];
                     double kernelValue = kernel[rowShift + kernelRadius][columnShift + kernelRadius];
                     red += imageColor.getRed() * kernelValue;
@@ -41,4 +41,5 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
 
         return new Color(red, green, blue);
     }
+
 }
