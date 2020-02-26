@@ -4,18 +4,10 @@ import api.image.ImageConverter;
 
 import java.awt.*;
 
-//        alpha                       red                      green                     blue
-//0  1  2  3  4  5  6  7    8  9  10 11 12 13 14 15   16 17 18 19 20 21 22 23   24 25 26 27 28 29 30 31
-//1  1  1  1  1  1  1  1    0  0  0  0  0  0  0  0    1  0  0  0  0  1  1  1    0  0  0  0  0  1  0  1
-//31 30 29 28 27 26 25 24   23 22 21 20 19 18 17 16   15 14 13 12 11 10 9  8    7  6  5  4  3  2  1  0
-
 public class ImageConveterImplementation implements ImageConverter {
-//    private String alpha;
 
     @Override
     public Color[][] convertToColor(int[][] image) {
-        //формула: x = a*255/127  (a - как в int[][], x - для записи в Color[][])
-        System.out.println("toColor:");
         Color[][] imageColor = new Color[image.length][image[0].length];
         for (int i = 0; i < image.length; i++) {
             for (int j = 0; j < image[0].length; j++) {
@@ -28,9 +20,7 @@ public class ImageConveterImplementation implements ImageConverter {
                 String green = tempStr.substring(16, 24);
                 String blue = tempStr.substring(24);
                 imageColor[i][j] = new Color(Integer.parseInt(red, 2), Integer.parseInt(green, 2), Integer.parseInt(blue, 2), Integer.parseInt(alpha, 2));
-//                System.out.println(image[i][j] + " " + imageColor[i][j].toString());
             }
-//            System.out.println();
         }
         return imageColor;
     }
@@ -39,9 +29,7 @@ public class ImageConveterImplementation implements ImageConverter {
 
     @Override
     public int[][] convertToRgb(Color[][] image) {
-        //формула: x = a*127/255  (a - как в Color[][], x - для записи в int[][])
         int[][] imageInt = new int[image.length][image[0].length];
-        System.out.println("toRGB:");
         for (int i = 0; i < image.length; i++) {
             for (int j = 0; j < image[0].length; j++) {
 //                imageInt[i][j] = image[i][j].getRGB();
@@ -79,11 +67,8 @@ public class ImageConveterImplementation implements ImageConverter {
                         }
                     }
                     imageInt[i][j] = -(Integer.parseInt(tempStr2, 2) + 1);
-                } finally {
-//                    System.out.println(image[i][j].toString() + "  " + imageInt[i][j]);
                 }
           }
-//            System.out.println();
         }
         return imageInt;
     }
