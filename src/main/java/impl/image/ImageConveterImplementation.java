@@ -23,16 +23,14 @@ public class ImageConveterImplementation implements ImageConverter {
                 while (tempStr.length() < 32) {
                     tempStr = "0" + tempStr;
                 }
-//                System.out.println(tempStr + ":");
                 String alpha = tempStr.substring(0, 8);
                 String red = tempStr.substring(8, 16);
                 String green = tempStr.substring(16, 24);
                 String blue = tempStr.substring(24);
-//                System.out.println("red:" + red + "; green:" + green + "; blue:" + blue + "; alpha:" + alpha);
                 imageColor[i][j] = new Color(Integer.parseInt(red, 2), Integer.parseInt(green, 2), Integer.parseInt(blue, 2), Integer.parseInt(alpha, 2));
-                System.out.println(image[i][j] + " " + imageColor[i][j].toString());
+//                System.out.println(image[i][j] + " " + imageColor[i][j].toString());
             }
-            System.out.println();
+//            System.out.println();
         }
         return imageColor;
     }
@@ -82,13 +80,10 @@ public class ImageConveterImplementation implements ImageConverter {
                     }
                     imageInt[i][j] = -(Integer.parseInt(tempStr2, 2) + 1);
                 } finally {
-                    System.out.println(image[i][j].toString() + "  " + imageInt[i][j]);
+//                    System.out.println(image[i][j].toString() + "  " + imageInt[i][j]);
                 }
-
-
-////                System.out.println(Integer.toBinaryString(-15985343) + " " + Integer.toBinaryString(imageInt[i][j]));
-            }
-            System.out.println();
+          }
+//            System.out.println();
         }
         return imageInt;
     }
