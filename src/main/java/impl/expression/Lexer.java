@@ -34,11 +34,15 @@ public class Lexer {
                 if (Character.isDigit(symbol)) {
                     var number = Character.getNumericValue(symbol);
 //                    Don't really like next couple of lines, but other options were uglier
-                    while (currentPosition < input.length() &&
-                            Character.isDigit(input.charAt(currentPosition))) {
-                        int nextDigit = Character.getNumericValue(input.charAt(currentPosition++));
+                    while (currentPosition < input.length()) {
+                        char nextChar = input.charAt(currentPosition);
+                        if (!Character.isDigit(nextChar)) {
+                            break;
+                        }
+                        int nextDigit = Character.getNumericValue(nextChar);
                         try {
                             number = Math.addExact(Math.multiplyExact(10, number), nextDigit);
+                            currentPosition++;
                         } catch (ArithmeticException e) { //gotta rethrow proper exception here FOR THE TESTS
                             throw new LexerException(String.format("Number given is too big for int calculations! %d%d", number, nextDigit));
                         }
