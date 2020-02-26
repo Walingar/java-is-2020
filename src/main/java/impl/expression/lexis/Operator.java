@@ -6,7 +6,6 @@ public class Operator extends Lexem {
 
     public Operator(OperatorType type) {
         super(LexemType.Operator);
-
         this.type = type;
     }
 
