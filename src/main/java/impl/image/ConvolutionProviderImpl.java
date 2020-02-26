@@ -16,11 +16,10 @@ class ConvolutionProviderImpl implements ConvolutionProvider {
             return new Color[imageHeight][];
         }
         var imageWidth = image[0].length;
-
-        var wrappedImage = new ImageData(image, imageHeight, imageWidth);
-        var wrappedKernel = new KernelData(kernel, kernel.length / 2, kernel[0].length / 2);
-
         var convertedImage = new Color[imageHeight][imageWidth];
+
+        var wrappedImage = new ImageData(image);
+        var wrappedKernel = new KernelData(kernel);
 
         for (var x = 0; x < wrappedImage.height; x++) {
             for (var y = 0; y < wrappedImage.width; y++) {
@@ -68,7 +67,7 @@ class ConvolutionProviderImpl implements ConvolutionProvider {
             }
         }
 
-       return new Color(boundComponent(red), boundComponent(green), boundComponent(blue));
+        return new Color(boundComponent(red), boundComponent(green), boundComponent(blue));
     }
 
     private static class ImageData {
@@ -76,10 +75,10 @@ class ConvolutionProviderImpl implements ConvolutionProvider {
         private final int height;
         private final int width;
 
-        public ImageData(Color[][] image, int height, int width) {
+        public ImageData(Color[][] image) {
             this.image = image;
-            this.height = height;
-            this.width = width;
+            this.height = image.length;
+            this.width = image[0].length;
         }
     }
 
@@ -88,10 +87,10 @@ class ConvolutionProviderImpl implements ConvolutionProvider {
         private final int verticalRadius;
         private final int horizontalRadius;
 
-        public KernelData(double[][] kernel, int verticalRadius, int horizontalRadius) {
+        public KernelData(double[][] kernel) {
             this.kernel = kernel;
-            this.verticalRadius = verticalRadius;
-            this.horizontalRadius = horizontalRadius;
+            this.verticalRadius = kernel.length / 2;
+            this.horizontalRadius = kernel[0].length / 2;
         }
     }
 }
