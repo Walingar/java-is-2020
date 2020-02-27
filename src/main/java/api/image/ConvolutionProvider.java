@@ -1,8 +1,8 @@
 package api.image;
 
-import java.awt.*;
+import java.awt.Color;
 
 public interface ConvolutionProvider {
 
-    Color[][] apply(Color[][] image, double[][] kernel);
+  Color[][] apply(Color[][] image, double[][] kernel);
 }
