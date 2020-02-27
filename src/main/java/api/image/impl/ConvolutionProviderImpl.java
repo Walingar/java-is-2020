@@ -38,12 +38,12 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
         int red = 0;
         int green = 0;
         int blue = 0;
-        int xDelta = kernelData.getHeight();
-        int yDelta = kernelData.getWidth();
+        int xDelta = kernelData.getHeight() / 2;
+        int yDelta = kernelData.getWidth() / 2;
 
         for (int xId = -xDelta; xId <= xDelta; xId++) {
             int shiftedX = x + xId;
-            if (shiftedX < 0 || shiftedX < imageData.getHeight()) {
+            if (shiftedX < 0 || shiftedX >= imageData.getHeight()) {
                 continue;
             }
             for (int yId = -yDelta; yId <= yDelta; yId++) {
