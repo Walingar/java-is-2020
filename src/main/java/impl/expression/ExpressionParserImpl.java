@@ -63,9 +63,9 @@ public class ExpressionParserImpl implements ExpressionParser {
             Optional<Integer> currentNumber = getCurrentNumber();
             if (currentNumber.isPresent()) {
                 if (sign == Sign.MINUS) {
-                    result -= currentNumber.get();
+                    result = Math.subtractExact(result, currentNumber.get());
                 } else {
-                    result += currentNumber.get();
+                    result = Math.addExact(result, currentNumber.get());
                 }
             } else if (sign != null) {
                 throw new ParseException("Several signs in a row are not permitted");
