@@ -9,10 +9,12 @@ public final class ConvolutionProviderImpl implements ConvolutionProvider {
 
     @Override
     public Color[][] apply(Color[][] image, double[][] kernel) {
-        Color[][] filteredImage = new Color[image.length][];
-        for (int x = 0; x < image.length; x++) {
-            Color[] filteredRow = new Color[image[x].length];
-            for (int y = 0; y < image[x].length; y++) {
+        int height = image.length;
+        Color[][] filteredImage = new Color[height][];
+        for (int x = 0; x < height; x++) {
+            int width = image[x].length;
+            Color[] filteredRow = new Color[width];
+            for (int y = 0; y < width; y++) {
                 filteredRow[y] = apply(x, y, image, kernel);
             }
             filteredImage[x] = filteredRow;

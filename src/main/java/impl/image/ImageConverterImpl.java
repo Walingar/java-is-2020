@@ -7,32 +7,30 @@ import java.awt.*;
 public final class ImageConverterImpl implements ImageConverter {
     @Override
     public Color[][] convertToColor(int[][] image) {
-        if (image.length == 0) {
-            return new Color[][]{};
-        }
         int height = image.length;
-        int width = image[0].length;
-        Color[][] colors = new Color[height][width];
+        Color[][] colors = new Color[height][];
         for (int i = 0; i < height; i++) {
+            int width = image[i].length;
+            Color[] row = new Color[width];
             for (int j = 0; j < width; j++) {
-                colors[i][j] = new Color(image[i][j], true);
+                row[j] = new Color(image[i][j], true);
             }
+            colors[i] = row;
         }
         return colors;
     }
 
     @Override
     public int[][] convertToRgb(Color[][] image) {
-        if (image.length == 0) {
-            return new int[][]{};
-        }
         int height = image.length;
-        int width = image[0].length;
-        int[][] rgbs = new int[height][width];
+        int[][] rgbs = new int[height][];
         for (int i = 0; i < height; i++) {
+            int width = image[i].length;
+            int[] row = new int[width];
             for (int j = 0; j < width; j++) {
-                rgbs[i][j] = image[i][j].getRGB();
+                row[j] = image[i][j].getRGB();
             }
+            rgbs[i] = row;
         }
         return rgbs;
     }
