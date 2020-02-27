@@ -1,6 +1,7 @@
 package impl.image
 
-import impl.image.ImageUtil.readImage
+import impl.image.factory.ConvolutionProviderFactory
+import impl.image.util.ImageUtil.readImage
 import impl.util.assert2DArraysEqual
 import org.junit.Test
 import java.awt.Color

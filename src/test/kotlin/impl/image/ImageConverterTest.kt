@@ -1,5 +1,6 @@
 package impl.image
 
+import impl.image.factory.ImageConverterFactory
 import impl.util.assert2DArraysEqual
 import junit.framework.TestCase.assertEquals
 import org.junit.Test

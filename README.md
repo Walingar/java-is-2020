@@ -3,7 +3,7 @@
 # Домашнее задание 1. Обработка изображений
 
 Ваша задача разработать реализации интерфейсов `ImageConverter` и `ConvolutionProvider` и
-создать их в методах `impl.image.ImageConverterFactory.getInstance` и `impl.image.ConvolutionProviderFactory.getInstance` соответственно.
+создать их в методах `impl.image.factory.ImageConverterFactory.getInstance` и `impl.image.factory.ConvolutionProviderFactory.getInstance` соответственно.
 
 `ImageConverter` должен уметь превращать `Color[][]` в `int[][]` и обратно, где `int` будет хранить в себе данные о цвете в таком виде:
   * 0-7 биты хранят информацию о голубом цвете (`blue`), 

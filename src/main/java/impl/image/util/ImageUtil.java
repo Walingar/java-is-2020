@@ -1,4 +1,6 @@
-package impl.image;
+package impl.image.util;
+
+import impl.image.factory.ImageConverterFactory;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
