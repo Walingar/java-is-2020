@@ -1,7 +1,8 @@
 package impl.expression
 
 import api.expression.ExpressionParser
-import api.expression.ParseException
+import api.expression.exception.ParseException
+import impl.expression.factory.ExpressionParserFactory
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 

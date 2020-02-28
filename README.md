@@ -2,7 +2,7 @@
 
 # Домашнее задание 2. Исключения
 
-Ваша задача разработать реализацию интерфейса `ExpressionParser` и создать её в методе `impl.expression.ExpressionParserFactory.getInstance`.
+Ваша задача разработать реализацию интерфейса `ExpressionParser` и создать её в методе `impl.expression.factory.ExpressionParserFactory.getInstance`.
 
 `ExpressionParser` должен уметь вычислять значение арифметического выражения `expression`.
 
