@@ -9,27 +9,34 @@ public class ImageConveterImplementation implements ImageConverter {
     @Override
     public Color[][] convertToColor(int[][] image) {
         Color[][] imageColor = new Color[image.length][image[0].length];
+        int colorLength = 32;
+        int alphaRightBit = 8;
+        int RedRightBit = 16;
+        int GreenRightBit = 24;
+        int base = 2;
+
         for (int i = 0; i < image.length; i++) {
             for (int j = 0; j < image[0].length; j++) {
                 String tempStr = Integer.toBinaryString(image[i][j]);
-                while (tempStr.length() < 32) {
+                while (tempStr.length() < colorLength) {
                     tempStr = "0" + tempStr;
                 }
-                String alpha = tempStr.substring(0, 8);
-                String red = tempStr.substring(8, 16);
-                String green = tempStr.substring(16, 24);
-                String blue = tempStr.substring(24);
-                imageColor[i][j] = new Color(Integer.parseInt(red, 2), Integer.parseInt(green, 2), Integer.parseInt(blue, 2), Integer.parseInt(alpha, 2));
+                String alpha = tempStr.substring(0, alphaRightBit);
+                String red = tempStr.substring(alphaRightBit, RedRightBit);
+                String green = tempStr.substring(RedRightBit, GreenRightBit);
+                String blue = tempStr.substring(GreenRightBit);
+                imageColor[i][j] = new Color(Integer.parseInt(red, base), Integer.parseInt(green, base), Integer.parseInt(blue, base), Integer.parseInt(alpha, base));
             }
         }
         return imageColor;
     }
 
-    ;
-
     @Override
     public int[][] convertToRgb(Color[][] image) {
         int[][] imageInt = new int[image.length][image[0].length];
+        int colorLength = 8;
+        int base = 2;
+
         for (int i = 0; i < image.length; i++) {
             for (int j = 0; j < image[0].length; j++) {
 //                imageInt[i][j] = image[i][j].getRGB();
@@ -38,22 +45,22 @@ public class ImageConveterImplementation implements ImageConverter {
                 String green = Integer.toBinaryString(image[i][j].getGreen());
                 String blue = Integer.toBinaryString(image[i][j].getBlue());
 
-                while (alpha.length() < 8) {
+                while (alpha.length() < colorLength) {
                     alpha = "0" + alpha;
                 }
-                while (red.length() < 8) {
+                while (red.length() < colorLength) {
                     red = "0" + red;
                 }
-                while (green.length() < 8) {
+                while (green.length() < colorLength) {
                     green = "0" + green;
                 }
-                while (blue.length() < 8) {
+                while (blue.length() < colorLength) {
                     blue = "0" + blue;
                 }
 
                 String tempStr = alpha + red + green + blue;
                 try {
-                    imageInt[i][j] = Integer.parseInt(tempStr, 2);
+                    imageInt[i][j] = Integer.parseInt(tempStr, base);
                 } catch (NumberFormatException e) {
                     String tempStr2 = "";
                     for (int k = 0; k < tempStr.length(); k++) {
@@ -66,12 +73,10 @@ public class ImageConveterImplementation implements ImageConverter {
                             return null;
                         }
                     }
-                    imageInt[i][j] = -(Integer.parseInt(tempStr2, 2) + 1);
+                    imageInt[i][j] = -(Integer.parseInt(tempStr2, base) + 1);
                 }
-          }
+            }
         }
         return imageInt;
     }
-
-    ;
 }
