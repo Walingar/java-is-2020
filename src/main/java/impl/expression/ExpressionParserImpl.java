@@ -1,0 +1,74 @@
+package impl.expression;
+
+import api.expression.ExpressionParser;
+import api.expression.ParseException;
+import impl.expression.lexer.ExpressionLexer;
+import impl.expression.lexer.Token;
+
+import java.util.function.BinaryOperator;
+
+import static impl.expression.lexer.TokenType.MINUS;
+import static impl.expression.lexer.TokenType.PLUS;
+
+/**
+ * ExpressionParser for parsing the following grammar
+ * <pre>
+ * Grammar:
+ *   expression ::= first_term term*
+ *   first_term ::= sign? integer
+ *   term ::= sign integer
+ *   sign ::= '+' | '-'
+ *   integer ::= ['0'..'9']+
+ * </pre>
+ */
+public class ExpressionParserImpl implements ExpressionParser {
+    @Override
+    public int parse(String expression) throws ParseException {
+        if (expression == null) {
+            throw new IllegalArgumentException("Expression is null");
+        }
+        return parseExpression(new ExpressionLexer(expression));
+    }
+
+    private static int parseExpression(ExpressionLexer tokenizer) throws ParseException {
+        int result = parseFirstTerm(tokenizer);
+        while (tokenizer.hasNext()) {
+            BinaryOperator<Integer> operation = getOperation(tokenizer.nextToken());
+            int rightOperand = parseInteger(tokenizer.nextToken());
+            result = operation.apply(result, rightOperand);
+        }
+        return result;
+    }
+
+    private static int parseFirstTerm(ExpressionLexer tokenizer) throws ParseException {
+        Token token = tokenizer.nextToken();
+        return (token.tokenType == PLUS || token.tokenType == MINUS)
+                ? -parseInteger(tokenizer.nextToken())
+                : parseInteger(token);
+    }
+
+    private static int parseInteger(Token token) throws ParseException {
+        try {
+            return Integer.parseInt(token.text);
+        } catch (NumberFormatException ex) {
+            throw createUnexpectedTokenException("Integer constant", token);
+        }
+    }
+
+    private static BinaryOperator<Integer> getOperation(Token token) throws ParseException {
+        switch (token.tokenType) {
+            case PLUS:
+                return Math::addExact;
+            case MINUS:
+                return Math::subtractExact;
+            default:
+                throw createUnexpectedTokenException("Operation", token);
+        }
+    }
+
+    private static ParseException createUnexpectedTokenException(String expected, Token token) {
+        return new ParseException(
+                String.format("%s was expected, but found \"%s\" at position %d", expected, token.text, token.position)
+        );
+    }
+}
