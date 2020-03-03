@@ -14,13 +14,12 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
         var processedImg = new Color[imgHeight][imgWidth];
 
         for (int i = 0; i < imgHeight; i++) {
-
             for (int j = 0; j < imgWidth; j++) {
                 var R = 0;
                 var G = 0;
                 var B = 0;
-                for (int k = -kernelHeight; k <= kernelHeight; k++) {
 
+                for (int k = -kernelHeight; k <= kernelHeight; k++) {
                     for (int p = -kernelWith; p <= kernelWith; p++) {
                         int row = i + k;
                         int column = j + p;
@@ -31,21 +30,12 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
                             R += bufColor.getRed() * bufKernel;
                             G += bufColor.getGreen() * bufKernel;
                             B += bufColor.getBlue() * bufKernel;
-
                         }
-
                     }
-
                 }
-
                 processedImg[i][j] = new Color(R, G, B);
-
             }
-
         }
-
         return processedImg;
     }
-
-
 }

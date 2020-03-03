@@ -1,11 +1,10 @@
 package impl.image;
 
-        import api.image.ImageConverter;
+import api.image.ImageConverter;
 
-        import java.awt.*;
+import java.awt.*;
 
 class ImageConverterImpl implements ImageConverter {
-
 
     public Color[][] convertToColor(int[][] image) {
 
@@ -15,14 +14,12 @@ class ImageConverterImpl implements ImageConverter {
 
         for (int i = 0; i < imgHeight; i++) {
             for (int j = 0; j < imgWidth; j++) {
-
                 outputImage[i][j] = new Color(image[i][j]);
             }
-
         }
-
         return outputImage;
     }
+
 
     public int[][] convertToRgb(Color[][] image) {
         var imgHeight = image.length;
@@ -31,13 +28,9 @@ class ImageConverterImpl implements ImageConverter {
 
         for (int i = 0; i < imgHeight; i++) {
             for (int j = 0; j < imgWidth; j++) {
-
                 outputImage[i][j] = image[i][j].getRGB();
-
             }
-
         }
-
         return outputImage;
     }
 }
