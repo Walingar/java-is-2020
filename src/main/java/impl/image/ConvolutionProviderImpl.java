@@ -10,8 +10,8 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
         Color[][] resultImage = new Color[image.length][];
         for (int row = 0; row < image.length; row++) {
             resultImage[row] = new Color[image[row].length];
-            for (int column = 0; column < resultImage[row].length; column++){
-                resultImage[row][column] = ConvolutionProviderImpl.applyToPixel(image, kernel, row, column);
+            for (int column = 0; column < resultImage[row].length; column++) {
+                resultImage[row][column] = applyToPixel(image, kernel, row, column);
             }
         }
         return resultImage;
@@ -27,7 +27,7 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
             } else if (row >= image.length) {
                 break;
             }
-            for (int shiftedColumn =  - halfKernel; shiftedColumn <= halfKernel; shiftedColumn++) {
+            for (int shiftedColumn =  -halfKernel; shiftedColumn <= halfKernel; shiftedColumn++) {
                 int column = shiftedColumn + columnIdx;
                 if (column < 0) {
                     continue;
@@ -37,7 +37,6 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
                 convolutionPixel.convolution(image[row][column], kernel[halfKernel + shiftedRow][halfKernel + shiftedColumn]);
             }
         }
-
         return convolutionPixel.getColor();
     }
 
@@ -48,9 +47,9 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
         private int blue;
 
         public void convolution(Color pixel, double kernelElement) {
-            this.red += pixel.getRed() * kernelElement;
-            this.green += pixel.getGreen() * kernelElement;
-            this.blue += pixel.getBlue() * kernelElement;
+            red += pixel.getRed() * kernelElement;
+            green += pixel.getGreen() * kernelElement;
+            blue += pixel.getBlue() * kernelElement;
         }
 
         public Color getColor() {
@@ -58,5 +57,3 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
         }
     }
 }
-
-
