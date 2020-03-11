@@ -6,7 +6,7 @@ import api.expression.ParseException;
 public class ExpressionParserImpl implements ExpressionParser {
 
     @Override
-    public int parse(String expression) throws ParseException {
+    public int parse(String expression) throws ParseException, ArithmeticException {
         if (expression == null) {
             throw new IllegalArgumentException("Expression is null");
         }
@@ -27,7 +27,7 @@ public class ExpressionParserImpl implements ExpressionParser {
             // если знак
             if (currentChar == '+' || currentChar == '-') {
                 if(currentNumber.length() != 0){
-                    result = addValue(result, getNumber(currentNumber));
+                    result = Math.addExact(result, getNumber(currentNumber));
                     currentNumber = new StringBuilder();
                 }
                 currentNumber.append(currentChar);
@@ -36,7 +36,7 @@ public class ExpressionParserImpl implements ExpressionParser {
             throw new ParseException(String.format("Illegal character '%c' ", currentChar));
         }
         if (currentNumber.length() != 0) {
-            result = addValue(result, getNumber(currentNumber));
+            result = Math.addExact(result, getNumber(currentNumber));
         }
         return result;
     }
@@ -46,14 +46,6 @@ public class ExpressionParserImpl implements ExpressionParser {
             return Integer.parseInt(currentNumber.toString());
         } catch (NumberFormatException e){
             throw new ParseException("Not valid integer format");
-        }
-    }
-
-    private int addValue(int a, int b) throws ArithmeticException {
-        try {
-            return Math.addExact(a, b);
-        } catch (ArithmeticException e){
-            throw new ArithmeticException("Math operation error");
         }
     }
 }
