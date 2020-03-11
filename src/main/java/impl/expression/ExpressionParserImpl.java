@@ -52,7 +52,10 @@ public class ExpressionParserImpl implements ExpressionParser {
 
     private int calcResult(ArrayList<String> operators, ArrayList<String> operands) throws ParseException {
         try {
-            int result = Integer.parseInt(operands.get(0));
+            var result = Integer.parseInt(operands.get(0));
+            if (result >= Integer.MAX_VALUE) {
+                throw new ArithmeticException();
+            }
             for (int i = 0; i < operators.size(); i++) {
                 if (operators.get(i).equals("+")) {
                     result += Integer.parseInt(operands.get(i + 1));
@@ -61,9 +64,9 @@ public class ExpressionParserImpl implements ExpressionParser {
                 }
             }
             return result;
+
         } catch (NumberFormatException e) {
             throw new ParseException(e.getMessage());
         }
-
     }
 }
