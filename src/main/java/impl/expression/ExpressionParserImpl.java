@@ -7,9 +7,6 @@ import impl.expression.lexer.Token;
 
 import java.util.function.BinaryOperator;
 
-import static impl.expression.lexer.TokenType.MINUS;
-import static impl.expression.lexer.TokenType.PLUS;
-
 /**
  * ExpressionParser for parsing the following grammar
  * <pre>
@@ -42,9 +39,14 @@ public class ExpressionParserImpl implements ExpressionParser {
 
     private static int parseFirstTerm(ExpressionLexer tokenizer) throws ParseException {
         Token token = tokenizer.nextToken();
-        return (token.tokenType == PLUS || token.tokenType == MINUS)
-                ? -parseInteger(tokenizer.nextToken())
-                : parseInteger(token);
+        switch (token.tokenType) {
+            case PLUS:
+                return parseInteger(tokenizer.nextToken());
+            case MINUS:
+                return -parseInteger(tokenizer.nextToken());
+            default:
+                return parseInteger(token);
+        }
     }
 
     private static int parseInteger(Token token) throws ParseException {
