@@ -3,6 +3,7 @@ package impl.expression;
 import api.expression.ExpressionParser;
 import api.expression.ParseException;
 
+import java.lang.annotation.AnnotationTypeMismatchException;
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Stack;
@@ -28,13 +29,13 @@ public class Calculator implements ExpressionParser {
                 continue;
             }
 
-            if (isOperator(curChar)){
-                result = getTempResult(buffer,result);
+            if (isOperator(curChar)) {
+                result = getTempResult(buffer, result);
                 buffer.setLength(0);
                 buffer.append(curChar);
             }
         }
-        result = getTempResult(buffer,result);
+        result = getTempResult(buffer, result);
 
         return result;
     }
@@ -43,16 +44,19 @@ public class Calculator implements ExpressionParser {
         return symbol == '+' || symbol == '-';
     }
 
-    private int getTempResult(StringBuilder buffer,int result) throws ParseException{
-        if(buffer.length() == 0){
+    private int getTempResult(StringBuilder buffer, int result) throws ParseException, ArithmeticException {
+        if (buffer.length() == 0) {
             return 0;
         }
         int digit;
-        try{
+        try {
             digit = Integer.parseInt(buffer.toString());
+            if (digit == Integer.MAX_VALUE || digit == Integer.MIN_VALUE) {
+                throw new ArithmeticException();
+            }
             result += digit;
             return result;
-        }catch(NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             throw new ParseException("Cant parse number to int");
         }
     }
