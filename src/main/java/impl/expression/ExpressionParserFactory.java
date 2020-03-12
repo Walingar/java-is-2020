@@ -4,6 +4,7 @@ import api.expression.ExpressionParser;
 
 public class ExpressionParserFactory {
     public static ExpressionParser getInstance() {
-        return null;
+
+        return new Calculator();
     }
 }
