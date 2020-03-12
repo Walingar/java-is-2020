@@ -13,10 +13,7 @@ public class Calculator implements ExpressionParser {
         if (expression == null || expression.isBlank()) {
             throw new IllegalArgumentException("Expression should not be null or empty");
         }
-        var outputQueue = new LinkedList<String>();
-        var operatorStack = new Stack<String>();
         int result = 0;
-        //String[] tokens = expression.split("(?<=\\d)(?=\\D)|(?<=\\D)(?=\\d)");
         var buffer = new StringBuilder();
 
         for (int i = 0; i < expression.length(); i++) {
