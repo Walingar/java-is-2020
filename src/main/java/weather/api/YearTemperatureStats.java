@@ -1,10 +1,11 @@
-package api.weather;
+package weather.api;
 
 import java.time.Month;
 import java.util.List;
 import java.util.Map;
 
 public interface YearTemperatureStats {
+
     void updateStats(DayTemperatureInfo info);
 
     Double getAverageTemperature(Month month);

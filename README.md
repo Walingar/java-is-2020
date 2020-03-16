@@ -3,7 +3,7 @@
 # Домашнее задание 3. Статистика погоды
 
 Ваша задача разработать реализации интерфейсов `YearTemperatureStats` и `YearTemperatureStatsParser` и
-создать их в методах `impl.weather.YearTemperatureStatsFactory.getInstance` и `impl.weather.YearTemperatureStatsParserFactory.getInstance` соответственно.
+создать их в методах `weather.factory.YearTemperatureStatsFactory.getInstance` и `weather.factory.YearTemperatureStatsParserFactory.getInstance` соответственно.
 
 `YearTemperatureStats` должен уметь возвращать:
   * температуру за данный день месяца (или `null` если о дне ничего не известно); (константное время работы)

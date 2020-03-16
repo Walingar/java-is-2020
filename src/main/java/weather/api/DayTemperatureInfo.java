@@ -1,4 +1,4 @@
-package api.weather;
+package weather.api;
 
 import java.time.Month;
 

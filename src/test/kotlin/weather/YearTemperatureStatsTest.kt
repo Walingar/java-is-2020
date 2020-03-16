@@ -1,17 +1,17 @@
 package weather
 
-import api.weather.DayTemperatureInfo
-import api.weather.YearTemperatureStats
-import impl.weather.YearTemperatureStatsFactory
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
 import org.junit.Test
+import weather.api.DayTemperatureInfo
+import weather.api.YearTemperatureStats
+import weather.factory.YearTemperatureStatsFactory
 import java.time.Month
 
 internal class YearTemperatureStatsTest {
     private fun updateStats(
-        info: Collection<DayTemperatureInfo>,
-        stats: YearTemperatureStats = YearTemperatureStatsFactory.getInstance()
+            info: Collection<DayTemperatureInfo>,
+            stats: YearTemperatureStats = YearTemperatureStatsFactory.getInstance()
     ) = stats.apply {
         info.forEach {
             updateStats(it)

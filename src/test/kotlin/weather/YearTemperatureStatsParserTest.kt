@@ -1,8 +1,8 @@
 package weather
 
-import impl.weather.YearTemperatureStatsParserFactory
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
+import weather.factory.YearTemperatureStatsParserFactory
 import java.io.File
 import java.time.Month
 

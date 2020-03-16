@@ -1,7 +1,8 @@
-package api.weather;
+package weather.api;
 
 import java.util.Collection;
 
 public interface YearTemperatureStatsParser {
+
     YearTemperatureStats parse(Collection<String> rawData);
 }
