@@ -2,12 +2,16 @@ package impl.weather;
 
 import api.weather.DayTemperatureInfo;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
+
+import static java.util.Comparator.comparingDouble;
+import static java.util.stream.Collectors.toList;
 
 public class MonthTemperature {
 
-    private final Map<Integer, DayTemperatureInfo> dayInfos = new HashMap<>();
+    private final Map<Integer, DayTemperatureInfo> dayInfos = new LinkedHashMap<>();
     private Integer maximum;
     private Double average;
 
@@ -41,5 +45,11 @@ public class MonthTemperature {
 
     public Double getAverage() {
         return average;
+    }
+
+    public List<DayTemperatureInfo> getSortedTemperature() {
+        return dayInfos.values().stream()
+                .sorted(comparingDouble(DayTemperatureInfo::getTemperature))
+                .collect(toList());
     }
 }
