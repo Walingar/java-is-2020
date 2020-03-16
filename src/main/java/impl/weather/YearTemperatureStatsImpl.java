@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toMap;
 
 public class YearTemperatureStatsImpl implements YearTemperatureStats {
@@ -34,7 +35,8 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
     @Override
     public List<DayTemperatureInfo> getSortedTemperature(Month month) {
-        return null;
+        var monthTemperature = monthTemperatures.get(month);
+        return monthTemperature == null ? emptyList() : monthTemperature.getSortedTemperature();
     }
 
     @Override
