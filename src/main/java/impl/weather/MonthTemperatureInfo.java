@@ -17,20 +17,17 @@ class MonthTemperatureInfo {
         var day = info.getDay();
         var temperature = info.getTemperature();
 
-        var previousInfo = dayTemperatures.put(day, info);
+        if (dayTemperatures.containsKey(day)) {
+            throw new IllegalArgumentException(
+                    String.format("Day %d.%d is already in stats", day, info.getMonth().getValue()));
+        }
+        dayTemperatures.put(day, info);
 
         if (maxTemperature == null || temperature > maxTemperature) {
             maxTemperature = temperature;
         }
 
-        if (averageTemperature == null) {
-            averageTemperature = (double) temperature;
-        } else {
-            averageTemperature = (previousInfo != null) ?
-                    replaceInAverage(previousInfo.getTemperature(), temperature)
-                    : addToAverage(temperature);
-        }
-
+        averageTemperature = (averageTemperature != null) ? addToAverage(temperature) : temperature;
     }
 
     public Double getAverageTemperature() {
@@ -49,11 +46,6 @@ class MonthTemperatureInfo {
         return dayTemperatures.values().stream()
                 .sorted(Comparator.comparingInt(DayTemperatureInfo::getTemperature))
                 .collect(Collectors.toUnmodifiableList());
-    }
-
-    private double replaceInAverage(double oldValue, double newValue) {
-        var size = dayTemperatures.size();
-        return (size * averageTemperature - oldValue + newValue) / size;
     }
 
     private double addToAverage(double value) {
