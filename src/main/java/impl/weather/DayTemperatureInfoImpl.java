@@ -12,8 +12,6 @@ public class DayTemperatureInfoImpl implements DayTemperatureInfo {
     private int day;
     private Month month;
     private int temperature;
-    private HashMap<Month, Pair<Double, Integer>> averageTemperature = new HashMap<>();
-    private HashMap<Month, Integer> maximumTemperature = new HashMap<>();
 
     public DayTemperatureInfoImpl(int day, Month month, int temperature) {
         this.day = day;
