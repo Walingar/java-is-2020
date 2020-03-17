@@ -4,6 +4,6 @@ import api.weather.YearTemperatureStatsParser;
 
 public class YearTemperatureStatsParserFactory {
     public static YearTemperatureStatsParser getInstance() {
-        return null;
+        return new YearTemperatureStatsParserimpl();
     }
 }
