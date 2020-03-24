@@ -9,7 +9,7 @@ import java.util.*
 internal class QueueTest {
     private val rand = Random()
 
-    private fun getTestQueueList() = listOf(/*ArrayQueueFactory.getInstance(),*/ LinkedQueueFactory.getInstance())
+    private fun getTestQueueList() = listOf(ArrayQueueFactory.getInstance(), LinkedQueueFactory.getInstance())
 
     private fun getTestQueue() = TestQueue(ArrayDeque(), getTestQueueList())
 
