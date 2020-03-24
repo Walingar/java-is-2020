@@ -48,7 +48,7 @@ public class ArrayQueueImpl<T> extends AbstractQueue<T> {
 
     private void shrinkIfNeeded() {
         if (size < capacity / (GROWTH_FACTOR * 2)) {
-            var newCapacity = (int) (capacity / (GROWTH_FACTOR * 2));
+            var newCapacity = (int) (capacity / GROWTH_FACTOR);
             if (newCapacity < SHRINK_LIMIT) {
                 return;
             }
