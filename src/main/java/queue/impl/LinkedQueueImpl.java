@@ -1,102 +1,71 @@
 package queue.impl;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.util.Collection;
+import java.util.AbstractQueue;
 import java.util.Iterator;
-import java.util.Queue;
 
-public class LinkedQueueImpl implements Queue<Integer> {
+public class LinkedQueueImpl<T> extends AbstractQueue<T> {
+    private static class Container<T> {
+        private final T value;
+
+        public Container<T> next;
+        public Container<T> prev;
+
+        Container(T value) {
+            this.value = value;
+        }
+    }
+
+    private int size = 0;
+    private Container<T> head = null;
+    private Container<T> tail = null;
+
+    private Container<T> box(T t) {
+        return new Container<>(t);
+    }
+
+    private void bind(Container fst, Container snd) {
+        fst.next = snd;
+        snd.prev = fst;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return null;
+    }
+
     @Override
     public int size() {
-        return 0;
+        return size;
     }
 
     @Override
-    public boolean isEmpty() {
-        return false;
+    public boolean offer(T t) {
+        if (head == null) {
+            tail = box(t);
+            head = tail;
+        } else {
+            bind(tail, box(t));
+            tail = tail.next;
+        }
+        size++;
+        return true;
     }
 
     @Override
-    public boolean contains(Object o) {
-        return false;
-    }
-
-    @NotNull
-    @Override
-    public Iterator<Integer> iterator() {
-        return null;
-    }
-
-    @NotNull
-    @Override
-    public Object[] toArray() {
-        return new Object[0];
-    }
-
-    @NotNull
-    @Override
-    public <T> T[] toArray(@NotNull T[] ts) {
-        return null;
+    public T poll() {
+        if (size == 0)
+            return null;
+        var value = head.value;
+        head = head.next;
+        size--;
+        return value;
     }
 
     @Override
-    public boolean add(Integer integer) {
-        return false;
-    }
-
-    @Override
-    public boolean remove(Object o) {
-        return false;
-    }
-
-    @Override
-    public boolean containsAll(@NotNull Collection<?> collection) {
-        return false;
-    }
-
-    @Override
-    public boolean addAll(@NotNull Collection<? extends Integer> collection) {
-        return false;
-    }
-
-    @Override
-    public boolean removeAll(@NotNull Collection<?> collection) {
-        return false;
-    }
-
-    @Override
-    public boolean retainAll(@NotNull Collection<?> collection) {
-        return false;
-    }
-
-    @Override
-    public void clear() {
-
-    }
-
-    @Override
-    public boolean offer(Integer integer) {
-        return false;
-    }
-
-    @Override
-    public Integer remove() {
-        return null;
-    }
-
-    @Override
-    public Integer poll() {
-        return null;
-    }
-
-    @Override
-    public Integer element() {
-        return null;
-    }
-
-    @Override
-    public Integer peek() {
-        return null;
+    public T peek() {
+        if (size == 0) {
+            return null;
+        }
+        return head.value;
     }
 }
