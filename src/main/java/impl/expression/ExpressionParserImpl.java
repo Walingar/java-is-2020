@@ -16,7 +16,7 @@ public class ExpressionParserImpl implements ExpressionParser {
         ExpressionProcessor processor = new ExpressionProcessor();
         for (int index = 0; index < expression.length(); index++) {
             char character = expression.charAt(index);
-            if ('0' <= character && character <= '9') {
+            if (Character.isDigit(character)) {
                 processor.processDigit(character);
             } else if (character == '+') {
                 processor.processSign(Sign.PLUS);
@@ -68,7 +68,7 @@ public class ExpressionParserImpl implements ExpressionParser {
                     result = Math.addExact(result, currentNumber.get());
                 }
             } else if (sign != null) {
-                throw new ParseException("Several signs in a row are not permitted");
+                throw new ParseException("Incorrect expression");
             }
         }
 
