@@ -17,34 +17,20 @@ public class ExpressionParserImpl implements ExpressionParser {
         var number = 0;
 
         for (var symbol : symbols) {
-            switch (symbol) {
-                case '+':
-                    result = Math.addExact(result, sign * number);
-                    number = 0;
-                    sign = 1;
-                    break;
-                case '-':
-                    result = Math.addExact(result, sign * number);
-                    number = 0;
-                    sign = -1;
-                    break;
-                case ' ':
-                case '\t':
-                case '\n':
-                    result = Math.addExact(result, sign * number);
-                    number = 0;
-                    break;
-                default:
-                    if (Character.isDigit(symbol)) {
-                        try {
-                            number = Math.addExact(Math.multiplyExact(number, 10), Character.getNumericValue(symbol));
-                        } catch (ArithmeticException ex) {
-                            throw new ParseException("Number is too long");
-                        }
-                    } else {
-                        throw new ParseException("Not a valid symbol");
-                    }
-                    break;
+            if (Character.isDigit(symbol)) {
+                try {
+                    number = Math.addExact(Math.multiplyExact(number, 10), Character.getNumericValue(symbol));
+                } catch (ArithmeticException ex) {
+                    throw new ParseException("Number is too long");
+                }
+            } else if (Character.isWhitespace(symbol) || (symbol == '+') || (symbol == '-')) {
+                result = Math.addExact(result, sign * number);
+                number = 0;
+                if (!Character.isWhitespace(symbol)) {
+                    sign = (symbol == '-') ? -1 : 1;
+                }
+            } else {
+                throw new ParseException("Not a valid symbol");
             }
         }
 
