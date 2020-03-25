@@ -23,14 +23,14 @@ public class ExpressionParserImpl implements ExpressionParser {
                 } catch (ArithmeticException ex) {
                     throw new ParseException("Number is too long");
                 }
-            } else if (Character.isWhitespace(symbol) || (symbol == '+') || (symbol == '-')) {
+            } else if (symbol == '+' || symbol == '-') {
                 result = Math.addExact(result, sign * number);
                 number = 0;
-                if (!Character.isWhitespace(symbol)) {
-                    sign = (symbol == '-') ? -1 : 1;
-                }
+                sign = (symbol == '-') ? -1 : 1;
             } else {
-                throw new ParseException("Not a valid symbol");
+                if (!Character.isWhitespace(symbol)) {
+                    throw new ParseException("Not a valid symbol");
+                }
             }
         }
 
