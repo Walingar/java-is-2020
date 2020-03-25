@@ -12,7 +12,6 @@ public class ExpressionParserImpl implements ExpressionParser {
         if (expression == null) {
             throw new IllegalArgumentException("Expression may not be null");
         }
-        expression = expression.replaceAll("\\s", "");
         ExpressionProcessor processor = new ExpressionProcessor();
         for (int index = 0; index < expression.length(); index++) {
             char character = expression.charAt(index);
@@ -22,7 +21,7 @@ public class ExpressionParserImpl implements ExpressionParser {
                 processor.processSign(Sign.PLUS);
             } else if (character == '-') {
                 processor.processSign(Sign.MINUS);
-            } else {
+            } else if (!Character.isWhitespace(character)) {
                 String message = String.format("Illegal character '%c' encountered at index %d", character, index);
                 throw new ParseException(message);
             }
