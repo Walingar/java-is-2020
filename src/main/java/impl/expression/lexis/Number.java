@@ -1,11 +1,11 @@
 package impl.expression.lexis;
 
-public class Number extends Lexem {
+public class Number extends Lexeme {
 
-    private int value;
+    private final int value;
 
     public Number(int value) {
-        super(LexemType.Number);
+        super(LexemeType.NUMBER);
         this.value = value;
     }
 

@@ -1,6 +1,6 @@
 package impl.expression.lexis;
 
 public enum OperatorType {
-    Plus,
-    Minus
+    PLUS,
+    MINUS
 }

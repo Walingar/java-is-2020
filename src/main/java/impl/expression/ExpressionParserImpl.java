@@ -2,7 +2,7 @@ package impl.expression;
 
 import api.expression.ExpressionParser;
 import api.expression.ParseException;
-import impl.expression.lexis.LexemType;
+import impl.expression.lexis.LexemeType;
 import impl.expression.lexis.Operator;
 import impl.expression.lexis.Number;
 import impl.expression.lexis.OperatorType;
@@ -24,18 +24,18 @@ public class ExpressionParserImpl implements ExpressionParser {
     private int parseExpression() throws ParseException {
 //        well, generally we'd want to build AST first and eval later, but, well, yeah...
         var value = parseTerm();
-        var lexem = lexer.getNextToken();
-        while (lexem.getType() == LexemType.Operator) {
-            var operator = (Operator) lexem;
+        var lexeme = lexer.getNextToken();
+        while (lexeme.getType() == LexemeType.OPERATOR) {
+            var operator = (Operator) lexeme;
             switch (operator.getOperatorType()) {
-                case Plus: {
+                case PLUS: {
                     value = Math.addExact(value, parseTerm());
-                    lexem = lexer.getNextToken();
+                    lexeme = lexer.getNextToken();
                     break;
                 }
-                case Minus: {
+                case MINUS: {
                     value = Math.subtractExact(value, parseTerm());
-                    lexem = lexer.getNextToken();
+                    lexeme = lexer.getNextToken();
                     break;
                 }
                 default: {
@@ -47,14 +47,14 @@ public class ExpressionParserImpl implements ExpressionParser {
     }
 
     private int parseTerm() throws ParseException {
-        var lexem = lexer.getNextToken();
+        var lexeme = lexer.getNextToken();
 //        Here should be switch to parse brackets and stuff, but ummm, we don't have it...
-        if (lexem.getType() == LexemType.Number) {
-            return ((Number) lexem).getValue();
+        if (lexeme.getType() == LexemeType.NUMBER) {
+            return ((Number) lexeme).getValue();
         }
 //        Unary minus support, it's just less code than switch for two cases
-        if (lexem.getType() == LexemType.Operator &&
-                ((Operator) lexem).getOperatorType() == OperatorType.Minus) {
+        if (lexeme.getType() == LexemeType.OPERATOR &&
+                ((Operator) lexeme).getOperatorType() == OperatorType.MINUS) {
             return -parseTerm();
         }
         throw new ParseException("Syntactycally invalid input!");

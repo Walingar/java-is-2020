@@ -1,11 +1,11 @@
 package impl.expression.lexis;
 
-public class Operator extends Lexem {
+public class Operator extends Lexeme {
 
-    private OperatorType type;
+    private final OperatorType type;
 
     public Operator(OperatorType type) {
-        super(LexemType.Operator);
+        super(LexemeType.OPERATOR);
         this.type = type;
     }
 
