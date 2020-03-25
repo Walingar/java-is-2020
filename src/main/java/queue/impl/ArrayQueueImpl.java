@@ -1,25 +1,18 @@
 package queue.impl;
 
-import org.jetbrains.annotations.NotNull;
+import java.util.*;
 
-import java.lang.reflect.Array;
-import java.lang.reflect.ParameterizedType;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Queue;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.stream.IntStream;
+public class ArrayQueueImpl<T> extends AbstractQueue<T> {
 
-public class ArrayQueueImpl<T> implements Queue<T> {
-
+    private static final int DEFAULT_CAPACITY = 10_001; // Picked by a dice roll =)
+    private int capacity;
     private final boolean blocking;
-    private Object[] storage;
+    private Object[] items;
     private int head;
     private int tail;
 
     public ArrayQueueImpl() {
-        this(1_000_001);
+        this(DEFAULT_CAPACITY);
     }
 
     public ArrayQueueImpl(int capacity) {
@@ -27,8 +20,14 @@ public class ArrayQueueImpl<T> implements Queue<T> {
     }
 
     public ArrayQueueImpl(int capacity, boolean blocking) {
-        this.storage = new Object[capacity];
+        this.capacity = capacity;
+        this.items = new Object[capacity];
         this.blocking = blocking;
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return null;
     }
 
     @Override
@@ -37,108 +36,24 @@ public class ArrayQueueImpl<T> implements Queue<T> {
     }
 
     @Override
-    public boolean isEmpty() {
-        return head == tail;
-    }
-
-    @Override
-    public boolean contains(Object o) {
-        return IntStream.range(head, tail).anyMatch(i -> storage[i] == o);
-    }
-
-    @NotNull
-    @Override
-    public Iterator<T> iterator() {
-        return Arrays.stream(
-                Arrays.copyOfRange(storage, head, tail))
-                .iterator();
-    }
-
-    @NotNull
-    @Override
-    public Object[] toArray() {
-        return Arrays.copyOfRange(storage, head, tail);
-    }
-
-    @NotNull
-    @Override
-    public <T1> T1[] toArray(@NotNull T1[] t1s) {
-        return null;
-    }
-
-
-    @Override
-    public boolean add(T t) {
-        if (tail < storage.length) {
-            storage[tail++] = t;
-            return true;
-        }
-        if (blocking) {
-            throw new IllegalStateException();
-        }
-        storage = Arrays.copyOf(storage, storage.length * 2);
-        return add(t);
-    }
-
-    @Override
-    public boolean remove(Object o) {
-        return false;
-    }
-
-    @Override
-    public boolean containsAll(@NotNull Collection<?> collection) {
-        return false;
-    }
-
-    @Override
-    public boolean addAll(@NotNull Collection<? extends T> collection) {
-        return false;
-    }
-
-    @Override
-    public boolean removeAll(@NotNull Collection<?> collection) {
-        return false;
-    }
-
-    @Override
-    public boolean retainAll(@NotNull Collection<?> collection) {
-        return false;
-    }
-
-    @Override
-    public void clear() {
-        head = 0;
-        tail = 0;
-    }
-
-    @Override
     public boolean offer(T t) {
-        return false;
-    }
-
-    @Override
-    public T remove() {
-        return null;
+        if (tail >= capacity) {
+            return false;
+        }
+        items[tail++] = t;
+        return true;
     }
 
     @Override
     public T poll() {
-        if (tail > head) {
-            return (T)storage[head++];
+        if (tail <= head) {
+            return null;
         }
-        return null;
-    }
-
-    @Override
-    public T element() {
-        return null;
+        return (T) items[head++];
     }
 
     @Override
     public T peek() {
-        if (tail > head) {
-            return storage[head];
-        }
-        throw new IllegalStateException();
+        return (T) items[head];
     }
 }
