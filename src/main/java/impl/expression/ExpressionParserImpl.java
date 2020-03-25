@@ -37,21 +37,18 @@ public class ExpressionParserImpl implements ExpressionParser {
 
     private static class ExpressionProcessor {
 
+        private final StringBuilder number = new StringBuilder();
         private int result = 0;
         private Sign sign;
-        private StringBuilder number;
 
         public void processDigit(char digit) {
-            if (number == null) {
-                number = new StringBuilder();
-            }
             number.append(digit);
         }
 
         public void processSign(Sign newSign) throws ParseException {
             executeAddition();
             sign = newSign;
-            number = null;
+            number.setLength(0);
         }
 
         public int getResult() throws ParseException {
@@ -73,7 +70,7 @@ public class ExpressionParserImpl implements ExpressionParser {
         }
 
         private Optional<Integer> getCurrentNumber() throws ParseException {
-            if (number == null || number.length() == 0) {
+            if (number.length() == 0) {
                 return Optional.empty();
             }
             try {
