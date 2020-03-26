@@ -12,7 +12,7 @@ class LinkedQueueImpl<T> extends AbstractQueue<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return new MyIterator<>(head);
+        return new MyIterator();
     }
 
     @Override
@@ -22,7 +22,7 @@ class LinkedQueueImpl<T> extends AbstractQueue<T> {
 
     @Override
     public boolean offer(T value) {
-        var newNode = new Node<>(value, tail, null);
+        var newNode = new Node<>(value);
 
         if (tail == null) {
             head = newNode;
@@ -45,8 +45,6 @@ class LinkedQueueImpl<T> extends AbstractQueue<T> {
 
         if (next == null) {
             tail = null;
-        } else {
-            next.previous = null;
         }
         head = next;
 
@@ -62,21 +60,14 @@ class LinkedQueueImpl<T> extends AbstractQueue<T> {
     private static class Node<T> {
         private final T value;
         private Node<T> next;
-        private Node<T> previous;
 
-        Node(T value, Node<T> previous, Node<T> next) {
+        Node(T value) {
             this.value = value;
-            this.next = next;
-            this.previous = previous;
         }
     }
 
-    private static class MyIterator<T> implements Iterator<T> {
-        private Node<T> currentNode;
-
-        MyIterator(Node<T> head) {
-            currentNode = head;
-        }
+    private class MyIterator implements Iterator<T> {
+        private Node<T> currentNode = head;
 
         @Override
         public boolean hasNext() {

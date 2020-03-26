@@ -5,7 +5,7 @@ import java.util.AbstractQueue;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class ArrayQueueImpl<T> extends AbstractQueue<T> {
+class ArrayQueueImpl<T> extends AbstractQueue<T> {
 
     private static final int INITIAL_CAPACITY = 8;
     private static final double GROWTH_FACTOR = 2;
