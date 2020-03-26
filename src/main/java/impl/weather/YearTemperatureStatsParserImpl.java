@@ -1,6 +1,5 @@
 package impl.weather;
 
-
 import api.weather.DayTemperatureInfo;
 import api.weather.YearTemperatureStats;
 import api.weather.YearTemperatureStatsParser;
@@ -24,7 +23,7 @@ public class YearTemperatureStatsParserImpl implements YearTemperatureStatsParse
         return stats;
     }
 
-    private static class DayTemperatureInfoImpl implements DayTemperatureInfo {
+    private class DayTemperatureInfoImpl implements DayTemperatureInfo {
 
         private int day;
         private Month month;

@@ -1,6 +1,7 @@
 package impl.weather;
 
 import api.weather.DayTemperatureInfo;
+
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,29 +9,29 @@ import static java.util.Comparator.comparingDouble;
 
 public class MonthTemperatureInfo {
 
-    private LinkedHashMap<Integer, DayTemperatureInfo> dayData = new LinkedHashMap<>();
+    private LinkedHashMap<Integer, DayTemperatureInfo> dayInfos = new LinkedHashMap<>();
 
     public void updateMonthStats(DayTemperatureInfo dayInfo) {
-        dayData.putIfAbsent(dayInfo.getDay(), dayInfo);
+        dayInfos.putIfAbsent(dayInfo.getDay(), dayInfo);
     }
 
     public double getAverageTemperature() {
-        return dayData.values().stream().mapToDouble(DayTemperatureInfo::getTemperature).sum() / dayData.size();
+        return dayInfos.values().stream().mapToDouble(x-> x.getTemperature()).sum() / dayInfos.size();
     }
 
     public Integer getMaxTemperature() {
-        if (!dayData.isEmpty())
+        if (!dayInfos.isEmpty())
         {
-            return (int)dayData.values().stream().mapToDouble(DayTemperatureInfo::getTemperature).max().getAsDouble();
+            return (int)dayInfos.values().stream().mapToDouble(x-> x.getTemperature()).max().getAsDouble();
         }
         return 0;
     }
 
     public List<DayTemperatureInfo> getSortedTemperature() {
-        return dayData.values().stream().sorted(comparingDouble(DayTemperatureInfo::getTemperature)).collect(Collectors.toList());
+        return dayInfos.values().stream().sorted(comparingDouble(DayTemperatureInfo::getTemperature)).collect(Collectors.toList());
     }
 
     public DayTemperatureInfo getTemperature(int day) {
-        return dayData.get(day);
+        return dayInfos.get(day);
     }
 }
