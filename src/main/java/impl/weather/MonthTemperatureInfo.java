@@ -15,13 +15,13 @@ public class MonthTemperatureInfo {
     }
 
     public double getAverageTemperature() {
-        return dayData.values().stream().mapToDouble(x-> x.getTemperature()).sum() / dayData.size();
+        return dayData.values().stream().mapToDouble(DayTemperatureInfo::getTemperature).sum() / dayData.size();
     }
 
     public Integer getMaxTemperature() {
         if (!dayData.isEmpty())
         {
-            return (int)dayData.values().stream().mapToDouble(x-> x.getTemperature()).max().getAsDouble();
+            return (int)dayData.values().stream().mapToDouble(DayTemperatureInfo::getTemperature).max().getAsDouble();
         }
         return 0;
     }
