@@ -36,29 +36,6 @@ class ArrayQueueImpl<T> extends AbstractQueue<T> {
         return true;
     }
 
-    private void ensureCapacity() {
-        if (capacity < size + 2) {
-            var newCapacity = (int) (capacity * GROWTH_FACTOR);
-            data = toArray(new Object[newCapacity]);
-            capacity = newCapacity;
-            head = 0;
-            tail = size;
-        }
-    }
-
-    private void shrinkIfNeeded() {
-        if (size < capacity / (GROWTH_FACTOR * 2)) {
-            var newCapacity = (int) (capacity / GROWTH_FACTOR);
-            if (newCapacity < SHRINK_LIMIT) {
-                return;
-            }
-            data = toArray(new Object[newCapacity]);
-            capacity = newCapacity;
-            head = 0;
-            tail = size;
-        }
-    }
-
     @Override
     public T poll() {
         if (isEmpty()) {
@@ -75,6 +52,30 @@ class ArrayQueueImpl<T> extends AbstractQueue<T> {
     @Override
     public T peek() {
         return getCasted(head);
+    }
+
+    private void ensureCapacity() {
+        if (capacity < size + 2) {
+            var newCapacity = (int) (capacity * GROWTH_FACTOR);
+            applyNewCapacity(newCapacity);
+        }
+    }
+
+    private void shrinkIfNeeded() {
+        if (size < capacity / (GROWTH_FACTOR * 2)) {
+            var newCapacity = (int) (capacity / GROWTH_FACTOR);
+            if (newCapacity < SHRINK_LIMIT) {
+                return;
+            }
+            applyNewCapacity(newCapacity);
+        }
+    }
+
+    private void applyNewCapacity(int newCapacity) {
+        data = toArray(new Object[newCapacity]);
+        capacity = newCapacity;
+        head = 0;
+        tail = size;
     }
 
     @SuppressWarnings("unchecked")
