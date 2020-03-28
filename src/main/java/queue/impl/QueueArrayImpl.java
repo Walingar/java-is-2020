@@ -44,7 +44,7 @@ public class QueueArrayImpl implements Queue {
     }
 
     private void rearrangeQueue(Set<Integer> unused) {
-        if(unused == null){
+        if (unused == null) {
             unused = new HashSet<>();
         }
         if (begin == 0 && unused.isEmpty()) {
