@@ -216,7 +216,7 @@ public class QueueArrayImpl implements Queue {
 
     @Override
     public Object remove() {
-        if (size() == 0) {
+        if (size == 0) {
             throw new NoSuchElementException();
         }
         size--;
