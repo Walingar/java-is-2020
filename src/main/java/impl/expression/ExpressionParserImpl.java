@@ -3,7 +3,7 @@ package impl.expression;
 import api.expression.ExpressionParser;
 import api.expression.ParseException;
 
-import java.util.Optional;
+import static java.lang.Integer.parseInt;
 
 public class ExpressionParserImpl implements ExpressionParser {
 
@@ -56,24 +56,20 @@ public class ExpressionParserImpl implements ExpressionParser {
         }
 
         private void executeAddition() throws ParseException {
-            Optional<Integer> currentNumber = getCurrentNumber();
-            if (currentNumber.isPresent()) {
-                if (sign == Sign.MINUS) {
-                    result = Math.subtractExact(result, currentNumber.get());
-                } else {
-                    result = Math.addExact(result, currentNumber.get());
-                }
-            } else if (sign != null) {
-                throw new ParseException("Incorrect expression");
+            int currentNumber = getCurrentNumber();
+            if (sign == Sign.MINUS) {
+                result = Math.subtractExact(result, currentNumber);
+            } else {
+                result = Math.addExact(result, currentNumber);
             }
         }
 
-        private Optional<Integer> getCurrentNumber() throws ParseException {
+        private int getCurrentNumber() throws ParseException {
             if (number.length() == 0) {
-                return Optional.empty();
+                return 0;
             }
             try {
-                return Optional.of(Integer.parseInt(number.toString()));
+                return parseInt(number.toString());
             } catch (Exception e) {
                 throw new ParseException("Unexpected number: " + e.getMessage());
             }
