@@ -14,27 +14,27 @@ public class ExpressionParserImpl implements ExpressionParser {
             throw new IllegalArgumentException("Input is null");
         }
 
-        char[] temp = expression.toCharArray();
-        int expressionLength = temp.length;
+        char[] inputStringToCharArray = expression.toCharArray();
+        int expressionLength = inputStringToCharArray.length;
 
 
         for (int i = 0; i < expressionLength; i++) {
 
-            if (Character.isWhitespace(temp[i])) {
+            if (Character.isWhitespace(inputStringToCharArray[i])) {
                 continue;
             }
 
-            if (temp[i] == '+') {
+            if (inputStringToCharArray[i] == '+') {
                 result = produceResult(result, sign * currentOperand);
                 sign = 1;
                 currentOperand = 0;
-            } else if (temp[i] == '-') {
+            } else if (inputStringToCharArray[i] == '-') {
                 result = produceResult(result, sign * currentOperand);
                 sign = -1;
                 currentOperand = 0;
-            } else if (Character.isDigit(temp[i])) {
+            } else if (Character.isDigit(inputStringToCharArray[i])) {
                 try {
-                    currentOperand = Math.addExact(Math.multiplyExact(currentOperand, 10), Character.getNumericValue(temp[i]));
+                    currentOperand = Math.addExact(Math.multiplyExact(currentOperand, 10), Character.getNumericValue(inputStringToCharArray[i]));
                 } catch (ArithmeticException e) {
                     throw new ParseException("Input number is too long");
                 }
