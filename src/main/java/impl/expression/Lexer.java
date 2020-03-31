@@ -1,6 +1,6 @@
 package impl.expression;
 
-import api.expression.ParseException;
+import impl.expression.helper.Matcher;
 import impl.expression.lexis.*;
 import impl.expression.lexis.Number;
 
@@ -8,33 +8,27 @@ public class Lexer {
 
     private final String input;
     private int currentPosition;
+    private Matcher<Character, Lexeme, LexerException> matcher;
 
     public Lexer(String input) {
         this.input = input;
+//        Basically all lexical analysis happens here is sort-of pattern-matching analog for Java
+        matcher = new Matcher<>();
+        matcher.match(Character::isWhitespace, s -> getNextToken());
+        matcher.match(c -> c.equals('+'), s -> new Operator(OperatorType.PLUS));
+        matcher.match(c -> c.equals('-'), s -> new Operator(OperatorType.MINUS));
+        matcher.match(Character::isDigit, s -> new Number(consumeNumber(s)));
+        matcher.orThrow(LexerException.class, "Improperly formatted input");
     }
 
-    public Lexeme getNextToken() throws ParseException {
+    public Lexeme getNextToken() throws LexerException {
         if (currentPosition >= input.length()) {
             return new Lexeme(LexemeType.EOE);
         }
         char symbol = input.charAt(currentPosition++);
-        switch (symbol) {
-            case '\t': //fallthrough
-            case '\n': //fallthrough
-            case '\r': //fallthrough
-            case ' ':  //Since we just don't recognize these, we are gonna skip to next here
-                return getNextToken();
-            case '+':
-                return new Operator(OperatorType.PLUS);
-            case '-':
-                return new Operator(OperatorType.MINUS);
-            default: {
-                if (Character.isDigit(symbol)) {
-                    return new Number(consumeNumber(symbol));
-                } // Explicit else?
-                throw new ParseException(String.format("Unsupported symbol: %s", symbol));
-            }
-        }
+//        Can be done prettier
+        matcher.setErrorMessage(String.format("Improperly formatter input! %c at position %d", symbol, currentPosition));
+        return matcher.produce(symbol);
     }
 
     private int consumeNumber(char symbol) throws LexerException {
