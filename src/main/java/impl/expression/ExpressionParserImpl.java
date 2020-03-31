@@ -7,7 +7,7 @@ public class ExpressionParserImpl implements ExpressionParser {
     @Override
     public int parse(String expression) throws ParseException {
         int result = 0;
-        int container = 0;
+        int currentOperand = 0;
         int sign = 1;
 
         if (expression == null) {
@@ -25,16 +25,16 @@ public class ExpressionParserImpl implements ExpressionParser {
             }
 
             if (temp[i] == '+') {
-                result = produceResult(result, sign * container);
+                result = produceResult(result, sign * currentOperand);
                 sign = 1;
-                container = 0;
+                currentOperand = 0;
             } else if (temp[i] == '-') {
-                result = produceResult(result, sign * container);
+                result = produceResult(result, sign * currentOperand);
                 sign = -1;
-                container = 0;
+                currentOperand = 0;
             } else if (Character.isDigit(temp[i])) {
                 try {
-                    container = Math.addExact(Math.multiplyExact(container, 10), Character.getNumericValue(temp[i]));
+                    currentOperand = Math.addExact(Math.multiplyExact(currentOperand, 10), Character.getNumericValue(temp[i]));
                 } catch (ArithmeticException e) {
                     throw new ParseException("Input number is too long");
                 }
@@ -42,7 +42,7 @@ public class ExpressionParserImpl implements ExpressionParser {
                 throw new ParseException("Unknown symbol");
             }
         }
-        result = produceResult(result, sign * container);
+        result = produceResult(result, sign * currentOperand);
 
         return result;
     }
