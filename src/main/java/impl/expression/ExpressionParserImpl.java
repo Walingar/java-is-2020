@@ -3,6 +3,7 @@ package impl.expression;
 import api.expression.ExpressionParser;
 import api.expression.ParseException;
 import impl.expression.lexer.ExpressionLexer;
+import impl.expression.lexer.TextRange;
 import impl.expression.lexer.Token;
 
 import java.util.function.BinaryOperator;
@@ -50,6 +51,10 @@ public class ExpressionParserImpl implements ExpressionParser {
     }
 
     private static int parseInteger(Token token) throws ParseException {
+        TextRange tokenTextRange = token.getTextRange();
+        if (10 < tokenTextRange.getLength()) {
+            throw new ParseException("Token is too big for an integer at position " + tokenTextRange);
+        }
         try {
             return Integer.parseInt(token.getText());
         } catch (NumberFormatException ex) {
@@ -70,7 +75,7 @@ public class ExpressionParserImpl implements ExpressionParser {
 
     private static ParseException createUnexpectedTokenException(String expected, Token token) {
         return new ParseException(
-                String.format("%s was expected, but found \"%s\" at position %d", expected, token.getText(),
-                              token.getPosition()));
+                String.format("%s was expected, but found \"%s\" at position %s", expected, token.getText(),
+                              token.getTextRange()));
     }
 }

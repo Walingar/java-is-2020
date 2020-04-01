@@ -1,22 +1,27 @@
 package impl.expression.lexer;
 
 public class Token {
-    private final String text;
-    private final int position;
+    private final String expressionText;
+    private final TextRange textRange;
     private final TokenType tokenType;
+    private String lazyActualText;
 
-    public Token(TokenType tokenType, String text, int position) {
-        this.text = text;
-        this.position = position;
+    public Token(TokenType tokenType, String text, TextRange textRange) {
+        this.expressionText = text;
         this.tokenType = tokenType;
+        this.textRange = textRange;
     }
 
     public String getText() {
-        return text;
+        if (lazyActualText != null) {
+            return lazyActualText;
+        }
+        lazyActualText = textRange.substring(expressionText);
+        return lazyActualText;
     }
 
-    public int getPosition() {
-        return position;
+    public TextRange getTextRange() {
+        return textRange;
     }
 
     public TokenType getTokenType() {

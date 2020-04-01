@@ -35,9 +35,9 @@ public class ExpressionLexer {
     private Token consumeNextToken() throws ParseException  {
         char currentChar = expression.charAt(position);
         if (currentChar == '-') {
-            return new Token(TokenType.MINUS, "-", position++);
+            return new Token(TokenType.MINUS, expression, TextRange.ofLength(position++, 1));
         } else if (currentChar == '+') {
-            return new Token(TokenType.PLUS, "+", position++);
+            return new Token(TokenType.PLUS, expression, TextRange.ofLength(position++, 1));
         } else if (Character.isDigit(currentChar)) {
             return consumeIntegerConstant();
         }
@@ -49,7 +49,7 @@ public class ExpressionLexer {
         while (i < expression.length() && Character.isDigit(expression.charAt(i))) {
             i++;
         }
-        Token token = new Token(TokenType.INTEGER, expression.substring(position, i), position);
+        Token token = new Token(TokenType.INTEGER, expression, TextRange.of(position, i));
         position = i;
         return token;
     }
