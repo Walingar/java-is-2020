@@ -39,7 +39,7 @@ public class ExpressionParserImpl implements ExpressionParser {
 
     private static int parseFirstTerm(ExpressionLexer tokenizer) throws ParseException {
         Token token = tokenizer.nextToken();
-        switch (token.tokenType) {
+        switch (token.getTokenType()) {
             case PLUS:
                 return parseInteger(tokenizer.nextToken());
             case MINUS:
@@ -51,14 +51,14 @@ public class ExpressionParserImpl implements ExpressionParser {
 
     private static int parseInteger(Token token) throws ParseException {
         try {
-            return Integer.parseInt(token.text);
+            return Integer.parseInt(token.getText());
         } catch (NumberFormatException ex) {
             throw createUnexpectedTokenException("Integer constant", token);
         }
     }
 
     private static BinaryOperator<Integer> getOperation(Token token) throws ParseException {
-        switch (token.tokenType) {
+        switch (token.getTokenType()) {
             case PLUS:
                 return Math::addExact;
             case MINUS:
@@ -70,7 +70,7 @@ public class ExpressionParserImpl implements ExpressionParser {
 
     private static ParseException createUnexpectedTokenException(String expected, Token token) {
         return new ParseException(
-                String.format("%s was expected, but found \"%s\" at position %d", expected, token.text, token.position)
-        );
+                String.format("%s was expected, but found \"%s\" at position %d", expected, token.getText(),
+                              token.getPosition()));
     }
 }
