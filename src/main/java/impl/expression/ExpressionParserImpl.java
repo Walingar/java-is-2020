@@ -15,11 +15,7 @@ public class ExpressionParserImpl implements ExpressionParser {
         int tempOperand = 0;
         int operator = 1;
 
-        char currentChar;
-
-        for (int i = 0; i < expression.length(); i++) {
-
-            currentChar = expression.charAt(i);
+        for (char currentChar : expression.toCharArray()) {
 
             if (Character.isWhitespace(currentChar)) {
                 continue;
@@ -33,7 +29,7 @@ public class ExpressionParserImpl implements ExpressionParser {
                 } else {
                     operator = 1;
                 }
-            }  else if (Character.isDigit(currentChar)) {
+            } else if (Character.isDigit(currentChar)) {
                 try {
                     tempOperand = Math.addExact(Math.multiplyExact(tempOperand, 10), Character.getNumericValue(currentChar));
                 } catch (ArithmeticException e) {
