@@ -21,17 +21,17 @@ public class ExpressionParserImpl implements ExpressionParser {
                 continue;
             }
 
-            if (currentChar == '-' || currentChar == '+') {
-                result = updateResult(result, operator, tempOperand);
+            if (currentChar == '-') {
+                result = updateVariable(result, operator, tempOperand);
                 tempOperand = 0;
-                if (currentChar == '-') {
-                    operator = -1;
-                } else {
-                    operator = 1;
-                }
+                operator = -1;
+            } else if (currentChar == '+') {
+                result = updateVariable(result, operator, tempOperand);
+                tempOperand = 0;
+                operator = 1;
             } else if (Character.isDigit(currentChar)) {
                 try {
-                    tempOperand = Math.addExact(Math.multiplyExact(tempOperand, 10), Character.getNumericValue(currentChar));
+                    tempOperand = updateVariable(Character.getNumericValue(currentChar), 10, tempOperand);
                 } catch (ArithmeticException e) {
                     throw new ParseException("Too long number");
                 }
@@ -39,12 +39,10 @@ public class ExpressionParserImpl implements ExpressionParser {
                 throw new ParseException("Invalid symbol");
             }
         }
-        result = updateResult(result, operator, tempOperand);
-
-        return result;
+        return updateVariable(result, operator, tempOperand);
     }
 
-    private int updateResult(int operandA, int operator, int operandB) throws ArithmeticException {
+    private int updateVariable(int operandA, int operator, int operandB) throws ArithmeticException {
         try {
             return Math.addExact(operandA, Math.multiplyExact(operator, operandB));
         } catch (ArithmeticException e) {
