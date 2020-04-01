@@ -7,6 +7,9 @@ import java.util.Comparator;
 public class tempInfoComp implements Comparator<DayTemperatureInfo> {
     @Override
     public int compare(DayTemperatureInfo o1, DayTemperatureInfo o2) {
-        return o1.getTemperature() - o2.getTemperature() - 1;
+        if (o1.getTemperature() == o2.getTemperature()) {
+            return o2.getDay() - o1.getDay();
+        }
+        return o1.getTemperature() - o2.getTemperature();
     }
 }
