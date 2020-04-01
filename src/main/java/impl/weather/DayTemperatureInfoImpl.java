@@ -10,8 +10,7 @@ public class DayTemperatureInfoImpl implements DayTemperatureInfo {
     private final Month month;
     private final int temperature;
 
-    public DayTemperatureInfoImpl(int day, int month, int temperature)
-    {
+    public DayTemperatureInfoImpl(int day, int month, int temperature) {
         this.day = day;
         this.month = Month.of(month);
         this.temperature = temperature;

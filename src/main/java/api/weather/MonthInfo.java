@@ -1,15 +1,15 @@
 package api.weather;
 
-import java.util.Map;
+import java.util.List;
 
 public interface MonthInfo {
     void addDay(DayTemperatureInfo info);
 
-    Double getAverage();
+    double getAverage();
 
-    Integer getMaximum();
+    int getMaximum();
 
     DayTemperatureInfo getDay(Integer day);
 
-    Map<Integer, DayTemperatureInfo> getDays();
+    List<DayTemperatureInfo> getDays();
 }
