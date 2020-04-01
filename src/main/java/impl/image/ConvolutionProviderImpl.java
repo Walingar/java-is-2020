@@ -4,7 +4,7 @@ import api.image.ConvolutionProvider;
 
 import java.awt.*;
 
-public class ConvolutionProviderImp implements ConvolutionProvider {
+public class ConvolutionProviderImpl implements ConvolutionProvider {
 
     public Color[][] apply(Color[][] image, double[][] kernel) {
         int n = image.length;
@@ -19,26 +19,19 @@ public class ConvolutionProviderImp implements ConvolutionProvider {
                 int blue = 0;
                 int red = 0;
                 int green = 0;
-                int index1 = 0;
-                int index2 = 0;
                 for (int iterator1 = -HalfKernelN; iterator1 <= HalfKernelN; iterator1++) {
-                    index2 = 0;
                     for (int iterator2 = -HalfKernelM; iterator2 <= HalfKernelM; iterator2++) {
                         if (j + iterator2 < 0 || i + iterator1 < 0 || j + iterator2 >= m || i + iterator1 >= n) {
-                            index2 += 1;
                             continue;
                         }
-                        double kerenlVal = kernel[index1][index2];
+                        double kernelVal = kernel[iterator1 + HalfKernelN][iterator2 + HalfKernelM];
                         Color imgVal = image[i + iterator1][j + iterator2];
-                        blue += (int) (kerenlVal * imgVal.getBlue());
-                        green += (int) (kerenlVal * imgVal.getGreen());
-                        red += (int) (kerenlVal * imgVal.getRed());
-                        index2 += 1;
+                        blue += (int) (kernelVal * imgVal.getBlue());
+                        green += (int) (kernelVal * imgVal.getGreen());
+                        red += (int) (kernelVal * imgVal.getRed());
                     }
-                    index1 += 1;
                 }
                 img[i][j] = new Color(red, green, blue, 255);
-                ;
             }
         }
         return img;

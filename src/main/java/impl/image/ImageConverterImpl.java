@@ -4,7 +4,7 @@ import api.image.ImageConverter;
 
 import java.awt.*;
 
-public class ImageConverterImp implements ImageConverter {
+public class ImageConverterImpl implements ImageConverter {
     public Color[][] convertToColor(int[][] image) {
         int n = image.length;
         int m = image[0].length;
