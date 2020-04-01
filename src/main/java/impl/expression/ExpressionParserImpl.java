@@ -27,16 +27,16 @@ public class ExpressionParserImpl implements ExpressionParser {
             }
 
             if (currentChar == '+') {
-                tempResult = produceResult(tempResult, sign * currentOperand);
+                tempResult = doOperation(tempResult, sign * currentOperand);
                 sign = 1;
                 currentOperand = 0;
             } else if (currentChar == '-') {
-                tempResult = produceResult(tempResult, sign * currentOperand);
+                tempResult = doOperation(tempResult, sign * currentOperand);
                 sign = -1;
                 currentOperand = 0;
             } else if (Character.isDigit(currentChar)) {
                 try {
-                    currentOperand = Math.addExact(Math.multiplyExact(currentOperand, 10), Character.getNumericValue(currentChar));
+                    currentOperand = doOperation(Math.multiplyExact(currentOperand, 10), Character.getNumericValue(currentChar));
                 } catch (ArithmeticException e) {
                     throw new ParseException("Input number is too long");
                 }
@@ -44,10 +44,10 @@ public class ExpressionParserImpl implements ExpressionParser {
                 throw new ParseException("Unknown symbol");
             }
         }
-        return produceResult(tempResult, sign * currentOperand);
+        return doOperation(tempResult, sign * currentOperand);
     }
 
-    private int produceResult(int argumentA, int argumentB) throws ArithmeticException {
+    private int doOperation(int argumentA, int argumentB) {
         try {
             return Math.addExact(argumentA, argumentB);
         } catch (ArithmeticException e) {
