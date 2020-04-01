@@ -41,7 +41,7 @@ public class ExpressionLexer {
         } else if (Character.isDigit(currentChar)) {
             return consumeIntegerConstant();
         }
-        throw new ParseException("Unknown symbol \"" + currentChar + "\" at position " + position);
+        throw new ParseException(String.format("Unknown symbol \"%s\" at position %d", currentChar, position));
     }
 
     private Token consumeIntegerConstant() {
