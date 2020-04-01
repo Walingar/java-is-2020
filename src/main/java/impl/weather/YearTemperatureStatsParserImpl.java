@@ -14,8 +14,8 @@ public class YearTemperatureStatsParserImpl implements YearTemperatureStatsParse
         var temperatureStats = YearTemperatureStatsFactory.getInstance();
 
         for (var rawDayData : rawData) {
-            var tokens = splitIntoTokens(rawDayData, " ");
-            var dateTokens = splitIntoTokens(tokens[0], "\\.");
+            var tokens = splitIntoTokens(rawDayData, " ", getWrongFormatErrorMessage(rawDayData));
+            var dateTokens = splitIntoTokens(tokens[0], "\\.", getWrongFormatErrorMessage(rawDayData));
 
             var day = Integer.parseInt(dateTokens[0]);
             var month = Integer.parseInt(dateTokens[1]);
@@ -26,12 +26,15 @@ public class YearTemperatureStatsParserImpl implements YearTemperatureStatsParse
         return temperatureStats;
     }
 
-    private static String[] splitIntoTokens(String rawDayData, String pattern) {
-        var tokens = rawDayData.split(pattern);
+    private static String[] splitIntoTokens(String rawData, String pattern, String errorMessage) {
+        var tokens = rawData.split(pattern);
         if (tokens.length != 2) {
-            throw new IllegalArgumentException(
-                    "\"" + rawDayData + "\" does not follow \"day.month temperature\" pattern");
+            throw new IllegalArgumentException(errorMessage);
         }
         return tokens;
+    }
+
+    private static String getWrongFormatErrorMessage(String rawData) {
+        return "\"" + rawData + "\" does not follow \"day.month temperature\" pattern";
     }
 }
