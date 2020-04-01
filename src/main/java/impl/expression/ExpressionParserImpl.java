@@ -42,7 +42,7 @@ public class ExpressionParserImpl implements ExpressionParser {
         return updateVariable(result, operator, tempOperand);
     }
 
-    private int updateVariable(int operandA, int operator, int operandB) throws ArithmeticException {
+    private int updateVariable(int operandA, int operator, int operandB) {
         try {
             return Math.addExact(operandA, Math.multiplyExact(operator, operandB));
         } catch (ArithmeticException e) {
