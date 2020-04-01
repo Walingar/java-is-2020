@@ -3,51 +3,56 @@ package impl.weather;
 import api.weather.DayTemperatureInfo;
 import api.weather.MonthInfo;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MonthInfoImpl implements MonthInfo {
     private int maximum = Integer.MIN_VALUE;
     private double average = 0;
-    private final Map<Integer, DayTemperatureInfo> days = new HashMap<>();
+    private final List<DayTemperatureInfo> days = new ArrayList<>();
 
     public void addDay(DayTemperatureInfo info) {
         var day = info.getDay();
         var temperature = info.getTemperature();
+
+        var oldDay = getDay(day);
+        if (oldDay == null) {
+            updateAverageNewDay(temperature);
+            days.add(info);
+        } else {
+            updateAverageExistingDay(oldDay.getTemperature(), temperature);
+            days.set(days.indexOf(oldDay), info);
+        }
         updateMaximum(temperature);
-        updateAverage(day, temperature);
-        days.put(day, info);
     }
 
     private void updateMaximum(Integer temperature) {
         maximum = Math.max(maximum, temperature);
     }
 
-    private void updateAverage(Integer day, Integer temperature) {
+    private void updateAverageExistingDay(Integer oldTemperature, Integer temperature) {
         var size = days.size();
-        if (days.containsKey(day)) {
-            // updated day info
-            var oldTemperature = days.get(day).getTemperature();
-            average = (average * size - oldTemperature + temperature) / size;
-        } else {
-            // new day
-            average = (average * size + temperature) / (size + 1);
-        }
+        average = (average * size - oldTemperature + temperature) / size;
     }
 
-    public Double getAverage() {
+    private void updateAverageNewDay(Integer temperature) {
+        var size = days.size();
+        average = (average * size + temperature) / (size + 1);
+    }
+
+    public double getAverage() {
         return average;
     }
 
-    public Integer getMaximum() {
+    public int getMaximum() {
         return maximum;
     }
 
     public DayTemperatureInfo getDay(Integer day) {
-        return days.getOrDefault(day, null);
+        return days.stream().filter(dayInfo -> dayInfo.getDay() == day).findFirst().orElse(null);
     }
 
-    public Map<Integer, DayTemperatureInfo> getDays() {
+    public List<DayTemperatureInfo> getDays() {
         return days;
     }
 }

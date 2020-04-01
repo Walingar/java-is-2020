@@ -6,6 +6,7 @@ import api.weather.YearTemperatureStats;
 
 import java.time.Month;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class YearTemperatureStatsImpl implements YearTemperatureStats {
     private final Map<Month, MonthInfo> stats = new HashMap<>();
@@ -21,8 +22,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
     @Override
     public Double getAverageTemperature(Month month) {
-        var monthStat = stats.getOrDefault(month, null);
-        return monthStat == null ? null : monthStat.getAverage();
+        return stats.containsKey(month) ? stats.get(month).getAverage() : null;
     }
 
     @Override
@@ -36,39 +36,17 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
     @Override
     public List<DayTemperatureInfo> getSortedTemperature(Month month) {
-        if (stats.getOrDefault(month, null) == null) {
+        if (!stats.containsKey(month)) {
             return new ArrayList<>();
         }
-
-        List<DayTemperatureInfo> temperatures = new ArrayList<>();
-        var monthStats = stats.get(month).getDays();
-        for (var stat : monthStats.entrySet()) {
-            boolean added = false;
-            for (var i = 0; i < temperatures.size(); i++) {
-                if (temperatures.get(i).getTemperature() >= stat.getValue().getTemperature()) {
-                    temperatures.add(i, stat.getValue());
-                    added = true;
-                    break;
-                }
-            }
-            if (!added) {
-                temperatures.add(stat.getValue());
-            }
-        }
-        return temperatures;
-
-        /*return stats.get(month).getDays().values()
+        return stats.get(month).getDays()
                 .stream()
                 .sorted(Comparator.comparingInt(DayTemperatureInfo::getTemperature))
-                .collect(Collectors.toList());*/
+                .collect(Collectors.toList());
     }
 
     @Override
     public DayTemperatureInfo getTemperature(int day, Month month) {
-        var monthStat = stats.getOrDefault(month, null);
-        if (monthStat == null) {
-            return null;
-        }
-        return monthStat.getDay(day);
+        return stats.containsKey(month) ? stats.get(month).getDay(day) : null;
     }
 }
