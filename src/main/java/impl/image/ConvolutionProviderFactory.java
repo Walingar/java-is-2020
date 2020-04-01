@@ -4,6 +4,6 @@ import api.image.ConvolutionProvider;
 
 public class ConvolutionProviderFactory {
     public static ConvolutionProvider getInstance() {
-        return new ConvolutionProviderImp();
+        return new ConvolutionProviderImpl();
     }
 }
