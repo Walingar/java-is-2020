@@ -10,69 +10,49 @@ public class ConvolutionProviderImplementation implements ConvolutionProvider {
     public Color[][] apply(Color[][] image, double[][] kernel) {
         Color[][] bluredImage = new Color[image.length][image[0].length];
         int size = kernel.length;
-        int step = (int) Math.floor(size / 2);
-        boolean edge;
-        int alpha = 255;
+        int step = size / 2;
+        int bluredImageColorAlpha = 255;
+        int bluredImageColorDefault = 0;
 
         for (int i = 0; i < image.length; i++) {
             for (int j = 0; j < image[0].length; j++) {
                 // bluring
-                int red = 0;
-                int green = 0;
-                int blue = 0;
-                int m1 = -step;
-                int n1 = -step;
-                int m2 = size - 1;
-                int n2 = size - 1;
+                int bluredImageColorRed = 0;
+                int bluredImageColorGreen = 0;
+                int bluredImageColorBlue = 0;
+                int imageRow = -step;
+                int kernelRow = size - 1;
 
-//                while (m1 <= i + step && m2 >= 0) {
-//                    while (n1 <= j + step && n2 >= 0){
-//                        double kernelItem = kernel[m2][n2];
-//
-//                        try {
-//                            red += (int) image[i + m1][j + n1].getRed() * kernelItem;
-//                        } catch (ArrayIndexOutOfBoundsException e) {
-//                            red = Math.max(0, red);
-//                        }
-//                        try {
-//                            green += (int) image[i + m1][j + n1].getGreen() * kernelItem;
-//                        } catch (ArrayIndexOutOfBoundsException e) {
-//                            green = Math.max(0, green);
-//                        }
-//                        try {
-//                            blue += (int) image[i + m1][j + n1].getBlue() * kernelItem;
-//                        } catch (ArrayIndexOutOfBoundsException e) {
-//                            blue = Math.max(0, blue);
-//                        }
-//                        n1++;
-//                        n2--;
-//                    }
-//                    m1++;
-//                    m2--;
-//                }
-                for (m1 = -step, m2 = size - 1; m1 <= i + step && m2 >= 0; m1++, m2--) {
-                    for (n1 = -step, n2 = size - 1; n1 <= j + step && n2 >= 0; n1++, n2--) {
-                        double kernelItem = kernel[m2][n2];
-                        try {
-                            red += (int) image[i + m1][j + n1].getRed() * kernelItem;
-                        } catch (ArrayIndexOutOfBoundsException e) {
-                            red = Math.max(0, red);
+                while (imageRow <= i + step && kernelRow >= 0) {
+                    int imageColumn = -step;
+                    int kernelColumn = size - 1;
+
+                    while (imageColumn <= j + step && kernelColumn >= 0) {
+                        double kernelItem = kernel[kernelRow][kernelColumn];
+                        if (ifInRange(i + imageRow, image.length) && ifInRange(j + imageColumn, image[0].length)) {
+                            Color imageColor = image[i + imageRow][j + imageColumn];
+                            bluredImageColorRed += imageColor.getRed() * kernelItem;
+                            bluredImageColorGreen += imageColor.getGreen() * kernelItem;
+                            bluredImageColorBlue += imageColor.getBlue() * kernelItem;
+                        } else {
+                            bluredImageColorRed = Math.max(bluredImageColorDefault, bluredImageColorRed);
+                            bluredImageColorGreen = Math.max(bluredImageColorDefault, bluredImageColorGreen);
+                            bluredImageColorBlue = Math.max(bluredImageColorDefault, bluredImageColorBlue);
                         }
-                        try {
-                            green += (int) image[i + m1][j + n1].getGreen() * kernelItem;
-                        } catch (ArrayIndexOutOfBoundsException e) {
-                            green = Math.max(0, green);
-                        }
-                        try {
-                            blue += (int) image[i + m1][j + n1].getBlue() * kernelItem;
-                        } catch (ArrayIndexOutOfBoundsException e) {
-                            blue = Math.max(0, blue);
-                        }
+
+                        imageColumn++;
+                        kernelColumn--;
                     }
+                    imageRow++;
+                    kernelRow--;
                 }
-                bluredImage[i][j] = new Color(red, green, blue, alpha);
+                bluredImage[i][j] = new Color(bluredImageColorRed, bluredImageColorGreen, bluredImageColorBlue, bluredImageColorAlpha);
             }
         }
         return bluredImage;
+    }
+
+    boolean ifInRange(int i, int length) {
+        return i >= 0 && i < length;
     }
 }
