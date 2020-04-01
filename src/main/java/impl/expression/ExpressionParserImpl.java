@@ -6,7 +6,7 @@ import api.expression.ParseException;
 public class ExpressionParserImpl implements ExpressionParser {
     @Override
     public int parse(String expression) throws ParseException {
-        int result = 0;
+        int tempResult = 0;
         int currentOperand = 0;
         int sign = 1;
 
@@ -20,21 +20,23 @@ public class ExpressionParserImpl implements ExpressionParser {
 
         for (int i = 0; i < expressionLength; i++) {
 
-            if (Character.isWhitespace(inputStringToCharArray[i])) {
+            char currentChar = inputStringToCharArray[i];
+
+            if (Character.isWhitespace(currentChar)) {
                 continue;
             }
 
-            if (inputStringToCharArray[i] == '+') {
-                result = produceResult(result, sign * currentOperand);
+            if (currentChar == '+') {
+                tempResult = produceResult(tempResult, sign * currentOperand);
                 sign = 1;
                 currentOperand = 0;
-            } else if (inputStringToCharArray[i] == '-') {
-                result = produceResult(result, sign * currentOperand);
+            } else if (currentChar == '-') {
+                tempResult = produceResult(tempResult, sign * currentOperand);
                 sign = -1;
                 currentOperand = 0;
-            } else if (Character.isDigit(inputStringToCharArray[i])) {
+            } else if (Character.isDigit(currentChar)) {
                 try {
-                    currentOperand = Math.addExact(Math.multiplyExact(currentOperand, 10), Character.getNumericValue(inputStringToCharArray[i]));
+                    currentOperand = Math.addExact(Math.multiplyExact(currentOperand, 10), Character.getNumericValue(currentChar));
                 } catch (ArithmeticException e) {
                     throw new ParseException("Input number is too long");
                 }
@@ -42,9 +44,7 @@ public class ExpressionParserImpl implements ExpressionParser {
                 throw new ParseException("Unknown symbol");
             }
         }
-        result = produceResult(result, sign * currentOperand);
-
-        return result;
+        return produceResult(tempResult, sign * currentOperand);
     }
 
     private int produceResult(int argumentA, int argumentB) throws ArithmeticException {
