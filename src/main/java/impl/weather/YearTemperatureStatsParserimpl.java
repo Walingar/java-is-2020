@@ -18,8 +18,8 @@ public class YearTemperatureStatsParserimpl implements YearTemperatureStatsParse
             var day = Integer.parseInt(split[0]);
             var month = Month.of(Integer.parseInt(split[1]));
             var temp = Integer.parseInt(split[2]);
-            DayTemperatureInfo newday = new DayTemperatureInfoImpl(day, month, temp);
-            status.updateStats(newday);
+            DayTemperatureInfo NewDay = new DayTemperatureInfoImpl(day, month, temp);
+            status.updateStats(NewDay);
         }
         return status;
     }

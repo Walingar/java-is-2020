@@ -1,6 +1,5 @@
 package api.weather;
 
-
 import java.time.Month;
 import java.util.List;
 import java.util.Map;
