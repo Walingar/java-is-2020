@@ -9,6 +9,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 public class FileEncodingWriterImpl implements FileEncodingWriter {
     private static final int BUFFER_SIZE = 8 * 1024;
@@ -20,6 +21,7 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
 
     @Override
     public void write(File file, InputStream data, Charset dataEncoding, Charset fileEncoding) {
+        Objects.requireNonNull(file, "File is null");
         if (!createDirectories(file)) {
             System.err.println("Can't create file's directory");
             return;
