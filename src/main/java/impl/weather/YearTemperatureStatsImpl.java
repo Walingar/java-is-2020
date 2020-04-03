@@ -6,8 +6,6 @@ import api.weather.YearTemperatureStats;
 import java.time.Month;
 import java.util.*;
 
-import static java.util.Comparator.*;
-
 public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
     private Map<Month, Integer> maxTemperature = new HashMap<>();
@@ -57,7 +55,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
         }
         HashMap<Integer, DayTemperatureInfo> temp = yearStats.getOrDefault(month, null);
         ArrayList<DayTemperatureInfo> List = new ArrayList<>(temp.values());
-        List.sort(comparing(DayTemperatureInfo::getTemperature));
+        List.sort(java.util.Comparator.comparing(DayTemperatureInfo::getTemperature));
         return List;
     }
 
