@@ -7,7 +7,7 @@ import java.time.Month;
 import java.util.*;
 import java.util.List;
 
-public class YearTemperatureStatsimpl implements YearTemperatureStats {
+public class YearTemperatureStatsImpl implements YearTemperatureStats {
     private final Map<Month, Map<Integer, DayTemperatureInfo>> status = new HashMap<>();
     private final Average average = new Average();
     private final Max maxTemperature = new Max();
@@ -41,19 +41,19 @@ public class YearTemperatureStatsimpl implements YearTemperatureStats {
         if (status.getOrDefault(month, null) == null) {
             return new ArrayList<>();
         }
-        Map<Integer, DayTemperatureInfo> temporary;
-        temporary = status.getOrDefault(month, null);
-        ArrayList<DayTemperatureInfo> List = new ArrayList<>(temporary.values());
-        List.sort(new tempInfoComp());
-        return List;
+        Map<Integer, DayTemperatureInfo> temperatureInfo;
+        temperatureInfo = status.getOrDefault(month, null);
+        ArrayList<DayTemperatureInfo> sortedTemperature = new ArrayList<>(temperatureInfo.values());
+        sortedTemperature.sort(new DayTemperatureInfoComperator());
+        return sortedTemperature;
     }
 
     @Override
     public DayTemperatureInfo getTemperature(int day, Month month) {
-        Map<Integer, DayTemperatureInfo> temporary = status.getOrDefault(month, null);
-        if (temporary == null) {
+        Map<Integer, DayTemperatureInfo> temperatureInfo = status.getOrDefault(month, null);
+        if (temperatureInfo == null) {
             return null;
         }
-        return temporary.getOrDefault(day, null);
+        return temperatureInfo.getOrDefault(day, null);
     }
 }
