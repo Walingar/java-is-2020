@@ -8,11 +8,6 @@ import java.nio.charset.Charset
 
 internal class FileEncodingReaderTest {
     @Test
-    fun `read with default encoding`() {
-        readTestFileWithEncoding(Charset.defaultCharset())
-    }
-
-    @Test
     fun `read UTF-8`() {
         readTestFileWithEncoding(Charsets.UTF_8)
     }
