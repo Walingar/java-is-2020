@@ -2,16 +2,13 @@ package impl.weather;
 
 import api.weather.DayTemperatureInfo;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MonthInfo {
     private Integer maxTemperature;
     private Double avgTemperature;
 
-    private final Map<Integer, DayTemperatureInfo> daysInfo = new HashMap<>();
+    private final Map<Integer, DayTemperatureInfo> daysInfo = new LinkedHashMap<>();
 
     public void updateMonthInfo(DayTemperatureInfo info) {
         int day = info.getDay();
@@ -19,7 +16,7 @@ public class MonthInfo {
 
         daysInfo.put(day, info);
 
-        if (temperature > maxTemperature || maxTemperature == null) {
+        if (maxTemperature == null || temperature > maxTemperature) {
             maxTemperature = temperature;
         }
 
