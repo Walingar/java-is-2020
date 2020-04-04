@@ -22,26 +22,22 @@ public class ExpressionParserImpl implements ExpressionParser {
     public static class IntegerParser {
 
         private final String expression;
-        private boolean eof;
         private int currentPosition;
-        private boolean breakOnSign;
+        private int previousPosition;
+        private char operator;
 
         IntegerParser(String expression) throws IllegalArgumentException {
             if (expression == null) {
                 throw new IllegalArgumentException("expected string, got null");
             }
             this.expression = expression;
-            eof = false;
-            breakOnSign = false;
             currentPosition = 0;
+            previousPosition = 0;
+            operator = '+';
         }
 
         boolean isEof() {
-            return eof;
-        }
-
-        private void metEof() {
-            eof = true;
+            return currentPosition == expression.length();
         }
 
         boolean hasNextInt() {
@@ -50,62 +46,55 @@ public class ExpressionParserImpl implements ExpressionParser {
 
         int nextInt() throws ParseException {
 
-            StringBuilder stringBuilder = new StringBuilder();
+            while (!isEof()) {
+                char currentCharacter = expression.charAt(currentPosition);
 
-            if (isEof()) {
-                throw new ParseException("unexpected end of string");
-            }
-
-            if (breakOnSign) {
-                stringBuilder.append(expression.charAt(currentPosition));
-                currentPosition++;
-                breakOnSign = false;
-            }
-
-            while (currentPosition < expression.length()) {
-                char currentCharater = expression.charAt(currentPosition);
-
-                if (Character.isWhitespace(currentCharater)) {
-                    currentPosition++;
-                    continue;
-                }
-
-                if (!isExpectedSymbol(currentCharater)) {
+                if (!isExpectedSymbol(currentCharacter)) {
                     throw new ParseException("unexpected symbol");
                 }
 
-                if (isArithmeticSymbol(currentCharater)) {
-                    breakOnSign = true;
-                    break;
+                if (Character.isWhitespace(currentCharacter) && previousPosition == currentPosition) {
+                    previousPosition++;
+                }
+
+                if (isOperator(currentCharacter)) {
+                    int result = convertToInt(previousPosition, currentPosition, operator);
+                    currentPosition++;
+                    previousPosition = currentPosition;
+                    operator = currentCharacter;
+                    return result;
                 }
 
                 currentPosition++;
-                stringBuilder.append(currentCharater);
             }
 
-            if (currentPosition == expression.length()) {
-                metEof();
-            }
-
-            return convertToInt(stringBuilder);
+            return convertToInt(previousPosition, currentPosition, operator);
         }
 
-        private boolean isArithmeticSymbol(char symbol) {
+        private boolean isOperator(char symbol) {
             return symbol == '-' || symbol == '+';
         }
 
         private boolean isExpectedSymbol(char symbol) {
-            return Character.isDigit(symbol) || isArithmeticSymbol(symbol);
+            return Character.isDigit(symbol) || isOperator(symbol) || Character.isWhitespace(symbol);
         }
 
-        private int convertToInt(StringBuilder stringBuilder) throws ParseException {
-            if (stringBuilder.length() == 0) {
+        private int convertToInt(int begin, int end, char operator) throws ParseException {
+
+            if (begin == end) {
                 return 0;
             }
+
+            String token = expression.substring(begin, end).strip();
+
             try {
-                return Integer.parseInt(stringBuilder.toString());
+                int converted = Integer.parseInt(token);
+                if (operator == '-') {
+                    converted *= -1;
+                }
+                return converted;
             } catch (NumberFormatException e) {
-                throw new ParseException("cant convert token to int");
+                throw new ParseException("cant convert token \'" + token + "\' to int");
             }
         }
     }
