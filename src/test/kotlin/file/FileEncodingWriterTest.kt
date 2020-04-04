@@ -8,11 +8,6 @@ import java.nio.charset.Charset
 
 internal class FileEncodingWriterTest {
     @Test
-    fun `write with default encoding`() {
-        checkWriteWithEncoding(Charset.defaultCharset())
-    }
-
-    @Test
     fun `write UTF-8`() {
         checkWriteWithEncoding(Charsets.UTF_8)
     }
@@ -24,7 +19,7 @@ internal class FileEncodingWriterTest {
 
     @Test
     fun `write 2 times`() {
-        checkWriteWithEncoding(Charset.defaultCharset())
+        checkWriteWithEncoding(cp1251)
         checkWriteWithEncoding(Charsets.UTF_8, data = "Какая-то другая строчка")
     }
 
@@ -38,7 +33,6 @@ internal class FileEncodingWriterTest {
 
     @Test
     fun `write with CP-1251 file encoding`() {
-        checkWriteWithEncoding(Charset.defaultCharset(), fileEncoding = cp1251)
         checkWriteWithEncoding(Charsets.UTF_8, data = "Строчка на русском", fileEncoding = cp1251)
         checkWriteWithEncoding(cp1251, fileEncoding = cp1251)
     }
