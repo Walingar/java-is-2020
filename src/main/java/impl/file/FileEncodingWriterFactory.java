@@ -4,6 +4,6 @@ import api.file.FileEncodingWriter;
 
 public class FileEncodingWriterFactory {
     public static FileEncodingWriter getInstance() {
-        return null;
+        return new FileEncodingWriterImpl();
     }
 }
