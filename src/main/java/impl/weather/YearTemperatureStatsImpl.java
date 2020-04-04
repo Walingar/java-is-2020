@@ -10,89 +10,93 @@ import static java.lang.Math.max;
 
 public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
-    private Map<Month, ArrayList<DayTemperatureInfo>> temperature_info;
-    private Map<Month, ArrayList<Integer>> update_times;
-    private ArrayList<Double> average_temperature_per_month;
-    private ArrayList<Integer> maximal_temperature_per_month;
-    private int[] days_known_per_month;
-    private int last_update;
+    private final Map<Month, MonthInfo> monthInfo;
 
-    public YearTemperatureStatsImpl() {
-        temperature_info = new HashMap<>();
-        update_times = new HashMap<>();
-        last_update = 0;
-        int max_month_index = 12 + 1;
-        average_temperature_per_month = new ArrayList<>(Collections.nCopies(max_month_index, null));
-        maximal_temperature_per_month = new ArrayList<>(Collections.nCopies(max_month_index, null));
-        days_known_per_month = new int[max_month_index];
+    YearTemperatureStatsImpl() {
+        monthInfo = new HashMap<>();
     }
 
     @Override
     public void updateStats(DayTemperatureInfo info) {
-        int month = info.getMonth().getValue();
-        int day = info.getDay();
-        int temperature = info.getTemperature();
-
-        temperature_info.putIfAbsent(info.getMonth(),
-                new ArrayList<>(Collections.nCopies(info.getMonth().maxLength() + 1, null)));
-        update_times.putIfAbsent(info.getMonth(),
-                new ArrayList<>(Collections.nCopies(info.getMonth().maxLength() + 1, null)));
-
-        days_known_per_month[month] += 1;
-
-        Double cur_avg = average_temperature_per_month.get(month);
-        average_temperature_per_month.set(month, cur_avg == null ? temperature : cur_avg + temperature);
-
-        Integer cur_max = maximal_temperature_per_month.get(month);
-        maximal_temperature_per_month.set(month, cur_max == null ? temperature : max(cur_max, temperature));
-
-        temperature_info.get(info.getMonth()).set(day, info);
-        update_times.get(info.getMonth()).set(day, last_update++);
+        Month month = info.getMonth();
+        monthInfo.putIfAbsent(month, new MonthInfo());
+        monthInfo.get(month).update(info);
     }
 
     @Override
     public Double getAverageTemperature(Month month) {
-        Double average = average_temperature_per_month.get(month.getValue());
-        if (average == null) {
+        MonthInfo info = monthInfo.get(month);
+        if (info == null) {
             return null;
         }
-        return average / days_known_per_month[month.getValue()];
+        return info.getAverageTemperature();
     }
 
     @Override
     public Map<Month, Integer> getMaxTemperature() {
-        Map<Month, Integer> max_temperatures = new HashMap<>();
-        for (Month month : temperature_info.keySet()) {
-            max_temperatures.put(month, maximal_temperature_per_month.get(month.getValue()));
-        }
-        return max_temperatures;
+        Map<Month, Integer> maxTemperatures = new HashMap<>();
+        monthInfo.forEach((k, v) -> maxTemperatures.put(k, v.getMaximalTemperature()));
+        return maxTemperatures;
     }
 
     @Override
     public List<DayTemperatureInfo> getSortedTemperature(Month month) {
-        List<DayTemperatureInfo> sorted_temperatures = temperature_info.get(month);
-        if (sorted_temperatures == null) {
-            return new ArrayList<DayTemperatureInfo>();
+        MonthInfo info = monthInfo.get(month);
+        if (info == null) {
+            return new ArrayList<>();
         }
-        sorted_temperatures.removeAll(Collections.singleton(null));
-        sorted_temperatures.sort(new Comparator<DayTemperatureInfo>() {
-            @Override
-            public int compare(DayTemperatureInfo lhs, DayTemperatureInfo rhs) {
-                if (lhs.getTemperature() == rhs.getTemperature()) {
-                    return Integer.compare(update_times.get(month).get(lhs.getDay()),
-                            update_times.get(month).get(rhs.getDay()));
-                }
-                return Integer.compare(lhs.getTemperature(), rhs.getTemperature());
-            }
-        });
-        return sorted_temperatures;
+        return info.getSortedTemperature();
     }
 
     @Override
     public DayTemperatureInfo getTemperature(int day, Month month) {
-        ArrayList<DayTemperatureInfo> days_info = temperature_info.getOrDefault(month, null);
-        if (days_info == null)
+        MonthInfo info = monthInfo.get(month);
+        if (info == null) {
             return null;
-        return days_info.get(day);
+        }
+        return info.getTemperature(day);
+    }
+
+    private static class MonthInfo {
+        private final Map<Integer, DayTemperatureInfo> temperatures;
+        private Integer maximalTemperature;
+        private Double sumTemperature;
+
+        MonthInfo() {
+            maximalTemperature = null;
+            sumTemperature = 0.0;
+            temperatures = new LinkedHashMap<>();
+        }
+
+        double getAverageTemperature() {
+            return sumTemperature / temperatures.size();
+        }
+
+        int getMaximalTemperature() {
+            return maximalTemperature;
+        }
+
+        void update(DayTemperatureInfo info) {
+            int day = info.getDay();
+            int temperature = info.getTemperature();
+            if (maximalTemperature == null) {
+                maximalTemperature = temperature;
+            } else {
+                maximalTemperature = max(temperature, maximalTemperature);
+            }
+            sumTemperature += temperature;
+            temperatures.put(day, info);
+        }
+
+        DayTemperatureInfo getTemperature(int day) {
+            return temperatures.get(day);
+        }
+
+        List<DayTemperatureInfo> getSortedTemperature() {
+            List<DayTemperatureInfo> sorted = new ArrayList<>(temperatures.size());
+            temperatures.forEach((k, v) -> sorted.add(v));
+            sorted.sort(Comparator.comparingInt(DayTemperatureInfo::getTemperature));
+            return sorted;
+        }
     }
 }

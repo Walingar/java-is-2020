@@ -25,29 +25,29 @@ public class YearTemperatureStatsParserImpl implements YearTemperatureStatsParse
     }
 
     private static class DayTemperatureInfoImpl implements DayTemperatureInfo {
-        private int _day;
-        private Month _month;
-        private int _temperature;
+        private final int day;
+        private final Month month;
+        private final int temperature;
 
         public DayTemperatureInfoImpl(int day, Month month, int temperature) {
-            _day = day;
-            _month = month;
-            _temperature = temperature;
+            this.day = day;
+            this.month = month;
+            this.temperature = temperature;
         }
 
         @Override
         public int getDay() {
-            return _day;
+            return day;
         }
 
         @Override
         public Month getMonth() {
-            return _month;
+            return month;
         }
 
         @Override
         public int getTemperature() {
-            return _temperature;
+            return temperature;
         }
     }
 
