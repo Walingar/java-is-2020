@@ -1,124 +1,104 @@
 package queue.impl;
 
-import org.jetbrains.annotations.NotNull;
+import java.util.AbstractQueue;
+import java.util.Iterator;
+import java.util.Queue;
 
-import java.util.*;
+public class QueueLinkedImpl extends AbstractQueue implements Queue {
 
-public class QueueLinkedImpl implements Queue {
+    private static class Node {
+        private Node next;
+        private Integer value;
 
-    private List<Integer> queue;
+        Node(Node next, Integer value) {
+            this.next = next;
+            this.value = value;
+        }
+
+        Integer getValue() {
+            return value;
+        }
+
+
+        Node getNext() {
+            return next;
+        }
+
+        void setNext(Node next) {
+            this.next = next;
+        }
+
+    }
+
+    private static class QueueLinkedIterator implements Iterator {
+
+        Node current;
+
+        QueueLinkedIterator(Node head) {
+            current = head;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return current.getNext() != null;
+        }
+
+        @Override
+        public Object next() {
+            current = current.getNext();
+            return current;
+        }
+    }
+
+    private Node head;
+    private Node tail;
+    private int size;
 
     QueueLinkedImpl() {
-        queue = new LinkedListIntegerImpl();
+        head = null;
+        size = 0;
+    }
+
+    @Override
+    public Iterator iterator() {
+        return new QueueLinkedIterator(head);
     }
 
     @Override
     public int size() {
-        return queue.size();
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return queue.isEmpty();
-    }
-
-    @Override
-    public boolean contains(Object o) {
-        return queue.contains(o);
-    }
-
-    @NotNull
-    @Override
-    public Iterator iterator() {
-        return queue.iterator();
-    }
-
-    @NotNull
-    @Override
-    public Object[] toArray() {
-        return queue.toArray();
-    }
-
-    @NotNull
-    @Override
-    public Object[] toArray(@NotNull Object[] objects) {
-        return queue.toArray(objects);
-    }
-
-    @Override
-    public boolean add(Object o) {
-        return queue.add((Integer) o);
-    }
-
-    @Override
-    public boolean remove(Object o) {
-        return queue.remove(o);
-    }
-
-    @Override
-    public boolean addAll(@NotNull Collection collection) {
-        return queue.addAll(collection);
-    }
-
-    @Override
-    public void clear() {
-        queue.clear();
-        ;
-    }
-
-    @Override
-    public boolean retainAll(@NotNull Collection collection) {
-        return queue.retainAll(collection);
-    }
-
-    @Override
-    public boolean removeAll(@NotNull Collection collection) {
-        return queue.removeAll(collection);
-    }
-
-    @Override
-    public boolean containsAll(@NotNull Collection collection) {
-        return queue.containsAll(collection);
+        return size;
     }
 
     @Override
     public boolean offer(Object o) {
-        return false;
-    }
-
-    @Override
-    public Object remove() {
-        if (size() == 0) {
-            throw new NoSuchElementException();
+        Node newNode = new Node(null, (Integer) o);
+        if (head == null) {
+            head = newNode;
+            tail = head;
+        } else {
+            tail.setNext(newNode);
+            tail = newNode;
         }
-        Integer e = queue.get(0);
-        queue.remove(0);
-        return e;
+        size++;
+        return true;
     }
 
     @Override
     public Object poll() {
-        if (queue.isEmpty()) {
+        if (size == 0) {
             return null;
         }
-        Integer e = queue.get(0);
-        queue.remove(0);
-        return e;
-    }
-
-    @Override
-    public Object element() {
-        if (queue.isEmpty()) {
-            throw new NoSuchElementException();
-        }
-        return queue.get(0);
+        Object value = head.value;
+        head = head.getNext();
+        size--;
+        return value;
     }
 
     @Override
     public Object peek() {
-        if (queue.isEmpty()) {
+        if (size == 0) {
             return null;
         }
-        return queue.get(0);
+        return head.getValue();
     }
 }
