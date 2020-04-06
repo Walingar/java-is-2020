@@ -16,7 +16,7 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
     public void write(File file, InputStream data, Charset dataEncoding, Charset fileEncoding) {
         Path path = Paths.get(file.getParent());
         try {
-            Files.createDirectories(path.getParent());
+            Files.createDirectories(path);
             file.createNewFile();
         } catch (IOException e) {
             System.out.println("Could not create file or directory " + file.getPath());
