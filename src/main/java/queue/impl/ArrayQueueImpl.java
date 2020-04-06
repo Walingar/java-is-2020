@@ -4,11 +4,11 @@ import java.util.*;
 
 public class ArrayQueueImpl<T> extends AbstractQueue<T> {
 
-    private static int CAPACITY = 20000;
+    private final static int CAPACITY = 20000;
 
     private int size = 0;
     private int head = 0;
-    private Object[] q = new Object[CAPACITY];
+    private final Object[] queue = new Object[CAPACITY];
 
     @Override
     public Iterator<T> iterator() {
@@ -25,7 +25,7 @@ public class ArrayQueueImpl<T> extends AbstractQueue<T> {
         if (size == CAPACITY) {
             return false;
         }
-        q[getIndex(head + size)] = t;
+        queue[getIndex(head + size)] = t;
         size++;
         return true;
     }
@@ -39,12 +39,12 @@ public class ArrayQueueImpl<T> extends AbstractQueue<T> {
         size--;
         var oldHead = head;
         head = getIndex(head + 1);
-        return (T) q[oldHead];
+        return (T) queue[oldHead];
     }
 
     @Override
     public T peek() {
-        return size == 0 ? null : (T) q[head];
+        return size == 0 ? null : (T) queue[head];
     }
 
     private int getIndex(int x) {
@@ -64,7 +64,7 @@ public class ArrayQueueImpl<T> extends AbstractQueue<T> {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
-            var value = (T) q[current];
+            var value = (T) queue[current];
             current = getIndex(current + 1);
             return value;
         }

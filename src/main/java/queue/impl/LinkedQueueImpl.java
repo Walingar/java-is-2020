@@ -5,12 +5,12 @@ import java.util.*;
 public class LinkedQueueImpl<T> extends AbstractQueue<T> {
 
     private int size = 0;
-    private element<T> head = null;
-    private element<T> tail = null;
+    private Element<T> head = null;
+    private Element<T> tail = null;
 
     @Override
     public Iterator<T> iterator() {
-        return new LinkedQueueIterator();
+        return new LinkedQueueIterator<T>(head);
     }
 
     @Override
@@ -21,10 +21,10 @@ public class LinkedQueueImpl<T> extends AbstractQueue<T> {
     @Override
     public boolean offer(T t) {
         if (size == 0) {
-            head = new element<>(t);
+            head = new Element<>(t);
             tail = head;
         } else {
-            tail.next = new element<>(t);
+            tail.next = new Element<>(t);
             tail = tail.next;
         }
         size++;
@@ -52,18 +52,22 @@ public class LinkedQueueImpl<T> extends AbstractQueue<T> {
         return head == null ? null : head.value;
     }
 
-    private static class element<T> {
-        private T value;
-        private element<T> next;
+    private static class Element<T> {
+        private final T value;
+        private Element<T> next;
 
-        element(T value) {
+        Element(T value) {
             this.value = value;
             this.next = null;
         }
     }
 
-    private class LinkedQueueIterator implements Iterator<T> {
-        element<T> current = head;
+    private static class LinkedQueueIterator<T> implements Iterator<T> {
+        Element<T> current;
+
+        LinkedQueueIterator(Element<T> current) {
+            this.current = current;
+        }
 
         @Override
         public boolean hasNext() {
