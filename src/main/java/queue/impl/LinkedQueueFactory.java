@@ -25,11 +25,6 @@ public class LinkedQueueFactory {
             }
 
             @Override
-            public boolean add(Integer integer) {
-                return super.add(integer);
-            }
-
-            @Override
             public Integer poll() {
                 if (first != null) {
                     int item = first.item;
