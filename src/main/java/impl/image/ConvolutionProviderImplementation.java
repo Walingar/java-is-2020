@@ -12,10 +12,11 @@ public class ConvolutionProviderImplementation implements ConvolutionProvider {
         int size = kernel.length;
         int step = size / 2;
         int bluredImageColorAlpha = 255;
-        int bluredImageColorDefault = 0;
+        int imageSizeRow = image.length;
+        int imageSizeColumn = image[0].length;
 
-        for (int i = 0; i < image.length; i++) {
-            for (int j = 0; j < image[0].length; j++) {
+        for (int i = 0; i < imageSizeRow; i++) {
+            for (int j = 0; j < imageSizeColumn; j++) {
                 // bluring
                 int bluredImageColorRed = 0;
                 int bluredImageColorGreen = 0;
@@ -29,15 +30,11 @@ public class ConvolutionProviderImplementation implements ConvolutionProvider {
 
                     while (imageColumn <= j + step && kernelColumn >= 0) {
                         double kernelItem = kernel[kernelRow][kernelColumn];
-                        if (ifInRange(i + imageRow, image.length) && ifInRange(j + imageColumn, image[0].length)) {
+                        if (isInRange(i + imageRow, imageSizeRow) && isInRange(j + imageColumn, imageSizeColumn)) {
                             Color imageColor = image[i + imageRow][j + imageColumn];
                             bluredImageColorRed += imageColor.getRed() * kernelItem;
                             bluredImageColorGreen += imageColor.getGreen() * kernelItem;
                             bluredImageColorBlue += imageColor.getBlue() * kernelItem;
-                        } else {
-                            bluredImageColorRed = Math.max(bluredImageColorDefault, bluredImageColorRed);
-                            bluredImageColorGreen = Math.max(bluredImageColorDefault, bluredImageColorGreen);
-                            bluredImageColorBlue = Math.max(bluredImageColorDefault, bluredImageColorBlue);
                         }
 
                         imageColumn++;
@@ -52,7 +49,7 @@ public class ConvolutionProviderImplementation implements ConvolutionProvider {
         return bluredImage;
     }
 
-    boolean ifInRange(int i, int length) {
+    boolean isInRange(int i, int length) {
         return i >= 0 && i < length;
     }
 }
