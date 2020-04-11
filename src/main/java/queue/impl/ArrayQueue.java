@@ -1,5 +1,7 @@
 package queue.impl;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.AbstractQueue;
 import java.util.Iterator;
 import java.util.Objects;
@@ -77,8 +79,27 @@ public class ArrayQueue extends AbstractQueue<Integer> {
         tail = 0;
     }
 
+    @NotNull
     @Override
     public Iterator<Integer> iterator() {
-        return null;
+        return new Iterator<>() {
+
+            private int current = head;
+
+            @Override
+            public boolean hasNext() {
+                return current != tail;
+            }
+
+            @Override
+            public Integer next() {
+                if (current == tail) {
+                    return null;
+                }
+                int value = values[current];
+                current = (current + 1) % values.length;
+                return value;
+            }
+        };
     }
 }
