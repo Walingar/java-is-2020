@@ -1,5 +1,7 @@
 package queue.impl;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.AbstractQueue;
 import java.util.Iterator;
 import java.util.Objects;
@@ -55,9 +57,28 @@ public class LinkedQueue extends AbstractQueue<Integer> {
         size = 0;
     }
 
+    @NotNull
     @Override
     public Iterator<Integer> iterator() {
-        return null;
+        return new Iterator<>() {
+
+            private Node current = head;
+
+            @Override
+            public boolean hasNext() {
+                return current != null;
+            }
+
+            @Override
+            public Integer next() {
+                if (current == null) {
+                    return null;
+                }
+                int value = current.value;
+                current = current.next;
+                return value;
+            }
+        };
     }
 
     private static class Node {
