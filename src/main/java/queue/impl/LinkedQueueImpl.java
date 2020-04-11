@@ -14,11 +14,6 @@ public class LinkedQueueImpl<T> extends AbstractQueue<T> {
         return new Container<>(t);
     }
 
-    private void bind(Container<T> fst, Container<T> snd) {
-        fst.next = snd;
-        snd.prev = fst;
-    }
-
     @Override
     public Iterator<T> iterator() {
         return new Iterator<T>() {
@@ -52,7 +47,7 @@ public class LinkedQueueImpl<T> extends AbstractQueue<T> {
             tail = box(t);
             head = tail;
         } else {
-            bind(tail, box(t));
+            tail.next = box(t);
             tail = tail.next;
         }
         size++;
@@ -81,7 +76,6 @@ public class LinkedQueueImpl<T> extends AbstractQueue<T> {
         private final T value;
 
         public Container<T> next;
-        public Container<T> prev;
 
         Container(T value) {
             this.value = value;
