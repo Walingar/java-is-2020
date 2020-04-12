@@ -3,12 +3,8 @@ package impl.expression;
 import api.expression.ExpressionParser;
 import api.expression.ParseException;
 
-import java.lang.annotation.AnnotationTypeMismatchException;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Stack;
-
 public class Calculator implements ExpressionParser {
+
     @Override
     public int parse(String expression) throws ParseException {
         if (expression == null || expression.isBlank()) {
@@ -17,21 +13,22 @@ public class Calculator implements ExpressionParser {
         int result = 0;
         var buffer = new StringBuilder();
 
-        for (int i = 0; i < expression.length(); i++) {
-            var curChar = expression.charAt(i);
+        for (var curChar : expression.toCharArray()) {
 
-            if (Character.isSpaceChar(curChar) || curChar == '\n' || curChar == '\t') {
+            if (Character.isWhitespace(curChar)) {
                 continue;
             }
 
-            if (Character.isDigit(curChar) || i == 0) {
+            if (Character.isDigit(curChar)) {
                 buffer.append(curChar);
                 continue;
             }
 
             if (isOperator(curChar)) {
-                result = getTempResult(buffer, result);
-                buffer.setLength(0);
+                if (buffer.length() != 0) {
+                    result = getTempResult(buffer, result);
+                    buffer.setLength(0);
+                }
                 buffer.append(curChar);
             }
         }
@@ -44,17 +41,14 @@ public class Calculator implements ExpressionParser {
         return symbol == '+' || symbol == '-';
     }
 
-    private int getTempResult(StringBuilder buffer, int result) throws ParseException, ArithmeticException {
+    private int getTempResult(StringBuilder buffer, int result) throws ParseException {
         if (buffer.length() == 0) {
             return 0;
         }
-        int digit;
+
         try {
-            digit = Integer.parseInt(buffer.toString());
-            if (digit == Integer.MAX_VALUE || digit == Integer.MIN_VALUE) {
-                throw new ArithmeticException();
-            }
-            result += digit;
+            int number = Integer.parseInt(buffer.toString());
+            result = Math.addExact(result,number);
             return result;
         } catch (NumberFormatException ex) {
             throw new ParseException("Cant parse number to int");
