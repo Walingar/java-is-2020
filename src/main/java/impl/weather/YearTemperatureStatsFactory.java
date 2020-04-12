@@ -4,6 +4,6 @@ import api.weather.YearTemperatureStats;
 
 public class YearTemperatureStatsFactory {
     public static YearTemperatureStats getInstance() {
-        return null;
+        return new YearTemperatureStatsImpl();
     }
 }
