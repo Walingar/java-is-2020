@@ -76,3 +76,9 @@
 `FileEncodingReader` должен уметь возвращать `java.io.Reader` из файла в заданной кодировке.
 
 `FileEncodingWriter` должен уметь создавать файл и записывать в него данные из `InputStream` с кодировкой `dataEncoding` в кодировке `fileEncoding` (`UTF-8`, если `fileEncoding` не передана).
+
+# Домашнее задание 6. Пары
+
+Ваша задача разработать реализации интерфейсов `api.pair.Pair` и `api.pair.NumberPair` и 
+уметь создавать их в методах `impl.pair.PairFactory.of` и `impl.pair.NumberPairFactory.of` соответственно.
+Пары хранят в себе два значения `first` и `second`.
