@@ -33,8 +33,12 @@ public class PairImpl<F, S> implements Pair<F, S> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof PairImpl)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof PairImpl)) {
+            return false;
+        }
         PairImpl<?, ?> pair = (PairImpl<?, ?>) o;
         return Objects.equals(getFirst(), pair.getFirst()) &&
                 Objects.equals(getSecond(), pair.getSecond());
