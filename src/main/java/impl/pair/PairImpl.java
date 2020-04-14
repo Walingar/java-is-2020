@@ -29,7 +29,6 @@ public class PairImpl<T, E> implements Pair {
 
     @Override
     public String toString() {
-        String out = "Pair[ " + first + "," + second + "]";
-        return out;
+        return "Pair[ " + first + "," + second + "]";
     }
 }
