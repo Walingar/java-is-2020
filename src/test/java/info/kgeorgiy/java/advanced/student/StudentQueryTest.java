@@ -1,7 +1,9 @@
 package info.kgeorgiy.java.advanced.student;
 
 import org.junit.Assert;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -18,6 +20,7 @@ import java.util.stream.Stream;
  *
  * @author Georgiy Korneev (kgeorgiy@kgeorgiy.info)
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class StudentQueryTest implements StudentQuery {
     protected static final Random RANDOM = new Random(8458243580324875285L);
     private static final List<String> FIRST_NAMES = List.of("Азат", "Александр", "Александра", "Алексей", "Анастасия", "Анатолий", "Андрей", "Анна", "Антон", "Арсений", "Артем", "Аслан", "Ася", "Благой", "Борис", "Валерия", "Варвара", "Виктор", "Виталий", "Владислав", "Всеволод", "Вячеслав", "Георгий", "Глеб", "Григорий", "Даниил", "Данил", "Дарья", "Демид", "Демьян", "Денис", "Дмитрий", "Евгений", "Егор", "Елизавета", "Захар", "Зоя", "Ибрагим", "Иван", "Идрис", "Илона", "Ильдар", "Илья", "Ирина", "Кирилл", "Константин", "Любовь", "Мадияр", "Максим", "Марина", "Марк", "Михаил", "Мухаммаджон", "Наталья", "Никита", "Николай", "Олег", "Олеся", "Петр", "Равиль", "Рамазан", "Роман", "Руслан", "Семён", "Сергей", "Станислав", "Тарас", "Темирлан", "Тимофей", "Элина", "Эрика", "Юлия", "Юрий", "Ян", "Янис", "Ярослав"
@@ -139,7 +142,7 @@ public class StudentQueryTest implements StudentQuery {
     public List<String> getFirstNames(final List<Student> students) {
         final List<String> result = new ArrayList<>();
         for (final Student student : students) {
-            result.add(student.getLastName());
+            result.add(student.getFirstName());
         }
         return result;
     }
