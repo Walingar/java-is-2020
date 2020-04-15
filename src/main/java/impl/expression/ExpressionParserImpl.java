@@ -20,7 +20,7 @@ public class ExpressionParserImpl implements ExpressionParser {
         }
         try {
             return Integer.parseInt(expression);
-        } catch (ArithmeticException e) {
+        } catch (NumberFormatException e) {
             int result = 0;
             for (int pos = 0; pos < expression.length(); pos++) {
 
