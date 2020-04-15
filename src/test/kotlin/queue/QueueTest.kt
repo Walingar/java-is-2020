@@ -2,8 +2,8 @@ package queue
 
 import junit.framework.TestCase.*
 import org.junit.Test
-import queue.impl.ArrayQueueFactory
-import queue.impl.LinkedQueueFactory
+import queue.factory.ArrayQueueFactory
+import queue.factory.LinkedQueueFactory
 import java.util.*
 
 internal class QueueTest {

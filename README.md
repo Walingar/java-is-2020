@@ -3,7 +3,7 @@
 # Домашнее задание 4. Очередь
 
 Ваша задача разработать реализации интерфейса `java.util.Queue<Integer>` и 
-создать в методах `queue.impl.ArrayQueueFactory.getInstance` и `queue.impl.LinkedQueueFactory.getInstance` 
+создать в методах `queue.factory.ArrayQueueFactory.getInstance` и `queue.factory.LinkedQueueFactory.getInstance` 
 реализации на массиве и связном списке соответственно.
 
 Готовые решения использовать нельзя.
