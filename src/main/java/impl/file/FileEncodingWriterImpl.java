@@ -22,7 +22,11 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
   @Override
   public void write(File file, InputStream data, Charset dataEncoding, Charset fileEncoding) {
     try {
-      createFileFromInputStream(
+      if (!file.exists()) {
+        createFile(file);
+      }
+
+      fillFileFromInputStream(
           file,
           fileEncoding,
           new char[BUFFER_SIZE],
@@ -33,7 +37,12 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
     }
   }
 
-  private void createFileFromInputStream(File file, Charset fileEncoding, char[] buffer, InputStreamReader inputStream) throws IOException {
+  private void createFile(File file) throws IOException {
+    file.getParentFile().mkdirs();
+    file.createNewFile();
+  }
+
+  private void fillFileFromInputStream(File file, Charset fileEncoding, char[] buffer, InputStreamReader inputStream) throws IOException {
     int readBytes;
     try (FileWriter outputFileStream = new FileWriter(file, fileEncoding)) {
       while ((readBytes = inputStream.read(buffer, 0, buffer.length)) != -1) {
