@@ -4,11 +4,13 @@ import java.util.*;
 
 public class ArrayQueueImpl<T> extends AbstractQueue<T> {
 
-    private final static int CAPACITY = 20000;
+    private final static int MIN_CAPACITY = 16;
+    private final static int MULTIPLIER = 2;
 
     private int size = 0;
     private int head = 0;
-    private final Object[] queue = new Object[CAPACITY];
+    private int capacity = MIN_CAPACITY;
+    private Object[] queue = new Object[MIN_CAPACITY];
 
     @Override
     public Iterator<T> iterator() {
@@ -22,8 +24,8 @@ public class ArrayQueueImpl<T> extends AbstractQueue<T> {
 
     @Override
     public boolean offer(T t) {
-        if (size == CAPACITY) {
-            return false;
+        if (size == capacity) {
+            updateArray(true);
         }
         queue[getIndex(head + size)] = t;
         size++;
@@ -37,9 +39,15 @@ public class ArrayQueueImpl<T> extends AbstractQueue<T> {
         }
 
         size--;
-        var oldHead = head;
+        var value = queue[head];
+        queue[head] = null;
         head = getIndex(head + 1);
-        return (T) queue[oldHead];
+
+        if (size == capacity / MULTIPLIER && size >= MIN_CAPACITY) {
+            updateArray(false);
+        }
+
+        return (T) value;
     }
 
     @Override
@@ -48,7 +56,7 @@ public class ArrayQueueImpl<T> extends AbstractQueue<T> {
     }
 
     private int getIndex(int x) {
-        return x % CAPACITY;
+        return x % capacity;
     }
 
     private class ArrayQueueIterator implements Iterator<T> {
@@ -68,5 +76,17 @@ public class ArrayQueueImpl<T> extends AbstractQueue<T> {
             current = getIndex(current + 1);
             return value;
         }
+    }
+
+    private void updateArray(boolean enlarge) {
+        var newCapacity = enlarge ? capacity * MULTIPLIER : capacity / MULTIPLIER;
+        Object[] newQueue = new Object[newCapacity];
+        var firstPartSize = size - head + (enlarge ? 0 : 1);
+        var secondPartSize = size - firstPartSize;
+        System.arraycopy(queue, head, newQueue, 0, firstPartSize);
+        System.arraycopy(queue, 0, newQueue, firstPartSize, secondPartSize);
+        head = 0;
+        capacity = newCapacity;
+        queue = newQueue;
     }
 }
