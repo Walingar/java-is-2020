@@ -26,8 +26,13 @@ public class ArrayQueueFactory {
             public Integer poll() {
                 if (sizeMas > 0) {
                     int temp = mas[0];
-                    System.arraycopy(mas, 1, mas, 0, sizeMas - 1);
-                    sizeMas--;
+                    if (mas.length - mas.length/3 >= --sizeMas) {
+                        int[] newMas = new int[mas.length-mas.length/4];
+                        System.arraycopy(mas, 1, newMas, 0, sizeMas);
+                        mas = newMas;
+                    } else {
+                        System.arraycopy(mas, 1, mas, 0, sizeMas);
+                    }
                     return temp;
                 }
                 return null;

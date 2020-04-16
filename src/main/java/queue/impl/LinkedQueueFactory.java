@@ -9,17 +9,16 @@ public class LinkedQueueFactory {
         var linkedQueueInt = new AbstractQueue<Integer>() {
 
             private Link first = null;
+            private Link last = null;
 
             @Override
             public boolean offer(Integer integer) {
                 if (first == null) {
                     first = new Link(integer);
+                    last = first;
                 } else {
-                    Link current = first;
-                    while (current.next != null) {
-                        current = current.next;
-                    }
-                    current.next = new Link(integer);
+                    last.next = new Link(integer);
+                    last = last.next;
                 }
                 return true;
             }
@@ -29,6 +28,9 @@ public class LinkedQueueFactory {
                 if (first != null) {
                     int item = first.item;
                     first = first.next;
+                    if (first == null) {
+                        last = null;
+                    }
                     return item;
                 }
                 return null;
