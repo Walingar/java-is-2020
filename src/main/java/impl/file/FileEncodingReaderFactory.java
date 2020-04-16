@@ -4,6 +4,7 @@ import api.file.FileEncodingReader;
 
 public class FileEncodingReaderFactory {
     public static FileEncodingReader getInstance() {
-        return null;
+        return new FileEncodingReaderImpl();
+
     }
 }
