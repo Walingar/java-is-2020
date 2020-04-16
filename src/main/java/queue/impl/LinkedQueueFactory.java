@@ -4,6 +4,6 @@ import java.util.Queue;
 
 public class LinkedQueueFactory {
     public static Queue<Integer> getInstance() {
-        return null;
+        return new QueueLinkedImpl();
     }
 }
