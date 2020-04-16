@@ -1,7 +1,8 @@
 package queue.impl;
 
 import java.util.AbstractQueue;
-import java.util.*;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 public class QueueArrayImpl extends AbstractQueue<Integer> {
     private Integer[] queue;
@@ -12,9 +13,9 @@ public class QueueArrayImpl extends AbstractQueue<Integer> {
     private int coefficient;
 
     QueueArrayImpl() {
-        queue = new Integer[capacity];
         capacity = 1;
         coefficient = 2;
+        queue = new Integer[capacity];
         size = 0;
         begin = 0;
         end = 0;
@@ -23,13 +24,13 @@ public class QueueArrayImpl extends AbstractQueue<Integer> {
     private class ArrayQueueIterator implements Iterator {
         private int currentIndex;
 
-        ArrayQueueIterator() {
-            currentIndex = begin;
-        }
-
         @Override
         public boolean hasNext() {
             return currentIndex < end;
+        }
+
+        ArrayQueueIterator() {
+            currentIndex = begin;
         }
 
         @Override
@@ -50,13 +51,13 @@ public class QueueArrayImpl extends AbstractQueue<Integer> {
     }
 
     @Override
-    public Iterator iterator() {
-        return new ArrayQueueIterator();
+    public int size() {
+        return size;
     }
 
     @Override
-    public int size() {
-        return size;
+    public Iterator iterator() {
+        return new ArrayQueueIterator();
     }
 
     @Override
