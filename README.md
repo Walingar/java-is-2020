@@ -3,7 +3,7 @@
 # Домашнее задание 5. Файлы и Кодировки
 
 Ваша задача разработать реализации интерфейсов `api.file.FileEncodingReader` и `api.file.FileEncodingWriter` и 
-создать их в методах `impl.file.FileEncodingReaderFactory.getInstance` и `impl.file.FileEncodingWriterFactory.getInstance` соответственно.
+создать их в методах `factory.file.FileEncodingReaderFactory.getInstance` и `factory.file.FileEncodingWriterFactory.getInstance` соответственно.
 
 `FileEncodingReader` должен уметь возвращать `java.io.Reader` из файла в заданной кодировке.
 

@@ -1,6 +1,6 @@
 package file
 
-import impl.file.FileEncodingWriterFactory
+import factory.file.FileEncodingWriterFactory
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
 import org.junit.Test
