@@ -49,7 +49,9 @@ public class StudentQueryImpl implements StudentQuery {
 
     @Override
     public List<Student> sortStudentsByName(Collection<Student> students) {
-        return (List<Student>) getSortedCollection(students, STUDENT_COMPARATOR);
+        return (List<Student>) getSortedCollection(students, Comparator.comparing(Student::getLastName)
+                .thenComparing(Student::getFirstName)
+                .thenComparing(Student::getId));
     }
 
     @Override
@@ -76,19 +78,6 @@ public class StudentQueryImpl implements StudentQuery {
                         )
                 );
     }
-
-
-    private static final Comparator<Student> STUDENT_COMPARATOR = (a, b) -> {
-        final int last = a.getLastName().compareTo(b.getLastName());
-        if (last != 0) {
-            return last;
-        }
-        final int first = a.getFirstName().compareTo(b.getFirstName());
-        if (first != 0) {
-            return first;
-        }
-        return Integer.compare(a.getId(), b.getId());
-    };
 
 
     private <T, R> Collection<R> getMappedCollection(Collection<T> collection, Function<T, R> function) {
