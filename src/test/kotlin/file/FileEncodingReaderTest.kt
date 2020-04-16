@@ -1,7 +1,7 @@
 package file
 
-import impl.file.FileEncodingReaderFactory
-import impl.file.FileEncodingWriterFactory
+import factory.file.FileEncodingReaderFactory
+import factory.file.FileEncodingWriterFactory
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 import java.nio.charset.Charset
