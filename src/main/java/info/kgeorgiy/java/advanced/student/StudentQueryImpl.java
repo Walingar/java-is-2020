@@ -1,7 +1,7 @@
 package info.kgeorgiy.java.advanced.student;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 public class StudentQueryImpl implements StudentQuery {
@@ -67,6 +67,6 @@ public class StudentQueryImpl implements StudentQuery {
     @Override
     public Map<String, String> findStudentNamesByGroup(Collection<Student> students, String group) {
         return findStudentsByGroup(students, group).stream()
-                .collect(Collectors.toMap(Student::getLastName, Student::getFirstName, (s1, s2) -> s1));
+                .collect(Collectors.toMap(Student::getLastName, Student::getFirstName, BinaryOperator.minBy(Comparable::compareTo)));
     }
 }
