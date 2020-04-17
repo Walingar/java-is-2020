@@ -65,7 +65,7 @@ public class StudentQueryImpl implements StudentQuery {
     }
 
     @Override
-    public Map<String, String> findStudentNamesByGroup(Collection<Student> students, String group) { 
+    public Map<String, String> findStudentNamesByGroup(Collection<Student> students, String group) {
         return findStudentsByGroup(students, group).stream()
                 .collect(Collectors.toMap(Student::getLastName, Student::getFirstName, (s1, s2) -> s1));
     }
