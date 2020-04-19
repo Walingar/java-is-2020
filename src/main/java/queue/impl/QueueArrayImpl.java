@@ -4,33 +4,14 @@ import java.util.*;
 
 import static java.lang.Math.min;
 
-public class QueueArrayImpl extends AbstractQueue implements Queue {
+public class QueueArrayImpl extends AbstractQueue<Integer> implements Queue<Integer> {
     private Integer[] queue;
     private int capacity;
-    private int capacityMultiplier;
+    private final int capacityMultiplier;
     private int size;
     private int begin;
     private int end;
 
-    private class QueueArrayIterator implements Iterator {
-
-        private int currentElementIndex;
-
-        QueueArrayIterator(int begin) {
-            currentElementIndex = begin - 1;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return isIndexInside(currentElementIndex + 1);
-        }
-
-        @Override
-        public Object next() {
-            currentElementIndex++;
-            return getElementAt(currentElementIndex);
-        }
-    }
 
     QueueArrayImpl() {
         capacity = 1;
@@ -42,7 +23,7 @@ public class QueueArrayImpl extends AbstractQueue implements Queue {
     }
 
     @Override
-    public Iterator iterator() {
+    public Iterator<Integer> iterator() {
         return new QueueArrayIterator(begin);
     }
 
@@ -51,23 +32,13 @@ public class QueueArrayImpl extends AbstractQueue implements Queue {
         return size;
     }
 
-    private void rearrangeQueue(Set<Integer> unused) {
-        if (unused == null) {
-            unused = new HashSet<>();
-        }
-        if (begin == 0 && unused.isEmpty()) {
+    private void rearrangeQueue() {
+        if (begin == 0) {
             return;
         }
-        Integer[] newQueue = new Integer[size];
-        end = 0;
-        for (int i = 0; i < size; i++) {
-            if (!unused.contains(begin + i)) {
-                newQueue[i] = queue[begin + i];
-                end++;
-            }
-        }
+        setRange(queue, queue, begin, size);
         begin = 0;
-        arrayCopy(newQueue, queue);
+        end = size;
     }
 
     private boolean isIndexInside(int index) {
@@ -82,44 +53,70 @@ public class QueueArrayImpl extends AbstractQueue implements Queue {
         }
     }
 
-    private void arrayCopy(Object[] from, Object[] to) {
-        System.arraycopy(from, 0, to, 0, min(from.length, to.length));
+    private void setRange(Integer[] from, Integer[] to, int begin, int size) {
+        System.arraycopy(from, begin, to, 0, size);
     }
 
-    private void reallocateMemory() {
-        rearrangeQueue(null);
-        Integer[] temp = new Integer[capacity];
-        arrayCopy(queue, temp);
-        capacity *= capacityMultiplier;
+    private void reallocateMemory(int newCapacity) {
+        rearrangeQueue();
+        Integer[] temp = new Integer[size];
+        setRange(queue, temp, 0, size);
+        capacity = newCapacity;
         queue = new Integer[capacity];
-        arrayCopy(temp, queue);
+        setRange(temp, queue, 0, size);
     }
 
     @Override
-    public boolean offer(Object o) {
+    public boolean offer(Integer o) {
         if (end == capacity) {
-            reallocateMemory();
+            reallocateMemory(capacity * capacityMultiplier);
         }
-        queue[end] = (Integer) o;
+        queue[end] = o;
         size++;
         end++;
         return true;
     }
 
     @Override
-    public Object poll() {
+    public Integer poll() {
         if (size == 0) {
             return null;
         }
         size--;
-        return queue[begin++];
+        int returnValue = queue[begin];
+        begin++;
+        if (size < capacity / capacityMultiplier && capacity % capacityMultiplier == 0) {
+            reallocateMemory(capacity / capacityMultiplier);
+        }
+        return returnValue;
     }
 
     @Override
-    public Object peek() {
-        if (size() == 0) {
+    public Integer peek() {
+        if (size == 0) {
             return null;
         }
         return queue[begin];
     }
+
+    private class QueueArrayIterator implements Iterator<Integer> {
+
+        private int currentElementIndex;
+
+        QueueArrayIterator(int begin) {
+            currentElementIndex = begin - 1;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return isIndexInside(currentElementIndex + 1);
+        }
+
+        @Override
+        public Integer next() {
+            currentElementIndex++;
+            return getElementAt(currentElementIndex);
+        }
+    }
+
 }
