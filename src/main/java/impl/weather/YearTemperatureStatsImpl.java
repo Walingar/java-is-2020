@@ -3,14 +3,13 @@ package impl.weather;
 import api.weather.DayTemperatureInfo;
 import api.weather.YearTemperatureStats;
 
+import java.text.DateFormatSymbols;
 import java.time.Month;
 import java.util.*;
 import java.util.List;
 
 public class YearTemperatureStatsImpl implements YearTemperatureStats {
-    private final Map<Month, Map<Integer, DayTemperatureInfo>> status = new HashMap<>();
-    private final Average average = new Average();
-    private final Max maxTemperature = new Max();
+    private final Map<Month, Info> status = new HashMap<>();
 
     @Override
     public void updateStats(DayTemperatureInfo info) {
@@ -18,42 +17,56 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
         Month month = info.getMonth();
         int temperature = info.getTemperature();
         if (!status.containsKey(month)) {
-            status.put(month, new HashMap<>());
+            status.put(month, new Info());
         }
-        status.get(month).put(day, info);
-        average.updateAverage(month, temperature);
-        maxTemperature.updateMaxValue(month, temperature);
-
+        Info current = status.get(month);
+        current.updateAverage(temperature);
+        current.updateMaxValue(temperature);
+        status.get(month).set(day, info);
     }
 
     @Override
     public Double getAverageTemperature(Month month) {
-        return this.average.getAverageTemp(month);
+        Info current = status.get(month);
+        if (current == null) {
+            return null;
+        }
+        return this.status.get(month).getAverageTemp();
     }
 
     @Override
     public Map<Month, Integer> getMaxTemperature() {
-        return this.maxTemperature.getMaxTemperature();
+        Map<Month, Integer> ans = new HashMap<>();
+        for (int i = 1; i <= 12; i++) {
+            Month month = Month.of(i);
+            Integer current;
+            if (!status.containsKey(month)) {
+                continue;
+            }
+            current = status.get(month).getMaxTemperature();
+            ans.put(month, current);
+        }
+        return ans;
     }
 
     @Override
     public List<DayTemperatureInfo> getSortedTemperature(Month month) {
-        if (status.getOrDefault(month, null) == null) {
+        Info current;
+        current = status.get(month);
+        if (current == null) {
             return new ArrayList<>();
         }
-        Map<Integer, DayTemperatureInfo> temperatureInfo;
-        temperatureInfo = status.getOrDefault(month, null);
-        ArrayList<DayTemperatureInfo> sortedTemperature = new ArrayList<>(temperatureInfo.values());
+        List<DayTemperatureInfo> sortedTemperature = new ArrayList<>(current.getInfo().values());
         sortedTemperature.sort(new DayTemperatureInfoComperator());
         return sortedTemperature;
     }
 
     @Override
     public DayTemperatureInfo getTemperature(int day, Month month) {
-        Map<Integer, DayTemperatureInfo> temperatureInfo = status.getOrDefault(month, null);
-        if (temperatureInfo == null) {
+        Info current = status.get(month);
+        if (current == null) {
             return null;
         }
-        return temperatureInfo.getOrDefault(day, null);
+        return current.getInfo().getOrDefault(day, null);
     }
 }
