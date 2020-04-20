@@ -1,5 +1,7 @@
 package queue.impl;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
 
 public class ArrayQueueImpl<T> extends AbstractQueue<T> {
@@ -7,7 +9,7 @@ public class ArrayQueueImpl<T> extends AbstractQueue<T> {
     private static final int DEFAULT_CAPACITY = 10_001; // Picked by a dice roll =)
     private static final int CAPACITY_CHANGE_RATE = 2;
     private int capacity;
-    private final boolean blocking;
+    private final boolean fixed;
     private Object[] items;
     private int head;
     private int tail;
@@ -20,10 +22,10 @@ public class ArrayQueueImpl<T> extends AbstractQueue<T> {
         this(capacity, true);
     }
 
-    public ArrayQueueImpl(int capacity, boolean blocking) {
+    public ArrayQueueImpl(int capacity, boolean fixed) {
         this.capacity = capacity;
         this.items = new Object[capacity];
-        this.blocking = blocking;
+        this.fixed = fixed;
     }
 
     private void extendCapacity() throws ArithmeticException { // Explicitly notify that we can throw here
@@ -42,24 +44,9 @@ public class ArrayQueueImpl<T> extends AbstractQueue<T> {
     }
 
     @Override
+    @NotNull
     public Iterator<T> iterator() {
-        return new Iterator<T>() {
-            private int iteratorHead = head;
-
-            @Override
-            public boolean hasNext() {
-                return iteratorHead != tail;
-            }
-
-            @Override
-            @SuppressWarnings("unchecked")
-            public T next() {
-                if (iteratorHead == tail) {
-                    throw new NoSuchElementException("");
-                }
-                return (T) items[iteratorHead++];
-            }
-        };
+        return new ArrayQueueIterator();
     }
 
     @Override
@@ -70,7 +57,7 @@ public class ArrayQueueImpl<T> extends AbstractQueue<T> {
     @Override
     public boolean offer(T t) {
         if (tail >= capacity) {
-            if (blocking) {
+            if (fixed) {
                 return false;
             } else {
                 try {
@@ -104,5 +91,23 @@ public class ArrayQueueImpl<T> extends AbstractQueue<T> {
     @SuppressWarnings("unchecked")
     public T peek() {
         return (T) items[head];
+    }
+
+    private class ArrayQueueIterator implements Iterator<T> {
+        private int iteratorHead = head;
+
+        @Override
+        public boolean hasNext() {
+            return iteratorHead != tail;
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public T next() {
+            if (iteratorHead == tail) {
+                throw new NoSuchElementException("");
+            }
+            return (T) items[iteratorHead++];
+        }
     }
 }

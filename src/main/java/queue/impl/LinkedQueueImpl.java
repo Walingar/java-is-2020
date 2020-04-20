@@ -1,5 +1,7 @@
 package queue.impl;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.AbstractQueue;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -7,33 +9,17 @@ import java.util.NoSuchElementException;
 public class LinkedQueueImpl<T> extends AbstractQueue<T> {
 
     private int size = 0;
-    private Container<T> head = null;
-    private Container<T> tail = null;
+    private Node<T> head = null;
+    private Node<T> tail = null;
 
-    private Container<T> box(T t) {
-        return new Container<>(t);
+    private Node<T> box(T t) {
+        return new Node<>(t);
     }
 
     @Override
+    @NotNull
     public Iterator<T> iterator() {
-        return new Iterator<T>() {
-            private Container<T> iteratorHead = head;
-
-            @Override
-            public boolean hasNext() {
-                return iteratorHead != null;
-            }
-
-            @Override
-            public T next() {
-                if (iteratorHead == null) {
-                    throw new NoSuchElementException("");
-                }
-                var value = iteratorHead.value;
-                iteratorHead = iteratorHead.next;
-                return value;
-            }
-        };
+        return new LinkedQueueIterator();
     }
 
     @Override
@@ -56,8 +42,9 @@ public class LinkedQueueImpl<T> extends AbstractQueue<T> {
 
     @Override
     public T poll() {
-        if (size == 0)
+        if (size == 0) {
             return null;
+        }
         var value = head.value;
         head = head.next;
         size--;
@@ -72,13 +59,32 @@ public class LinkedQueueImpl<T> extends AbstractQueue<T> {
         return head.value;
     }
 
-    private static class Container<T> {
+    private static class Node<T> {
         private final T value;
 
-        public Container<T> next;
+        public Node<T> next;
 
-        Container(T value) {
+        Node(T value) {
             this.value = value;
+        }
+    }
+
+    private class LinkedQueueIterator implements Iterator<T> {
+        private Node<T> iteratorHead = head;
+
+        @Override
+        public boolean hasNext() {
+            return iteratorHead != null;
+        }
+
+        @Override
+        public T next() {
+            if (iteratorHead == null) {
+                throw new NoSuchElementException("");
+            }
+            var value = iteratorHead.value;
+            iteratorHead = iteratorHead.next;
+            return value;
         }
     }
 
