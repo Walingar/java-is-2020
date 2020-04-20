@@ -37,7 +37,7 @@ public class ArrayQueue extends AbstractQueue<Integer> {
             return null;
         }
         int value = values[head];
-        head = (head + 1) % values.length;
+        head = getNextPositionOfValuesPointer(head);
         return value;
     }
 
@@ -51,18 +51,13 @@ public class ArrayQueue extends AbstractQueue<Integer> {
             }
         }
         values[tail] = element;
-        tail = (tail + 1) % values.length;
+        tail = getNextPositionOfValuesPointer(tail);
         return true;
     }
 
     private boolean extendValues() {
-        ArrayQueue extendedQueue;
-        try {
-            int newCapacity = Math.multiplyExact(values.length, 2);
-            extendedQueue = new ArrayQueue(newCapacity);
-        } catch (Exception e) {
-            return false;
-        }
+        int newCapacity = values.length * 2;
+        ArrayQueue extendedQueue = new ArrayQueue(newCapacity);
         Integer element;
         while ((element = poll()) != null) {
             extendedQueue.add(element);
@@ -97,9 +92,13 @@ public class ArrayQueue extends AbstractQueue<Integer> {
                     return null;
                 }
                 int value = values[current];
-                current = (current + 1) % values.length;
+                current = getNextPositionOfValuesPointer(current);
                 return value;
             }
         };
+    }
+
+    private int getNextPositionOfValuesPointer(int currentPosition) {
+        return (currentPosition + 1) % values.length;
     }
 }
