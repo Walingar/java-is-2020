@@ -23,18 +23,17 @@ public final class ExpressionParserImpl implements ExpressionParser {
                 try {
                     operand = Math.addExact(Math.multiplyExact(operand, 10), Character.getNumericValue(symbol));
                 } catch (ArithmeticException e) {
-                    throw new ParseException("expression contains too large (or small) number");
+                    throw new ParseException("expression contains too large (or small) number at " + position);
                 }
             } else if (symbol == '+' || symbol == '-') {
                 computeLastOperation();
                 if (symbol == '+') {
                     sign = 1;
-                }
-                if (symbol == '-') {
+                } else {
                     sign = -1;
                 }
             } else {
-                throw new ParseException("unexpected symbol \"" + symbol + "\" found");
+                throw new ParseException("unexpected symbol \"" + symbol + "\" found at " + position);
             }
         }
         computeLastOperation();
