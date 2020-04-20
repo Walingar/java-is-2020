@@ -23,7 +23,7 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
     public void write(File file, InputStream data, Charset dataEncoding, Charset fileEncoding) {
         var parent = file.getParentFile();
         if (parent != null && !parent.exists()) {
-            if(!parent.mkdirs()){
+            if (!parent.mkdirs()) {
                 // It makes sense to throw here... Hmm...
                 System.err.println("Could not create directory for the file");
             }
