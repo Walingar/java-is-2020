@@ -1,5 +1,6 @@
 package impl.file;
 
+import api.file.FileEncodingException;
 import api.file.FileEncodingWriter;
 
 import java.io.*;
@@ -23,17 +24,17 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
             }
             doWrite(file, data, dataEncoding, fileEncoding);
         } catch (IOException e) {
-            throw new RuntimeException("An error occurred when writing to file: " + e.getMessage());
+            throw new FileEncodingException("An error occurred when writing to file", e);
         }
     }
 
     private void doWrite(File file, InputStream data, Charset dataEncoding, Charset fileEncoding) throws IOException {
-        try (var reader = new BufferedReader(new InputStreamReader(data, dataEncoding))) {
-            try (var writer = new FileWriter(file, fileEncoding)) {
-                int character;
-                while ((character = reader.read()) >= 0) {
-                    writer.write(character);
-                }
+        try (var reader = new BufferedReader(new InputStreamReader(data, dataEncoding));
+             var writer = new FileWriter(file, fileEncoding)
+        ) {
+            int character;
+            while ((character = reader.read()) >= 0) {
+                writer.write(character);
             }
         }
     }

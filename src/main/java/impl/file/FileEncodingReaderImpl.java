@@ -1,5 +1,6 @@
 package impl.file;
 
+import api.file.FileEncodingException;
 import api.file.FileEncodingReader;
 
 import java.io.File;
@@ -15,7 +16,7 @@ public class FileEncodingReaderImpl implements FileEncodingReader {
         try {
             return new FileReader(file, fileEncoding);
         } catch (IOException e) {
-            throw new RuntimeException("Unable to open file for reading: " + e.getMessage());
+            throw new FileEncodingException("Unable to open file for reading", e);
         }
     }
 }
