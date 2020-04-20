@@ -8,7 +8,7 @@ import java.nio.charset.StandardCharsets;
 
 public class FileEncodingWriterImpl implements FileEncodingWriter {
 
-    private final int Size = 512;
+    private final int size = 512;
 
     @Override
     public void write(File file, InputStream data, Charset dataEncoding) {
@@ -18,14 +18,18 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
     @Override
     public void write(File file, InputStream data, Charset dataEncoding, Charset fileEncoding) {
         if (!file.exists()) {
+            boolean created = false;
             var parent = file.getParentFile();
             if (parent != null && !parent.exists()) {
-                parent.mkdirs();
+                created = parent.mkdirs();
+            }
+            if(!created){
+                System.err.println("Unable to create a File");
             }
         }
         try (FileWriter writer = new FileWriter(file, fileEncoding);
              InputStreamReader reader = new InputStreamReader(data, dataEncoding)) {
-            char[] input = new char[Size];
+            char[] input = new char[size];
             while (true) {
                 int numBytes = reader.read(input);
                 if (numBytes == -1) {
