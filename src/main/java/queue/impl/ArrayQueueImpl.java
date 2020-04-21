@@ -7,7 +7,7 @@ import java.util.*;
 public class ArrayQueueImpl<T> extends AbstractQueue<T> {
 
     private static final int DEFAULT_CAPACITY = 10_001; // Picked by a dice roll =)
-    private static final int CAPACITY_CHANGE_RATE = 2;
+    private static final int CAPACITY_CHANGE_RATE = 4;
     private int capacity;
     private final boolean fixed;
     private Object[] items;
