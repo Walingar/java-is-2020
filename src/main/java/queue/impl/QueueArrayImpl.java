@@ -85,8 +85,9 @@ public class QueueArrayImpl extends AbstractQueue<Integer> implements Queue<Inte
         size--;
         int returnValue = queue[begin];
         begin++;
-        if (size < capacity / capacityMultiplier && capacity % capacityMultiplier == 0) {
-            reallocateMemory(capacity / capacityMultiplier);
+        int minimalCapacityUpdateSize = capacity / capacityMultiplier / capacityMultiplier;
+        if (size < minimalCapacityUpdateSize && capacity % capacityMultiplier == 0) {
+            reallocateMemory(minimalCapacityUpdateSize);
         }
         return returnValue;
     }
