@@ -1,7 +1,7 @@
 package api.pair;
 
-public interface Pair<T, K> {
-    T getFirst();
+public interface Pair<K, T> {
+    K getFirst();
 
-    K getSecond();
+    T getSecond();
 }
