@@ -6,7 +6,7 @@ import java.util.AbstractQueue;
 import java.util.Iterator;
 
 public class ArrayQueueImpl extends AbstractQueue<Integer> {
-    private int[] mas = new int[50000];
+    private int[] mas = new int[5];
     private int size = 0;
 
     @NotNull
@@ -39,22 +39,28 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
 
     @Override
     public boolean offer(Integer integer) {
-        if (size + 1 <= mas.length) {
-            mas[size] = integer;
-            size++;
-            return true;
-        } else {
-            System.out.println("Error! There is no place to insert new element");
-            return false;
+        if (size == mas.length) {
+            int[] newMas = new int[size * 2];
+            System.arraycopy(mas, 0, newMas, 0, mas.length);
+            mas = newMas;
         }
+        mas[size] = integer;
+        size++;
+        return true;
     }
 
     @Override
     public Integer poll() {
         if (size > 0) {
             Integer polledElement = mas[0];
-            System.arraycopy(mas, 1, mas, 0, size - 1);
             size--;
+            if (size < mas.length / 2) {
+                int[] newMas = new int[size + 1];
+                System.arraycopy(mas, 1, newMas, 0, size);
+                mas = newMas;
+            } else {
+                System.arraycopy(mas, 1, mas, 0, size);
+            }
             return polledElement;
         } else {
             System.out.println("Nothing to poll! There are no elements in the queue");
