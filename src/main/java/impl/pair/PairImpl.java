@@ -3,7 +3,6 @@ package impl.pair;
 import api.pair.Pair;
 
 import java.util.Objects;
-import java.util.logging.StreamHandler;
 
 public class PairImpl<T, K> implements Pair<T, K> {
 
