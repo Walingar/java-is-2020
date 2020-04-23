@@ -12,8 +12,8 @@ public class YearTemperatureStatsParserImpl implements YearTemperatureStatsParse
     public YearTemperatureStats parse(Collection<String> rawData) {
         YearTemperatureStats output = new YearTemperatureStatsImpl();
 
-        for (var i : rawData) {
-            var blankSplit = i.split("[ ]");
+        for (var inputString : rawData) {
+            var blankSplit = inputString.split("[ ]");
             var temperature = Integer.parseInt(blankSplit[1]);
             var pointSplit = blankSplit[0].split("[.]");
             var day = Integer.parseInt(pointSplit[0]);
