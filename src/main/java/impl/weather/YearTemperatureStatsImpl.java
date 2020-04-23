@@ -8,9 +8,9 @@ import java.util.*;
 
 public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
-    private HashMap<Month, LinkedHashMap<Integer, DayTemperatureInfo>> yearTemperatureInfo = new HashMap<>();
-    private HashMap<Month, Integer> maxTemperatureInfo = new HashMap<>();
-    private HashMap<Month, Double> averageTemperatureInfo = new HashMap<>();
+    private final Map<Month, LinkedHashMap<Integer, DayTemperatureInfo>> yearTemperatureInfo = new HashMap<>();
+    private Map<Month, Integer> maxTemperatureInfo = new HashMap<>();
+    private Map<Month, Double> averageTemperatureInfo = new HashMap<>();
 
     @Override
     public void updateStats(DayTemperatureInfo info) {
