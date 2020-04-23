@@ -22,17 +22,16 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
             }
             writeFunction(file, data, dataEncoding, fileEncoding);
         } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException("Unable to create a directory or write to file:" + file.getPath() + ", " + e.getMessage());
         }
     }
 
     private void writeFunction(File file, InputStream data, Charset dataEncoding, Charset fileEncoding) throws IOException {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(data, dataEncoding))) {
-            try (FileWriter writer = new FileWriter(file, fileEncoding)) {
-                int symbol;
-                while ((symbol = reader.read()) >= 0) {
-                    writer.write(symbol);
-                }
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(data, dataEncoding));
+             FileWriter writer = new FileWriter(file, fileEncoding)) {
+            int symbol;
+            while ((symbol = reader.read()) >= 0) {
+                writer.write(symbol);
             }
         }
     }
