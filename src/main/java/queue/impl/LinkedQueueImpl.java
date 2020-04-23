@@ -1,17 +1,20 @@
 package queue.impl;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.AbstractQueue;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class LinkedQueueImpl<Integer> extends AbstractQueue<Integer> {
-    private Element<Integer> head = null;
-    private Element<Integer> tail = null;
+public class LinkedQueueImpl extends AbstractQueue<Integer> {
+    private Element head = null;
+    private Element tail = null;
     private int size = 0;
 
+    @NotNull
     @Override
     public Iterator<Integer> iterator() {
-        return new QueueIterator<>(head);
+        return new QueueIterator(head);
     }
 
     @Override
@@ -21,7 +24,7 @@ public class LinkedQueueImpl<Integer> extends AbstractQueue<Integer> {
 
     @Override
     public boolean offer(Integer value) {
-        var newElement = new Element<>(value, null);
+        var newElement = new Element(value, null);
 
         if (tail == null) {
             head = newElement;
@@ -56,20 +59,20 @@ public class LinkedQueueImpl<Integer> extends AbstractQueue<Integer> {
         return head == null ? null : head.value;
     }
 
-    private static class Element<Integer> {
+    private static class Element {
         private final Integer value;
-        private Element<Integer> next;
+        private Element next;
 
-        Element(Integer value, Element<Integer> next) {
+        Element(Integer value, Element next) {
             this.value = value;
             this.next = next;
         }
     }
 
-    private static class QueueIterator<Integer> implements Iterator<Integer> {
-        private Element<Integer> currentElement;
+    private static class QueueIterator implements Iterator<Integer> {
+        private Element currentElement;
 
-        QueueIterator(Element<Integer> head) {
+        QueueIterator(Element head) {
             currentElement = head;
         }
 
