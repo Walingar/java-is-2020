@@ -1,16 +1,19 @@
 package queue.impl;
 
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.AbstractQueue;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class LinkedQueueImpl<Integer> extends AbstractQueue<Integer> {
+public class LinkedQueueImpl extends AbstractQueue<Integer> {
 
     private Point<Integer> head = null;
     private Point<Integer> tail = null;
     private int size = 0;
 
+    @NotNull
     @Override
     public Iterator<Integer> iterator() {
         return new QueueIterator();

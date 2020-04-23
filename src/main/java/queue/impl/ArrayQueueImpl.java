@@ -1,10 +1,12 @@
 package queue.impl;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.AbstractQueue;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class ArrayQueueImpl<Integer> extends AbstractQueue<Integer> {
+public class ArrayQueueImpl extends AbstractQueue<Integer> {
 
     private static final int START_CAPACITY = 16;
     private static final double FACTOR = 2;
@@ -16,6 +18,7 @@ public class ArrayQueueImpl<Integer> extends AbstractQueue<Integer> {
     private int head = 0;
     private int tail = 0;
 
+    @NotNull
     @Override
     public Iterator<Integer> iterator() {
         return new QueueIterator();
