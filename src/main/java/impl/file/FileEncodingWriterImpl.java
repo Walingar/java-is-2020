@@ -19,7 +19,9 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
         var path = Paths.get(file.getParent());
         try {
             Files.createDirectories(path);
-            file.createNewFile();
+            if (!file.createNewFile()) {
+                System.out.println(file.getPath() + " already exists");
+            }
         } catch (IOException e) {
             System.out.println("File / Directory creating error");
         }
