@@ -8,67 +8,53 @@ import java.util.*;
 
 public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
-    private final Map<Month, LinkedHashMap<Integer, DayTemperatureInfo>> yearTemperatureInfo = new HashMap<>();
-    private Map<Month, Integer> maxTemperatureInfo = new HashMap<>();
-    private Map<Month, Double> averageTemperatureInfo = new HashMap<>();
+    private final Map<Month, MonthTemperatureInfo> yearTemperatureInfo = new HashMap<>();
 
     @Override
     public void updateStats(DayTemperatureInfo info) {
-        int day = info.getDay();
         Month month = info.getMonth();
-        int temperature = info.getTemperature();
-
 
         if (!yearTemperatureInfo.containsKey(month)) {
-            yearTemperatureInfo.put(month, new LinkedHashMap<>());
-            maxTemperatureInfo.put(month, temperature);
-            averageTemperatureInfo.put(month, (double) temperature);
-
+            yearTemperatureInfo.put(month, new MonthTemperatureInfo());
         }
 
-        yearTemperatureInfo.get(month).put(day, info);
-
-        int monthSize = yearTemperatureInfo.get(month).size();
-
-        if (monthSize > 1) {
-            if (temperature > maxTemperatureInfo.get(month)) {
-                maxTemperatureInfo.put(month, temperature);
-            }
-
-            var oldAverageTemperature = averageTemperatureInfo.get(month);
-            var newAverageTemperature = (oldAverageTemperature * (monthSize - 1) + temperature) / monthSize;
-            averageTemperatureInfo.put(month, newAverageTemperature);
-        }
-
-
+        yearTemperatureInfo.get(month).updateMonthTemperatureInfo(info);
     }
 
     @Override
     public Double getAverageTemperature(Month month) {
-        return averageTemperatureInfo.get(month);
+
+        MonthTemperatureInfo monthTemperatureInfo = yearTemperatureInfo.get(month);
+        if (monthTemperatureInfo == null) {
+            return null;
+        }
+        return monthTemperatureInfo.getAverageTemperature();
     }
 
     @Override
     public Map<Month, Integer> getMaxTemperature() {
-        return maxTemperatureInfo;
+        Map<Month, Integer> maxTemperature = new HashMap<>();
+        for (var entry : yearTemperatureInfo.entrySet()) {
+            maxTemperature.put(entry.getKey(), entry.getValue().getMaxTemperature());
+        }
+        return maxTemperature;
     }
 
     @Override
     public List<DayTemperatureInfo> getSortedTemperature(Month month) {
-        var monthTemperatureInfo = yearTemperatureInfo.getOrDefault(month, null);
-        if (monthTemperatureInfo == null){
+
+        MonthTemperatureInfo monthTemperatureInfo = yearTemperatureInfo.get(month);
+        if (monthTemperatureInfo == null) {
             return new ArrayList<>();
         }
-        ArrayList<DayTemperatureInfo> result = new ArrayList<>(monthTemperatureInfo.values());
-        result.sort(Comparator.comparing(DayTemperatureInfo::getTemperature));
-        return result;
+        return monthTemperatureInfo.getSortedDayList();
     }
 
     @Override
     public DayTemperatureInfo getTemperature(int day, Month month) {
-        var monthTemperatureInfo = yearTemperatureInfo.getOrDefault(month, null);
+        var monthTemperatureInfo = yearTemperatureInfo.get(month);
         if (monthTemperatureInfo != null) {
-            return monthTemperatureInfo.get(day);
+            return monthTemperatureInfo.getDayInfo(day);
         }
         return null;
     }
