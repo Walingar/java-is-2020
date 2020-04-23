@@ -41,7 +41,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
     @Override
     public List<DayTemperatureInfo> getSortedTemperature(Month month) {
-        MonthInfo monthInfo = yearStats.getOrDefault(month, null);
+        MonthInfo monthInfo = yearStats.get(month);
         if (monthInfo == null) {
             return new ArrayList<>();
         }
@@ -50,7 +50,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
     @Override
     public DayTemperatureInfo getTemperature(int day, Month month) {
-        MonthInfo monthInfo = yearStats.getOrDefault(month, null);
+        MonthInfo monthInfo = yearStats.get(month);
         if (monthInfo != null) {
             return monthInfo.getDayInfo(day);
         }
