@@ -67,3 +67,29 @@
 Можно пользоваться любыми абстрактными классами стандартной библиотеки.
 Постарайтесь сделать так, чтобы при длинной цепочке действий `add(element), poll` 
 программа не потребляла много памяти.
+
+# Домашнее задание 5. Файлы и Кодировки
+
+Ваша задача разработать реализации интерфейсов `api.file.FileEncodingReader` и `api.file.FileEncodingWriter` и 
+создать их в методах `impl.file.FileEncodingReaderFactory.getInstance` и `impl.file.FileEncodingWriterFactory.getInstance` соответственно.
+
+`FileEncodingReader` должен уметь возвращать `java.io.Reader` из файла в заданной кодировке.
+
+`FileEncodingWriter` должен уметь создавать файл и записывать в него данные из `InputStream` с кодировкой `dataEncoding` в кодировке `fileEncoding` (`UTF-8`, если `fileEncoding` не передана).
+
+# Домашнее задание 6. Пары
+
+Ваша задача разработать реализации интерфейсов `api.pair.Pair` и `api.pair.NumberPair` и 
+уметь создавать их в методах `impl.pair.PairFactory.of` и `impl.pair.NumberPairFactory.of` соответственно.
+Пары хранят в себе два значения `first` и `second`.
+
+# Домашнее задание 7. Студенты
+
+1. Разработайте класс StudentDB, осуществляющий поиск по базе данных студентов.
+   * Класс StudentDB должен реализовывать интерфейс StudentQuery.
+   * Каждый метод должен состоять из ровно одного оператора. При этом длинные операторы надо разбивать на несколько строк.
+2. При выполнении задания следует обратить внимание на:
+   * Применение лямбда-выражений и потоков.
+   * Избавление от повторяющегося кода.
+
+Объект класса StudentDB должен быть создан в методе `info.kgeorgiy.java.advanced.student.StudentQueryFactory.getInstance`
