@@ -23,18 +23,18 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
     @Override
     public Double getAverageTemperature(Month month) {
-        MonthInfo monthInfo = yearStats.getOrDefault(month, null);
+        MonthInfo monthInfo = yearStats.get(month);
         if (monthInfo == null) {
             return null;
         }
-        return yearStats.get(month).getAvgTemperature();
+        return monthInfo.getAvgTemperature();
     }
 
     @Override
     public Map<Month, Integer> getMaxTemperature() {
         Map<Month, Integer> monthMaxTemperature = new HashMap<>();
-        for (var month : yearStats.keySet()) {
-            monthMaxTemperature.put(month, yearStats.get(month).getMaxTemperature());
+        for (var monthMonthInfoEntry : yearStats.entrySet()) {
+            monthMaxTemperature.put(monthMonthInfoEntry.getKey(), monthMonthInfoEntry.getValue().getMaxTemperature());
         }
         return monthMaxTemperature;
     }
