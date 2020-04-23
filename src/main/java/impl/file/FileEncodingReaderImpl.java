@@ -14,7 +14,7 @@ public class FileEncodingReaderImpl implements FileEncodingReader {
         try {
             return new FileReader(file, fileEncoding);
         } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new RuntimeException("Unable to read file:" + file.getPath() + ", " + e.getMessage());
         }
     }
 }
