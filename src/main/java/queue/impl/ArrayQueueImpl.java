@@ -1,19 +1,22 @@
 package queue.impl;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.AbstractQueue;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-public class ArrayQueueImpl<Integer> extends AbstractQueue<Integer> {
+public class ArrayQueueImpl extends AbstractQueue<Integer> {
     private static final double FACTOR = 2;
     private static final int MIN_CAPACITY = 32;
 
-    private Object[] elements = new Object[MIN_CAPACITY];
+    private Integer[] elements = new Integer[MIN_CAPACITY];
     private int size = 0;
     private int head = 0;
     private int tail = 0;
     private int capacity = MIN_CAPACITY;
 
+    @NotNull
     @Override
     public Iterator<Integer> iterator() {
         return new ArrayIterator();
@@ -59,7 +62,7 @@ public class ArrayQueueImpl<Integer> extends AbstractQueue<Integer> {
     }
 
     private void reduceCapacity() {
-        if (size < capacity / FACTOR) {
+        if (size < capacity / (FACTOR * 2)) {
             var newCapacity = (int) (capacity / FACTOR);
             if (newCapacity < MIN_CAPACITY) {
                 return;
@@ -69,7 +72,7 @@ public class ArrayQueueImpl<Integer> extends AbstractQueue<Integer> {
     }
 
     private void applyCapacity(int newCapacity) {
-        elements = toArray(new Object[newCapacity]);
+        elements = toArray(new Integer[newCapacity]);
         tail = size;
         head = 0;
         capacity = newCapacity;
@@ -77,7 +80,7 @@ public class ArrayQueueImpl<Integer> extends AbstractQueue<Integer> {
 
 
     private Integer getElement(int index) {
-        return (Integer) elements[index];
+        return elements[index];
     }
 
     private int increasePointer(int pointer) {
