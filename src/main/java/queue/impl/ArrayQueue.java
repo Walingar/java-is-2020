@@ -8,12 +8,14 @@ import java.util.Objects;
 
 public class ArrayQueue extends AbstractQueue<Integer> {
 
+    private static final int MIN_CAPACITY = 100;
+
     private int[] values;
     private int head;
     private int tail;
 
     public ArrayQueue() {
-        this(100);
+        this(MIN_CAPACITY);
     }
 
     public ArrayQueue(int capacity) {
@@ -37,35 +39,45 @@ public class ArrayQueue extends AbstractQueue<Integer> {
             return null;
         }
         int value = values[head];
+        decreaseValuesCapacityIfNeeded();
         head = getNextPositionOfValuesPointer(head);
         return value;
+    }
+
+    private void decreaseValuesCapacityIfNeeded() {
+        if (size() <= values.length / 2) {
+            int newCapacity = values.length * 2 / 3;
+            if (newCapacity >= MIN_CAPACITY) {
+                changeValuesCapacity(newCapacity);
+            }
+        }
     }
 
     @Override
     public boolean offer(Integer element) {
         Objects.requireNonNull(element);
-        if (size() == values.length - 1) {
-            boolean extensionSuccessful = extendValues();
-            if (!extensionSuccessful) {
-                return false;
-            }
-        }
+        increaseValuesCapacityIfNeeded();
         values[tail] = element;
         tail = getNextPositionOfValuesPointer(tail);
         return true;
     }
 
-    private boolean extendValues() {
-        int newCapacity = values.length * 2;
-        ArrayQueue extendedQueue = new ArrayQueue(newCapacity);
-        Integer element;
-        while ((element = poll()) != null) {
-            extendedQueue.add(element);
+    private void increaseValuesCapacityIfNeeded() {
+        if (size() == values.length - 1) {
+            int newCapacity = values.length * 2;
+            changeValuesCapacity(newCapacity);
         }
-        values = extendedQueue.values;
-        head = extendedQueue.head;
-        tail = extendedQueue.tail;
-        return true;
+    }
+
+    private void changeValuesCapacity(int newCapacity) {
+        int newTail = 0;
+        int[] newValues = new int[newCapacity];
+        for (int element : this) {
+            newValues[newTail++] = element;
+        }
+        head = 0;
+        tail = newTail;
+        values = newValues;
     }
 
     @Override
