@@ -77,28 +77,30 @@ public class ArrayQueue extends AbstractQueue<Integer> {
     @NotNull
     @Override
     public Iterator<Integer> iterator() {
-        return new Iterator<>() {
-
-            private int current = head;
-
-            @Override
-            public boolean hasNext() {
-                return current != tail;
-            }
-
-            @Override
-            public Integer next() {
-                if (current == tail) {
-                    return null;
-                }
-                int value = values[current];
-                current = getNextPositionOfValuesPointer(current);
-                return value;
-            }
-        };
+        return new ArrayQueueIterator();
     }
 
     private int getNextPositionOfValuesPointer(int currentPosition) {
         return (currentPosition + 1) % values.length;
+    }
+
+    private class ArrayQueueIterator implements Iterator<Integer> {
+
+        private int current = head;
+
+        @Override
+        public boolean hasNext() {
+            return current != tail;
+        }
+
+        @Override
+        public Integer next() {
+            if (current == tail) {
+                return null;
+            }
+            int value = values[current];
+            current = getNextPositionOfValuesPointer(current);
+            return value;
+        }
     }
 }

@@ -60,25 +60,7 @@ public class LinkedQueue extends AbstractQueue<Integer> {
     @NotNull
     @Override
     public Iterator<Integer> iterator() {
-        return new Iterator<>() {
-
-            private Node current = head;
-
-            @Override
-            public boolean hasNext() {
-                return current != null;
-            }
-
-            @Override
-            public Integer next() {
-                if (current == null) {
-                    return null;
-                }
-                int value = current.value;
-                current = current.next;
-                return value;
-            }
-        };
+        return new LinkedQueueIterator();
     }
 
     private static class Node {
@@ -87,6 +69,26 @@ public class LinkedQueue extends AbstractQueue<Integer> {
 
         public Node(int value) {
             this.value = value;
+        }
+    }
+
+    private class LinkedQueueIterator implements Iterator<Integer> {
+
+        private Node current = head;
+
+        @Override
+        public boolean hasNext() {
+            return current != null;
+        }
+
+        @Override
+        public Integer next() {
+            if (current == null) {
+                return null;
+            }
+            int value = current.value;
+            current = current.next;
+            return value;
         }
     }
 }
