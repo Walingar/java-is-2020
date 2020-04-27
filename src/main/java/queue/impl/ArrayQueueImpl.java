@@ -4,21 +4,21 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public class ArrayQueueImpl<Integer> extends AbstractQueue<Integer> {
+public class ArrayQueueImpl extends AbstractQueue<Integer> {
 
     private static final int INITIAL_CAPACITY = 11;
     private static final int CAPACITY_RATE = 2;
 
     private int head;
     private int tail;
-    private Object[] elements;
+    private Integer[] elements;
 
     public ArrayQueueImpl() {
         this(INITIAL_CAPACITY);
     }
 
     public ArrayQueueImpl(int capacity) {
-        this.elements = new Object[capacity];
+        this.elements = new Integer[capacity];
     }
 
     @Override
@@ -55,7 +55,8 @@ public class ArrayQueueImpl<Integer> extends AbstractQueue<Integer> {
         if (head > capacity - capacity / CAPACITY_RATE) {
             shrink(capacity);
         }
-        var result = (Integer) elements[head];
+
+        var result = elements[head];
         head++;
         return result;
     }
@@ -66,25 +67,26 @@ public class ArrayQueueImpl<Integer> extends AbstractQueue<Integer> {
             return null;
         }
 
-        return (Integer) elements[head];
+        return elements[head];
     }
 
     private void grow() {
         int oldCapacity = this.elements.length;
-        int newCapacity = oldCapacity + (oldCapacity >> 1);
+        int newCapacity = oldCapacity + (oldCapacity / 2);
         this.elements = Arrays.copyOf(elements, newCapacity);
     }
 
     private void shrink(int oldCapacity) {
-        int newCapacity = oldCapacity/CAPACITY_RATE;
+        int newCapacity = oldCapacity / CAPACITY_RATE;
         var newLength = oldCapacity - newCapacity;
-        elements = Arrays.copyOfRange(elements,newLength,oldCapacity);
+        var a = elements.length;
+        elements = Arrays.copyOfRange(elements, newLength, oldCapacity);
         head = head - newLength;
         tail = tail - newLength;
     }
 
     private Integer getByIndex(int index) {
-        return (Integer) elements[index];
+        return elements[index];
     }
 
     private class ArrayQueueIterator implements Iterator<Integer> {

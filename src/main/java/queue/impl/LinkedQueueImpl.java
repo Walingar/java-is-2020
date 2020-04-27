@@ -15,7 +15,7 @@ public class LinkedQueueImpl<T> extends AbstractQueue<T> {
 
     @Override
     public Iterator<T> iterator() {
-        return null;
+        return new LinkedQueueIterator();
     }
 
     @Override
@@ -25,10 +25,10 @@ public class LinkedQueueImpl<T> extends AbstractQueue<T> {
 
     @Override
     public boolean offer(T t) {
-        if(head == null){
+        if (head == null) {
             head = wrap(t);
             tail = head;
-        }else{
+        } else {
             tail.nextNode = wrap(t);
             tail = tail.nextNode;
         }
@@ -39,7 +39,7 @@ public class LinkedQueueImpl<T> extends AbstractQueue<T> {
 
     @Override
     public T poll() {
-        if(size == 0){
+        if (size == 0) {
             return null;
         }
 
@@ -51,18 +51,18 @@ public class LinkedQueueImpl<T> extends AbstractQueue<T> {
 
     @Override
     public T peek() {
-        if(size == 0){
+        if (size == 0) {
             return null;
         }
 
         return head.value;
     }
 
-    private Node<T> wrap(T value){
+    private Node<T> wrap(T value) {
         return new Node<>(value);
     }
 
-    private class LinkedQueueIterator implements Iterator<T>{
+    private class LinkedQueueIterator implements Iterator<T> {
 
         @Override
         public boolean hasNext() {
@@ -75,12 +75,12 @@ public class LinkedQueueImpl<T> extends AbstractQueue<T> {
         }
     }
 
-    private static class Node<T>{
+    private static class Node<T> {
         private final T value;
 
-        public  Node<T> nextNode;
+        public Node<T> nextNode;
 
-        Node(T value){
+        Node(T value) {
             this.value = value;
         }
     }
