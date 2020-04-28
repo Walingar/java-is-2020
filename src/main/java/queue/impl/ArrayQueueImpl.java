@@ -4,45 +4,50 @@ import java.util.*;
 
 public class ArrayQueueImpl extends AbstractQueue<Integer> {
     private static final int INITIAL_ARRAY_SIZE = 16;
-    private int push_idx = 0;
+    private int pushIdx = 0;
+    private int popIdx = 0;
     private Integer[] array;
 
     public ArrayQueueImpl() {
         array = new Integer[INITIAL_ARRAY_SIZE];
     }
 
+    private class ArrayQueueIterator implements Iterator<Integer> {
+        private int idx = pushIdx;
+
+        public boolean hasNext() {
+            return idx != pushIdx;
+        }
+
+        public Integer next() {
+            if (idx == pushIdx) {
+                throw new NoSuchElementException("No such element");
+            }
+
+            return array[idx++];
+        }
+    }
+
     public Iterator<Integer> iterator() {
-        return new Iterator<>() {
-            private int idx = push_idx;
-
-            public boolean hasNext() {
-                return idx != push_idx;
-            }
-
-            public Integer next() {
-                if (idx == push_idx) {
-                    throw new NoSuchElementException("No such element");
-                }
-
-                return array[idx++];
-            }
-        };
+        return new ArrayQueueIterator();
     }
 
     public int size() {
-        return push_idx;
+        return pushIdx - popIdx;
     }
 
     public boolean add(Integer e) {
-        if (push_idx == array.length) {
-            Integer[] new_array = new Integer[2 * array.length];
-
-            System.arraycopy(array, 0, new_array, 0, array.length);
-            push_idx = array.length;
-            array = new_array;
+        if (pushIdx == array.length) {
+            if (popIdx > 0) {
+                System.arraycopy(array, popIdx, array, 0, array.length - popIdx);
+                pushIdx -= popIdx;
+                popIdx = 0;
+            } else {
+                array = Arrays.copyOf(array, 2 * array.length);
+            }
         }
 
-        array[push_idx++] = e;
+        array[pushIdx++] = e;
         return true;
     }
 
@@ -51,18 +56,11 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
     }
 
     public Integer remove() {
-        if (push_idx == 0) {
+        if (size() == 0) {
             throw new NoSuchElementException("Queue is empty");
         }
 
-        Integer e = array[0];
-
-        for (int i = 0; i < push_idx - 1; i++) {
-            array[i] = array[i + 1];
-        }
-
-        push_idx--;
-        return e;
+        return array[popIdx++];
     }
 
     public Integer poll() {
@@ -74,11 +72,11 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
     }
 
     public Integer element() {
-        if (push_idx == 0) {
+        if (size() == 0) {
             throw new NoSuchElementException("Queue is empty");
         }
 
-        return array[0];
+        return array[popIdx];
     }
 
     public Integer peek() {
