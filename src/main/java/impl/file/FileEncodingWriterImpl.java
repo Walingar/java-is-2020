@@ -28,10 +28,10 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
 
         try (var reader = new InputStreamReader(data, dataEncoding);
              var fileWriter = new FileWriter(file, fileEncoding)) {
-            int streamData = reader.read();
-            while (streamData != -1) {
-                fileWriter.write(streamData);
-                streamData = reader.read();
+            char[] charArray = new char[2048];
+            int numRead = 0;
+            while((numRead = reader.read(charArray,0,2048)) >= 0){
+                fileWriter.write(charArray,0,numRead);
             }
         } catch (IOException e) {
             System.err.println("Error occurred during the file writing");

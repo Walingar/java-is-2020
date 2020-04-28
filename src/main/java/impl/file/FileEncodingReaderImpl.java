@@ -10,7 +10,7 @@ public class FileEncodingReaderImpl implements FileEncodingReader {
     @Override
     public Reader read(File file, Charset fileEncoding) {
         try {
-            return new FileReader(file, fileEncoding);
+            return new BufferedReader(new FileReader(file, fileEncoding));
         } catch (IOException e) {
             System.err.println("Error while opening file " + file.getPath());
         }
