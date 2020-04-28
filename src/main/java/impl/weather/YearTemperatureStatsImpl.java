@@ -43,55 +43,55 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
         }
     }
 
-    private Map<Month, MonthTemperatureItem> temp_info_per_mon;
-    private Map<Month, Map<Integer, OrderedDayTemperatureInfo>> temp_per_day;
+    private Map<Month, MonthTemperatureItem> tempInfoPerMon;
+    private Map<Month, Map<Integer, OrderedDayTemperatureInfo>> tempPerDay;
     private int add_order_count;
 
     public YearTemperatureStatsImpl() {
-        temp_info_per_mon = new HashMap<>();
-        temp_per_day = new HashMap<>();
+        tempInfoPerMon = new HashMap<>();
+        tempPerDay = new HashMap<>();
         add_order_count = 0;
     }
 
     public void updateStats(DayTemperatureInfo info) {
-        MonthTemperatureItem temp_info = temp_info_per_mon.get(info.getMonth());
+        MonthTemperatureItem tempInfo = tempInfoPerMon.get(info.getMonth());
 
-        if (temp_info == null) {
-            temp_info = new MonthTemperatureItem(0.0, null, 0);
+        if (tempInfo == null) {
+            tempInfo = new MonthTemperatureItem(0.0, null, 0);
         }
 
-        temp_info.avg = (temp_info.avg * temp_info.count + info.getTemperature()) / (temp_info.count + 1);
-        temp_info.max = (temp_info.max == null || temp_info.max < info.getTemperature()) ? info.getTemperature()
-                                                                                         : temp_info.max;
-        temp_info.count++;
-        temp_info_per_mon.put(info.getMonth(), temp_info);
+        tempInfo.avg = (tempInfo.avg * tempInfo.count + info.getTemperature()) / (tempInfo.count + 1);
+        tempInfo.max = (tempInfo.max == null || tempInfo.max < info.getTemperature()) ? info.getTemperature()
+                                                                                         : tempInfo.max;
+        tempInfo.count++;
+        tempInfoPerMon.put(info.getMonth(), tempInfo);
 
-        Map<Integer, OrderedDayTemperatureInfo> month_info = temp_per_day.get(info.getMonth());
+        Map<Integer, OrderedDayTemperatureInfo> monthInfo = tempPerDay.get(info.getMonth());
 
-        if (month_info == null) {
-            month_info = new HashMap<>();
+        if (monthInfo == null) {
+            monthInfo = new HashMap<>();
         }
 
-        month_info.put(info.getDay(), new OrderedDayTemperatureInfo(info, add_order_count));
+        monthInfo.put(info.getDay(), new OrderedDayTemperatureInfo(info, add_order_count));
         add_order_count++;
-        temp_per_day.put(info.getMonth(), month_info);
+        tempPerDay.put(info.getMonth(), monthInfo);
 
     }
 
     public Double getAverageTemperature(Month month) {
-        MonthTemperatureItem temp_info = temp_info_per_mon.get(month);
+        MonthTemperatureItem tempInfo = tempInfoPerMon.get(month);
 
-        if (temp_info == null) {
+        if (tempInfo == null) {
             return null;
         }
 
-        return temp_info.avg;
+        return tempInfo.avg;
     }
 
     public Map<Month, Integer> getMaxTemperature() {
         Map<Month, Integer> map = new HashMap<>();
 
-        for (Map.Entry<Month, MonthTemperatureItem> entry : temp_info_per_mon.entrySet()) {
+        for (Map.Entry<Month, MonthTemperatureItem> entry : tempInfoPerMon.entrySet()) {
             map.put(entry.getKey(), entry.getValue().max);
         }
 
@@ -100,16 +100,16 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
     public List<DayTemperatureInfo> getSortedTemperature(Month month) {
         List<DayTemperatureInfo> list = new LinkedList<>();
-        Map<Integer, OrderedDayTemperatureInfo> month_info = temp_per_day.get(month);
+        Map<Integer, OrderedDayTemperatureInfo> monthInfo = tempPerDay.get(month);
 
-        if (month_info == null) {
+        if (monthInfo == null) {
             return list;
         }
 
         Set<OrderedDayTemperatureInfo> sorted_info =
                 new TreeSet<>(new OrderedDayTemperatureInfoComparator());
 
-        sorted_info.addAll(month_info.values());
+        sorted_info.addAll(monthInfo.values());
 
         for (OrderedDayTemperatureInfo info : sorted_info) {
             list.add(info.info);
@@ -119,13 +119,13 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
     }
 
     public DayTemperatureInfo getTemperature(int day, Month month) {
-        Map<Integer, OrderedDayTemperatureInfo> month_info = temp_per_day.get(month);
+        Map<Integer, OrderedDayTemperatureInfo> monthInfo = tempPerDay.get(month);
 
-        if (month_info == null) {
+        if (monthInfo == null) {
             return null;
         }
 
-        OrderedDayTemperatureInfo day_info = month_info.get(day);
+        OrderedDayTemperatureInfo day_info = monthInfo.get(day);
 
         if (day_info == null) {
             return null;

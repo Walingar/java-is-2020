@@ -13,10 +13,10 @@ public class YearTemperatureStatsParserImpl implements YearTemperatureStatsParse
         Pattern p = Pattern.compile("\\.| ");
 
         for (String data : rawData) {
-            String[] data_list = p.split(data);
-            int day = Integer.parseInt(data_list[0]);
-            Month month = Month.of(Integer.parseInt(data_list[1]));
-            int temperature = Integer.parseInt(data_list[2]);
+            String[] dataList = p.split(data);
+            int day = Integer.parseInt(dataList[0]);
+            Month month = Month.of(Integer.parseInt(dataList[1]));
+            int temperature = Integer.parseInt(dataList[2]);
 
             stats.updateStats(new DayTemperatureInfoImpl(month, day, temperature));
         }
