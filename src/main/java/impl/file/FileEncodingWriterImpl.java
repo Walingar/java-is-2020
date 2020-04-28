@@ -15,14 +15,15 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
     }
 
     public void write(File file, InputStream data, Charset dataEncoding, Charset fileEncoding) {
-        File file_dir = file.getParentFile();
+        if (!file.exists()) {
+            File fileDir = file.getParentFile();
 
-        if (file_dir != null && !file_dir.exists() && !file_dir.mkdirs()){
-            throw new RuntimeException("Failed to create parent directory");
+            if (fileDir != null && !fileDir.exists() && !fileDir.mkdirs()) {
+                throw new RuntimeException("Failed to create parent directory");
+            }
         }
 
-        try {
-            FileWriter file_stream = new FileWriter(file, fileEncoding);
+        try (FileWriter file_stream = new FileWriter(file, fileEncoding)) {
             InputStreamReader reader = new InputStreamReader(data, dataEncoding);
             char []buff = new char[IO_BUFF_SIZE];
             int read_bytes;
@@ -30,8 +31,6 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
             while ((read_bytes = reader.read(buff, 0, buff.length)) != -1) {
                 file_stream.write(buff, 0, read_bytes);
             }
-
-            file_stream.close();
         } catch (IOException e) {
             throw new RuntimeException(e.getMessage());
         }
