@@ -1,6 +1,7 @@
 package info.kgeorgiy.java.advanced.student;
 
 import java.util.*;
+import java.util.function.BinaryOperator;
 import java.util.stream.Collectors;
 
 public class StudentQueryImpl implements StudentQuery {
@@ -35,7 +36,7 @@ public class StudentQueryImpl implements StudentQuery {
     @Override
     public Set<String> getDistinctFirstNames(List<Student> students) {
         return students.stream()
-                .map(this::getFullName)
+                .map(Student::getFirstName)
                 .collect(Collectors.toSet());
     }
 
@@ -67,6 +68,8 @@ public class StudentQueryImpl implements StudentQuery {
     public List<Student> findStudentsByFirstName(Collection<Student> students, String name) {
         return students.stream()
                 .filter(x -> x.getFirstName().equals(name))
+                .sorted(Comparator.comparing(Student::getLastName)
+                        .thenComparing(Student::getFirstName))
                 .collect(Collectors.toList());
     }
 
@@ -81,17 +84,21 @@ public class StudentQueryImpl implements StudentQuery {
     public List<Student> findStudentsByGroup(Collection<Student> students, String group) {
         return students.stream()
                 .filter(x -> x.getGroup().equals(group))
+                .sorted(Comparator.comparing(Student::getLastName)
+                        .thenComparing(Student::getFirstName))
                 .collect(Collectors.toList());
     }
 
     @Override
     public Map<String, String> findStudentNamesByGroup(Collection<Student> students, String group) {
         return students.stream()
-                .filter(x -> x.getGroup().equals(group))
-                .collect(Collectors.toMap(Student::getFirstName, Student::getLastName));
+                .filter(student -> student.getGroup().equals(group))
+                .collect(Collectors
+                        .toMap(Student::getLastName,
+                                Student::getFirstName, BinaryOperator.minBy(String::compareTo)));
     }
 
     private String getFullName(Student student) {
-        return String.format("%s %s", student.getLastName(), student.getFirstName());
+        return String.format("%s %s", student.getFirstName(), student.getLastName());
     }
 }
