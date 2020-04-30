@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
  * @author Georgiy Korneev (kgeorgiy@kgeorgiy.info)
  */
 public interface StudentQuery {
+
     /** Returns student {@link Student#getFirstName() first names}. */
     List<String> getFirstNames(final List<Student> students);
 

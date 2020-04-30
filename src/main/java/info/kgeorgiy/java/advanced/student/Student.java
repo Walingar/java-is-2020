@@ -6,6 +6,7 @@ package info.kgeorgiy.java.advanced.student;
  * @author Georgiy Korneev (kgeorgiy@kgeorgiy.info)
  */
 public class Student implements Comparable<Student> {
+
     private final int id;
     private final String firstName;
     private final String lastName;

@@ -9,6 +9,7 @@ import java.util.Objects;
  * @author Georgiy Korneev (kgeorgiy@kgeorgiy.info)
  */
 public class Group {
+
     private final String name;
     private final List<Student> students;
 
