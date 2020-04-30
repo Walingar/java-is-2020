@@ -3,8 +3,6 @@ package info.kgeorgiy.java.advanced.student;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toMap;
-
 public class StudentDB implements StudentQuery {
     @Override
     public List<String> getFirstNames(List<Student> students) {
@@ -91,7 +89,7 @@ public class StudentDB implements StudentQuery {
     public Map<String, String> findStudentNamesByGroup(Collection<Student> students, String group) {
         return students.stream()
                 .filter(student -> student.getGroup().equals(group))
-                .collect(toMap(Student::getLastName, Student::getFirstName, (a, b) -> a.compareTo(b) < 0 ? a : b));
+                .collect(Collectors.toMap(Student::getLastName, Student::getFirstName, (a, b) -> a.compareTo(b) < 0 ? a : b));
     }
 
     private static final Comparator<? super Student> STUDENT_COMPARATOR = Comparator.comparing(Student::getLastName)
