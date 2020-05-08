@@ -21,9 +21,9 @@ public class YearTemperatureStatsParserImpl implements YearTemperatureStatsParse
         return yearTemperatureStats;
     }
 
-    class DayTemperatureInfoImpl implements DayTemperatureInfo {
-        private int day;
-        private Month month;
+    static class DayTemperatureInfoImpl implements DayTemperatureInfo {
+        private final int day;
+        private final Month month;
         private int temperature;
 
         DayTemperatureInfoImpl(int day, Month month, int temperature) {

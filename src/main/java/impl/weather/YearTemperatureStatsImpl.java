@@ -10,9 +10,9 @@ import static java.util.Comparator.comparing;
 
 public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
-    private HashMap<Month, Integer> maxTemperature = new HashMap<>();
-    private HashMap<Month, Double> avTemperature = new HashMap<>();
-    private HashMap<Month, LinkedHashMap<Integer, DayTemperatureInfo>> yearStats = new HashMap<>();
+    private Map<Month, Integer> maxTemperature = new HashMap<>();
+    private Map<Month, Double> avgTemperature = new HashMap<>();
+    private Map<Month, Map<Integer, DayTemperatureInfo>> yearStats = new HashMap<>();
 
     @Override
     public void updateStats(DayTemperatureInfo info) {
@@ -22,7 +22,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
         if (!yearStats.containsKey(month)) {
             maxTemperature.put(month, temperature);
-            avTemperature.put(month, (double) temperature);
+            avgTemperature.put(month, (double) temperature);
             yearStats.put(month, new LinkedHashMap<>());
         }
 
@@ -34,15 +34,15 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
                 maxTemperature.put(month, temperature);
             }
 
-            double newAverageTemperature = (avTemperature.get(month) * (dayCounter - 1) + temperature) / dayCounter;
+            double newAverageTemperature = (avgTemperature.get(month) * (dayCounter - 1) + temperature) / dayCounter;
 
-            avTemperature.put(month, newAverageTemperature);
+            avgTemperature.put(month, newAverageTemperature);
         }
     }
 
     @Override
     public Double getAverageTemperature(Month month) {
-        return avTemperature.get(month);
+        return avgTemperature.get(month);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
         if (yearStats.getOrDefault(month, null) == null) {
             return new ArrayList<>();
         }
-        HashMap<Integer, DayTemperatureInfo> temp = yearStats.getOrDefault(month, null);
+        Map<Integer, DayTemperatureInfo> temp = yearStats.getOrDefault(month, null);
         ArrayList<DayTemperatureInfo> List = new ArrayList<>(temp.values());
         List.sort(comparing(DayTemperatureInfo::getTemperature));
         return List;
@@ -63,7 +63,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
     @Override
     public DayTemperatureInfo getTemperature(int day, Month month) {
-        var stat = yearStats.getOrDefault(month, null);
+        var stat = yearStats.get(month);
         if (stat != null) {
             return stat.get(day);
         }
