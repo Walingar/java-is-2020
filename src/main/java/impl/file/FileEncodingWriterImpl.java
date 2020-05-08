@@ -18,8 +18,11 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
     public void write(File file, InputStream data, Charset dataEncoding, Charset fileEncoding) {
         try (Reader in = new BufferedReader(new InputStreamReader(data, dataEncoding))) {
             if (!file.exists()) {
-                file.getParentFile().mkdirs();
-                file.createNewFile();
+                boolean fileCreated = file.getParentFile().mkdirs();
+                fileCreated = fileCreated && file.createNewFile();
+                if (!fileCreated) {
+                    throw new FileNotFoundException("cant find or create file");
+                }
             }
             try (Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), fileEncoding))) {
                 in.transferTo(out);
