@@ -1,40 +1,17 @@
 package queue.impl;
 
-import java.util.*;
+import java.util.AbstractQueue;
+import java.util.Iterator;
 
 public class QueueLinkedImpl extends AbstractQueue<Integer> {
-    private static class Item {
-        private Integer value;
-        private Item nextItem;
-
-        Item(Item next, int value) {
-            this.nextItem = next;
-            this.value = value;
-        }
-
-        Integer getValue() {
-            return value;
-        }
-
-        void setValue(int newValue) {
-            this.value = newValue;
-        }
-
-        Item getNext() {
-            return nextItem;
-        }
-
-        void setNext(Item next) {
-            this.nextItem = next;
-        }
-    }
 
     private int size = 0;
     private Item head = null;
     private Item tail = null;
 
-    private static class LinkedQueueIterator implements Iterator {
+    private static class LinkedQueueIterator implements Iterator<Item> {
         Item current;
+
         LinkedQueueIterator(Item head) {
             current = head;
         }
@@ -46,8 +23,7 @@ public class QueueLinkedImpl extends AbstractQueue<Integer> {
 
         @Override
         public Item next() {
-            var next = current.getNext();
-            return next;
+            return current.getNext();
         }
     }
 
@@ -92,5 +68,27 @@ public class QueueLinkedImpl extends AbstractQueue<Integer> {
             return null;
         }
         return head.getValue();
+    }
+
+    private static class Item {
+        private Integer value;
+        private Item nextItem;
+
+        Item(Item next, int value) {
+            this.nextItem = next;
+            this.value = value;
+        }
+
+        Integer getValue() {
+            return value;
+        }
+
+        Item getNext() {
+            return nextItem;
+        }
+
+        void setNext(Item next) {
+            this.nextItem = next;
+        }
     }
 }
