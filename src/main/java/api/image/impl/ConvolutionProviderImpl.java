@@ -17,15 +17,9 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
             return new Color[0][];
         }
 
-        int imageHeight = image.length;
-        int imageWidth = image[0].length;
-        ImageData imageData = new ImageData(image, imageHeight, imageWidth);
-
-        int kernelHeight = kernel.length;
-        int kernelWidth = kernel[0].length;
-        KernelData kernelData = new KernelData(kernel, kernelHeight, kernelWidth);
-
-        Color[][] resultImage = new Color[imageHeight][imageData.getWidth()];
+        ImageData imageData = new ImageData(image);
+        KernelData kernelData = new KernelData(kernel);
+        Color[][] resultImage = new Color[imageData.getHeight()][imageData.getWidth()];
         for (var xId = 0; xId < imageData.getHeight(); xId++) {
             for (var yId = 0; yId < imageData.getWidth(); yId++) {
                 resultImage[xId][yId] = calculatePixel(imageData, kernelData, xId, yId);

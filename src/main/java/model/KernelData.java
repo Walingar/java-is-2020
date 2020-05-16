@@ -2,15 +2,15 @@ package model;
 
 public class KernelData {
 
-    private int height;
+    private final int height;
 
-    private int width;
+    private final int width;
 
-    private double[][] matrix;
+    private final double[][] matrix;
 
-    public KernelData(double[][] kernelMatrix, int kernelHeight, int kernelWidth) {
-        height = kernelHeight;
-        width = kernelWidth;
+    public KernelData(double[][] kernelMatrix) {
+        height = kernelMatrix.length;
+        width = kernelMatrix[0].length;
         matrix = kernelMatrix;
     }
 
