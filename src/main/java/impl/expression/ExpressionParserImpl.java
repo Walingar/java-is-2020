@@ -16,8 +16,7 @@ public class ExpressionParserImpl implements ExpressionParser {
         int result = 0;
         StringBuilder currentNumber = new StringBuilder();
         // parsing string
-        for (int index = 0; index < expression.length(); index++) {
-            char currentChar = expression.charAt(index);
+        for (char currentChar : expression.toCharArray()) {
             // if whitespace
             if(Character.isWhitespace(currentChar)){
                 continue;
