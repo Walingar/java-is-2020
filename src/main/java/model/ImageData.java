@@ -4,15 +4,15 @@ import java.awt.*;
 
 public class ImageData {
 
-    private int height;
+    private final int height;
 
-    private int width;
+    private final int width;
 
-    private Color[][] matrix;
+    private final Color[][] matrix;
 
-    public ImageData(Color[][] imageMatrix, int imageHeight , int imageWidth) {
-        this.height = imageHeight;
-        this.width = imageWidth;
+    public ImageData(Color[][] imageMatrix) {
+        this.height = imageMatrix.length;
+        this.width = imageMatrix[0].length;
         this.matrix = imageMatrix;
     }
 
