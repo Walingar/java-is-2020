@@ -93,3 +93,14 @@
    * Избавление от повторяющегося кода.
 
 Объект класса StudentDB должен быть создан в методе `info.kgeorgiy.java.advanced.student.StudentQueryFactory.getInstance`
+
+# Домашнее задание 8. Параллельное умножение матриц
+
+Ваша задача разработать реализацию интерфейса `api.matrix.ParallelMultiplier` и
+создать её в методе `impl.matrix.ParallelMultiplierFactory.getInstance`.
+
+`ParallelMultiplier` должен уметь умножать две матрицы параллельно, используя `maxThreadsCount` потоков.
+
+В тестах не проверяется то, насколько эффективно вы распараллелили задачу.
+
+**Важный момент**: использовать классы из пакета *java.util.concurrent* нельзя.
