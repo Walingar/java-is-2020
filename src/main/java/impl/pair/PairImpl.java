@@ -41,4 +41,9 @@ public class PairImpl<K, T> implements Pair<K, T> {
                 Objects.equals(second, inputPair.second);
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(first, second);
+    }
+
 }
