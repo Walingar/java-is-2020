@@ -3,7 +3,7 @@ package impl.pair;
 import api.pair.Pair;
 
 
-public class PairImpl<T, E> implements Pair {
+public class PairImpl<T, E> implements Pair<T, E> {
     private final T first;
     private final E second;
 
@@ -13,12 +13,12 @@ public class PairImpl<T, E> implements Pair {
     }
 
     @Override
-    public Object getFirst() {
+    public T getFirst() {
         return this.first;
     }
 
     @Override
-    public Object getSecond() {
+    public E getSecond() {
         return this.second;
     }
 
