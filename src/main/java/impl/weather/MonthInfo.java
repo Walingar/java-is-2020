@@ -5,14 +5,13 @@ import api.weather.DayTemperatureInfo;
 import java.util.HashMap;
 import java.util.Map;
 
-
-public class monthInfo {
+public class MonthInfo {
     private final Map<Integer, DayTemperatureInfo> info = new HashMap<>();
-    private averageData averageInfo;
+    private AverageData averageInfo;
     private int maximumTemp;
 
-    public monthInfo() {
-        this.averageInfo = new averageData(0, 0);
+    public MonthInfo() {
+        this.averageInfo = new AverageData(0);
         this.maximumTemp = -1000;
     }
 
@@ -20,46 +19,38 @@ public class monthInfo {
         info.put(day, dayInfo);
     }
 
-
     public Map<Integer, DayTemperatureInfo> getInfo() {
         return this.info;
     }
 
     public void updateAverage(int temperature) {
-        double numOfDays = (this.averageInfo.getNumOfElements());
+        int numOfDays = (this.info.size());
         var oldAverage = this.averageInfo.getAverage();
         double newAverage = ((oldAverage * numOfDays) + temperature) / (numOfDays + 1);
-        int counter = (int) numOfDays + 1;
-        this.averageInfo = new averageData(newAverage, counter);
+        this.averageInfo = new AverageData(newAverage);
     }
 
-    public Double getAverageTemp() {
-        return this.averageInfo.getAverage();
+    public AverageData getAverageInfo() {
+        return this.averageInfo;
     }
 
     public void updateMaxValue(int temperature) {
         this.maximumTemp = Math.max(temperature, this.maximumTemp);
     }
 
-    public Integer getMaxTemperature() {
+    public Integer getMaxTemperatureOnMonth() {
         return this.maximumTemp;
     }
 
-    public static class averageData {
+    public static class AverageData {
         private final double average;
-        private final int numOfElements;
 
-        public averageData(double average, int numOfElements) {
+        public AverageData(double average) {
             this.average = average;
-            this.numOfElements = numOfElements;
         }
 
         public double getAverage() {
             return this.average;
-        }
-
-        public int getNumOfElements() {
-            return this.numOfElements;
         }
     }
 }
