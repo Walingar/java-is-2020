@@ -18,13 +18,11 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
     @Override
     public void write(File file, InputStream data, Charset dataEncoding, Charset fileEncoding) {
         if (!file.exists()) {
-            boolean created = false;
             var parent = file.getParentFile();
             if (parent != null && !parent.exists()) {
-                created = parent.mkdirs();
-            }
-            if(!created){
-                System.err.println("Unable to create a File");
+                if(!parent.mkdirs()){
+                    System.err.println("Unable to create a File");
+                }
             }
         }
         try (FileWriter writer = new FileWriter(file, fileEncoding);
