@@ -33,6 +33,11 @@ public class PairImpl<K, T> implements Pair<K, T> {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(first, second);
+    }
+
+    @Override
     public String toString() {
         return "Pair [" + first.toString() + "," + second.toString() + "]";
     }
