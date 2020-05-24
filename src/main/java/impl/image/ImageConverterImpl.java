@@ -10,7 +10,7 @@ public class ImageConverterImpl implements ImageConverter {
         int numRows = image.length;
         int numColumns = image[0].length;
 
-        for (int rowIdx = 0; rowIdx < image.length; rowIdx++) {
+        for (var rowIdx = 0; rowIdx < numRows; rowIdx++) {
             if (image[rowIdx].length != numColumns) {
                 throw new IllegalArgumentException("Incorrect image format.");
             }
@@ -31,15 +31,15 @@ public class ImageConverterImpl implements ImageConverter {
         int numRows = image.length;
         int numColumns = image[0].length;
 
-        for (int rowIdx = 0; rowIdx < image.length; rowIdx++) {
+        for (var rowIdx = 0; rowIdx < image.length; rowIdx++) {
             if (image[rowIdx].length != numColumns) {
                 throw new IllegalArgumentException("Incorrect image format.");
             }
         }
 
         var colors = new int[image.length][image[0].length];
-        for (int rowIdx = 0; rowIdx < numRows; rowIdx++) {
-            for (int colIdx = 0; colIdx < numColumns; colIdx++) {
+        for (var rowIdx = 0; rowIdx < numRows; rowIdx++) {
+            for (var colIdx = 0; colIdx < numColumns; colIdx++) {
                 colors[rowIdx][colIdx] = image[rowIdx][colIdx].getRGB();
             }
         }
