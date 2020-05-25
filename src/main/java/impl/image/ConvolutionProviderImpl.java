@@ -15,7 +15,7 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
         for (var rowIdx = 0; rowIdx < numRows; rowIdx++) {
             resultImage[rowIdx] = new Color[numColumns];
             for (var colIdx = 0; colIdx < numColumns; colIdx++)
-                resultImage[colIdx][rowIdx] = applyKernelToPixel(image, kernel, colIdx, rowIdx);
+                resultImage[rowIdx][colIdx] = applyKernelToPixel(image, kernel, rowIdx, colIdx);
         }
 
         return resultImage;
@@ -37,8 +37,8 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
                 int rowIdx = pixelRowIdx + rowShift;
                 int colIdx = pixelColIdx + colShift;
                 if (rowIdx >= 0 && rowIdx < numRows && colIdx >= 0 && colIdx < numColumns) {
-                    double kernelPixel = kernel[rowIdx][colIdx];
-                    Color imagePixelColor = image[pixelRowIdx][pixelColIdx];
+                    double kernelPixel = kernel[kernelShiftRow + rowShift][kernelShiftColumn + colShift];
+                    Color imagePixelColor = image[rowIdx][colIdx];
                     red += imagePixelColor.getRed() * kernelPixel;
                     green += imagePixelColor.getGreen() * kernelPixel;
                     blue += imagePixelColor.getBlue() * kernelPixel;
