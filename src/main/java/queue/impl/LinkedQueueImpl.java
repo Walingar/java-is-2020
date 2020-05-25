@@ -22,7 +22,7 @@ class LinkedQueueImpl<T> extends AbstractQueue<T> {
 
     @Override
     public boolean offer(T value) {
-        var newElement = new QueueElement<>(value, tail, null);
+        var newElement = new QueueElement<>(value, null);
 
         if (tail == null) {
             head = newElement;
@@ -45,8 +45,6 @@ class LinkedQueueImpl<T> extends AbstractQueue<T> {
 
         if (next == null) {
             tail = null;
-        } else {
-            next.previous = null;
         }
         head = next;
 
@@ -62,12 +60,10 @@ class LinkedQueueImpl<T> extends AbstractQueue<T> {
     private static class QueueElement<T> {
         private final T value;
         private QueueElement<T> next;
-        private QueueElement<T> previous;
 
-        QueueElement(T value, QueueElement<T> previous, QueueElement<T> next) {
+        QueueElement(T value, QueueElement<T> next) {
             this.value = value;
             this.next = next;
-            this.previous = previous;
         }
     }
 

@@ -5,7 +5,7 @@ import java.util.AbstractQueue;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-class ArrayQueueImpl<Integer> extends AbstractQueue<Integer> {
+class ArrayQueueImpl extends AbstractQueue<Integer> {
 
     private static final double CAPACITY_FACTOR = 2;
     private static final int MINIMAL_CAPACITY = 128;
@@ -62,7 +62,7 @@ class ArrayQueueImpl<Integer> extends AbstractQueue<Integer> {
 
     private void checkShrink() {
         if (size < capacity / CAPACITY_FACTOR) {
-            var newCapacity = (int) (capacity / CAPACITY_FACTOR);
+            var newCapacity = (int) (capacity / Math.pow(CAPACITY_FACTOR, 2));
             if (newCapacity < MINIMAL_CAPACITY) {
                 return;
             }
@@ -78,7 +78,6 @@ class ArrayQueueImpl<Integer> extends AbstractQueue<Integer> {
     }
 
 
-    @SuppressWarnings("unchecked")
     private Integer getElement(int index) {
         return (Integer) queueElements[index];
     }
