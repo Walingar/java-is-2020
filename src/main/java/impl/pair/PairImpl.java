@@ -29,7 +29,7 @@ public class PairImpl<T, K> implements Pair<T, K> {
         if (this == obj) {
             return true;
         }
-        if (obj == null || getClass() != obj.getClass()) {
+        if (!(obj instanceof PairImpl)) {
             return false;
         }
         PairImpl<?, ?> pair = (PairImpl<?, ?>) obj;
@@ -42,4 +42,8 @@ public class PairImpl<T, K> implements Pair<T, K> {
         return "Pair [" + first.toString() + "," + second.toString() + "]";
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(first, second);
+    }
 }
