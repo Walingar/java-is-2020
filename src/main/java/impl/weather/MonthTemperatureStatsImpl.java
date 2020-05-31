@@ -4,13 +4,11 @@ import api.weather.DayTemperatureInfo;
 import api.weather.MonthTemperatureStats;
 
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static java.util.Comparator.comparingDouble;
 import static java.util.Comparator.comparingInt;
 
 public class MonthTemperatureStatsImpl implements MonthTemperatureStats {
@@ -21,7 +19,7 @@ public class MonthTemperatureStatsImpl implements MonthTemperatureStats {
 
     public MonthTemperatureStatsImpl(Month month) {
         this.month = month;
-        dayTemperatureInfoMap = new HashMap<>();
+        dayTemperatureInfoMap = new LinkedHashMap<>();
     }
 
     @Override
@@ -34,13 +32,17 @@ public class MonthTemperatureStatsImpl implements MonthTemperatureStats {
         int infoTemperature = info.getTemperature();
 
         dayTemperatureInfoMap.put(infoDay, info);
-        updateMaxAndAverageTemperatures(infoTemperature);
+        updateMaxTemperature(infoTemperature);
+        updateAverageTemperature(infoTemperature);
     }
 
-    private void updateMaxAndAverageTemperatures(int addedTemperature) {
+    private void updateMaxTemperature(int addedTemperature) {
         if (maxTemperature == null || addedTemperature > maxTemperature) {
             maxTemperature = addedTemperature;
         }
+    }
+
+    private void updateAverageTemperature(int addedTemperature) {
         if (averageTemperature == null) {
             averageTemperature = (double) addedTemperature;
         } else {
