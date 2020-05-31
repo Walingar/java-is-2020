@@ -1,7 +1,7 @@
 package impl.file;
 
 import api.file.FileEncodingReader;
-import api.file.FileEncodingReaderImpl;
+import impl.file.FileEncodingReaderImpl;
 
 public class FileEncodingReaderFactory {
     public static FileEncodingReader getInstance() {
