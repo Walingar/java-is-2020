@@ -9,7 +9,7 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
     private int size;
     private int head;
     private int tail;
-    private int resizeCoefficient;
+    private final int resizeCoefficient;
 
     ArrayQueueImpl() {
         capacity = 1;
@@ -18,28 +18,6 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
         size = 0;
         head = 0;
         tail = 0;
-    }
-
-    private class ArrayQueueIterator implements Iterator {
-        private int currentIndex;
-
-        ArrayQueueIterator() {
-            currentIndex = head;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return currentIndex < tail;
-        }
-
-        @Override
-        public Integer next() {
-            if (!hasNext()) {
-                throw new NoSuchElementException();
-            }
-            currentIndex++;
-            return queue[currentIndex];
-        }
     }
 
     private void resizeQueue() {
@@ -64,7 +42,7 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
         if (tail == capacity) {
             resizeQueue();
         }
-        queue[tail] = (Integer) item;
+        queue[tail] = item;
         size++;
         tail++;
         return true;
@@ -82,9 +60,30 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
 
     @Override
     public Integer peek() {
-        if (size() == 0) {
+        if (size == 0) {
             return null;
         }
         return queue[head];
+    }
+    private class ArrayQueueIterator implements Iterator<Integer> {
+        private int currentIndex;
+
+        ArrayQueueIterator() {
+            currentIndex = head;
+        }
+
+        @Override
+        public boolean hasNext() {
+            return currentIndex < tail;
+        }
+
+        @Override
+        public Integer next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            currentIndex++;
+            return queue[currentIndex];
+        }
     }
 }
