@@ -8,16 +8,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+
+import static java.util.Comparator.comparingDouble;
+import static java.util.Comparator.comparingInt;
 
 public class MonthTemperatureStatsImpl implements MonthTemperatureStats {
     private Month month;
-    private Map<Integer, DayTemperatureInfo> dayNumbersToTemperatureInfo;
+    private Map<Integer, DayTemperatureInfo> dayTemperatureInfoMap;
     private Integer maxTemperature;
     private Double averageTemperature;
 
     public MonthTemperatureStatsImpl(Month month) {
         this.month = month;
-        dayNumbersToTemperatureInfo = new HashMap<>();
+        dayTemperatureInfoMap = new HashMap<>();
     }
 
     @Override
@@ -29,7 +33,7 @@ public class MonthTemperatureStatsImpl implements MonthTemperatureStats {
         int infoDay = info.getDay();
         int infoTemperature = info.getTemperature();
 
-        dayNumbersToTemperatureInfo.put(infoDay, info);
+        dayTemperatureInfoMap.put(infoDay, info);
         updateMaxAndAverageTemperatures(infoTemperature);
     }
 
@@ -40,7 +44,7 @@ public class MonthTemperatureStatsImpl implements MonthTemperatureStats {
         if (averageTemperature == null) {
             averageTemperature = (double) addedTemperature;
         } else {
-            int numberOfDays = dayNumbersToTemperatureInfo.size();
+            int numberOfDays = dayTemperatureInfoMap.size();
             averageTemperature = ((numberOfDays - 1) * averageTemperature + addedTemperature) / numberOfDays;
         }
     }
@@ -56,12 +60,15 @@ public class MonthTemperatureStatsImpl implements MonthTemperatureStats {
     }
 
     @Override
-    public List<DayTemperatureInfo> getTemperatureInfoList() {
-        return new ArrayList<>(dayNumbersToTemperatureInfo.values());
+    public List<DayTemperatureInfo> getSortedTemperature() {
+        return dayTemperatureInfoMap.values()
+                .stream()
+                .sorted(comparingInt(DayTemperatureInfo::getTemperature))
+                .collect(Collectors.toList());
     }
 
     @Override
     public DayTemperatureInfo getTemperature(int day) {
-        return dayNumbersToTemperatureInfo.get(day);
+        return dayTemperatureInfoMap.get(day);
     }
 }
