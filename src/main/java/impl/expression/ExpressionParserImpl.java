@@ -18,7 +18,7 @@ public class ExpressionParserImpl implements ExpressionParser {
         // parsing string
         for (char currentChar : expression.toCharArray()) {
             // if whitespace
-            if(Character.isWhitespace(currentChar)){
+            if (Character.isWhitespace(currentChar)) {
                 continue;
             }
             // adding digit
@@ -28,7 +28,7 @@ public class ExpressionParserImpl implements ExpressionParser {
             }
             // sign processing
             if (currentChar == '+' || currentChar == '-') {
-                if(currentNumber.length() != 0){
+                if (currentNumber.length() != 0) {
                     result = Math.addExact(result, getNumber(currentNumber));
                     currentNumber = new StringBuilder();
                 }
@@ -46,7 +46,7 @@ public class ExpressionParserImpl implements ExpressionParser {
     private int getNumber(StringBuilder currentNumber) throws ParseException {
         try {
             return Integer.parseInt(currentNumber.toString());
-        } catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             throw new ParseException("Not valid integer format");
         }
     }
