@@ -10,7 +10,7 @@ public interface MonthTemperatureStats {
 
     int getMaxTemperature();
 
-    List<DayTemperatureInfo> getTemperatureInfoList();
+    List<DayTemperatureInfo> getSortedTemperature();
 
     DayTemperatureInfo getTemperature(int day);
 }
