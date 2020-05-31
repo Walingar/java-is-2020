@@ -29,7 +29,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
         if (current == null) {
             return null;
         }
-        return this.status.get(month).getAverageInfo().getAverage();
+        return status.get(month).getAverageInfo().getAverage();
     }
 
     @Override

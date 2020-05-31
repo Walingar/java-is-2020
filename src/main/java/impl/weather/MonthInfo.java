@@ -11,8 +11,8 @@ public class MonthInfo {
     private int maximumTemp;
 
     public MonthInfo() {
-        this.averageInfo = new AverageData(0);
-        this.maximumTemp = -1000;
+        averageInfo = new AverageData(0);
+        maximumTemp = -1000;
     }
 
     public void set(Integer day, DayTemperatureInfo dayInfo) {
@@ -20,26 +20,26 @@ public class MonthInfo {
     }
 
     public Map<Integer, DayTemperatureInfo> getInfo() {
-        return this.info;
+        return info;
     }
 
     public void updateAverage(int temperature) {
-        int numOfDays = (this.info.size());
-        var oldAverage = this.averageInfo.getAverage();
+        int numOfDays = (info.size());
+        var oldAverage = averageInfo.getAverage();
         double newAverage = ((oldAverage * numOfDays) + temperature) / (numOfDays + 1);
-        this.averageInfo = new AverageData(newAverage);
+        averageInfo = new AverageData(newAverage);
     }
 
     public AverageData getAverageInfo() {
-        return this.averageInfo;
+        return averageInfo;
     }
 
     public void updateMaxValue(int temperature) {
-        this.maximumTemp = Math.max(temperature, this.maximumTemp);
+        maximumTemp = Math.max(temperature, maximumTemp);
     }
 
     public Integer getMaxTemperatureOnMonth() {
-        return this.maximumTemp;
+        return maximumTemp;
     }
 
     public static class AverageData {
@@ -50,7 +50,7 @@ public class MonthInfo {
         }
 
         public double getAverage() {
-            return this.average;
+            return average;
         }
     }
 }
