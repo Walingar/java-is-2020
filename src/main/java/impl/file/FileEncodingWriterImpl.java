@@ -19,10 +19,8 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
     public void write(File file, InputStream data, Charset dataEncoding, Charset fileEncoding) {
         if (!file.exists()) {
             var parent = file.getParentFile();
-            if (parent != null && !parent.exists()) {
-                if(!parent.mkdirs()){
+            if (parent != null && !parent.exists() && !parent.mkdirs()) {
                     System.err.println("Unable to create a File");
-                }
             }
         }
         try (FileWriter writer = new FileWriter(file, fileEncoding);
