@@ -50,8 +50,8 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
         return (monthInfo == null) ? null : monthInfo.getTemperature(day);
     }
 
-    private void validateMonthDay(int day, Month month){
-        if(0 > day || day > month.length(false)) {
+    private void validateMonthDay(int day, Month month) {
+        if (day < 0 || day > month.length(false)) {
             throw new IllegalArgumentException("Wrong day format");
         }
     }
