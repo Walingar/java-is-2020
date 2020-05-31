@@ -28,7 +28,7 @@ public class PairImpl<K, T> implements Pair<K, T> {
         if (this == obj) {
             return true;
         }
-        if (!(obj instanceof PairImpl)){
+        if (!(obj instanceof PairImpl)) {
             return false;
         }
         PairImpl<?, ?> pair = (PairImpl<?, ?>) obj;
