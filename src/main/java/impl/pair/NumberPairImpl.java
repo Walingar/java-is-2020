@@ -7,5 +7,4 @@ public class NumberPairImpl<T extends Number, E extends Number> extends PairImpl
         super(first, second);
     }
 
-
 }
