@@ -6,6 +6,11 @@ public class PairImpl<K, T> implements Pair<K, T> {
     private final K first;
     private final T second;
 
+    PairImpl(K first, T second) {
+        this.first = first;
+        this.second = second;
+    }
+
     @Override
     public K getFirst() {
         return first;
@@ -28,10 +33,5 @@ public class PairImpl<K, T> implements Pair<K, T> {
     @Override
     public String toString() {
         return "<" + first.toString() + "," + second.toString() + ">";
-    }
-
-    PairImpl(K first, T second) {
-        this.first = first;
-        this.second = second;
     }
 }
