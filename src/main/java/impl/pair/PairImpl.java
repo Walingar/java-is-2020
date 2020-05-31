@@ -2,6 +2,8 @@ package impl.pair;
 
 import api.pair.Pair;
 
+import java.util.Objects;
+
 public class PairImpl<K, T> implements Pair<K, T> {
 
     private final K first;
@@ -29,6 +31,13 @@ public class PairImpl<K, T> implements Pair<K, T> {
 
     @Override
     public boolean equals(Object o) {
-        return this.getClass() == o.getClass() && this.toString().equals(o.toString());
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof PairImpl)) {
+            return false;
+        }
+        PairImpl<?,?> pair = (PairImpl<?,?>) o;
+        return Objects.equals(first, pair.first) && Objects.equals(second, pair.second);
     }
 }
