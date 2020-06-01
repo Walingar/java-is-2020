@@ -36,7 +36,7 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
 
         @Override
         public boolean hasNext() {
-            return currentIndex != tailIndex;
+            return currentIndex != tailIndex + 1;
         }
 
         @Override
