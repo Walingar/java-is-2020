@@ -1,5 +1,7 @@
 package queue.impl;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.AbstractQueue;
 import java.util.Iterator;
 
@@ -23,10 +25,31 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
         capacity = MIN_CAPACITY;
     }
 
+    @NotNull
     @Override
     public Iterator<Integer> iterator() {
-        return null;
+        return new ArrayQueueIterator();
     }
+
+    private class ArrayQueueIterator implements Iterator<Integer> {
+        private int currentIndex = headIndex;
+
+        @Override
+        public boolean hasNext() {
+            return currentIndex != tailIndex;
+        }
+
+        @Override
+        public Integer next() {
+            if (currentIndex > tailIndex) {
+                return null;
+            }
+            Integer value = elements[currentIndex];
+            currentIndex += 1;
+            return value;
+        }
+    }
+
 
     @Override
     public int size() {
