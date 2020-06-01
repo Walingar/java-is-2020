@@ -74,7 +74,9 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
         } else {
             var element = elements[headIndex];
             size -= 1;
-            headIndex += 1;
+            if (headIndex != tailIndex) {
+                headIndex += 1;
+            }
             updateQueueCapacity();
             return element;
         }
