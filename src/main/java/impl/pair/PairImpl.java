@@ -28,7 +28,7 @@ public class PairImpl<T, K> implements Pair<T, K> {
         if (this == o) {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if (!(o instanceof PairImpl)) {
             return false;
         }
         PairImpl<?, ?> pair = (PairImpl<?, ?>) o;
