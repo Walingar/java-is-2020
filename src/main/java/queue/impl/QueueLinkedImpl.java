@@ -1,35 +1,25 @@
 package queue.impl;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.AbstractQueue;
 import java.util.Iterator;
+import java.util.Queue;
 
-public class QueueLinkedImpl extends AbstractQueue<Integer> {
+public class QueueLinkedImpl extends AbstractQueue<Integer> implements Queue<Integer> {
+    private int size;
+    private Node head;
+    private Node tail;
 
-    private int size = 0;
-    private Item head = null;
-    private Item tail = null;
-
-    private static class LinkedQueueIterator implements Iterator<Item> {
-        Item current;
-
-        LinkedQueueIterator(Item head) {
-            current = head;
-        }
-
-        @Override
-        public boolean hasNext() {
-            return current.getNext() != null;
-        }
-
-        @Override
-        public Item next() {
-            return current.getNext();
-        }
+    QueueLinkedImpl() {
+        head = null;
+        size = 0;
     }
 
+    @NotNull
     @Override
-    public Iterator iterator() {
-        return new LinkedQueueIterator(head);
+    public Iterator<Integer> iterator() {
+        return new QueueLinkedIterator();
     }
 
     @Override
@@ -38,14 +28,14 @@ public class QueueLinkedImpl extends AbstractQueue<Integer> {
     }
 
     @Override
-    public boolean offer(Integer Item) {
-        Item newItem = new Item(null, Item);
+    public boolean offer(Integer element) {
+        Node node = new Node(null, element);
         if (head == null) {
-            head = newItem;
+            head = node;
             tail = head;
         } else {
-            tail.setNext(newItem);
-            tail = newItem;
+            tail.setNext(node);
+            tail = node;
         }
         size++;
         return true;
@@ -56,7 +46,7 @@ public class QueueLinkedImpl extends AbstractQueue<Integer> {
         if (size == 0) {
             return null;
         }
-        Integer value = head.getValue();
+        Integer value = head.value;
         head = head.getNext();
         size--;
         return value;
@@ -70,12 +60,12 @@ public class QueueLinkedImpl extends AbstractQueue<Integer> {
         return head.getValue();
     }
 
-    private static class Item {
+    private static class Node {
+        private Node next;
         private Integer value;
-        private Item nextItem;
 
-        Item(Item next, int value) {
-            this.nextItem = next;
+        Node(Node next, Integer value) {
+            this.next = next;
             this.value = value;
         }
 
@@ -83,12 +73,31 @@ public class QueueLinkedImpl extends AbstractQueue<Integer> {
             return value;
         }
 
-        Item getNext() {
-            return nextItem;
+        Node getNext() {
+            return next;
         }
 
-        void setNext(Item next) {
-            this.nextItem = next;
+        void setNext(Node next) {
+            this.next = next;
+        }
+    }
+
+    private class QueueLinkedIterator implements Iterator<Integer> {
+        private Node current = head;
+
+        @Override
+        public boolean hasNext() {
+            return current != null;
+        }
+
+        @Override
+        public Integer next() {
+            if (current == null) {
+                return null;
+            }
+            int value = current.value;
+            current = current.next;
+            return value;
         }
     }
 }

@@ -1,10 +1,11 @@
 package queue.impl;
 
+import org.jetbrains.annotations.NotNull;
 import java.util.AbstractQueue;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
+import java.util.Queue;
 
-public class QueueArrayImpl extends AbstractQueue<Integer> {
+public class QueueArrayImpl extends AbstractQueue<Integer> implements Queue<Integer> {
     private Integer[] queue;
     private int capacity;
     private int size;
@@ -21,11 +22,10 @@ public class QueueArrayImpl extends AbstractQueue<Integer> {
         end = 0;
     }
 
-    private void resizeQueue() {
-        capacity *= coefficient;
-        Integer[] buffer = new Integer[capacity];
-        System.arraycopy(queue, 0, buffer, 0, queue.length);
-        queue = buffer;
+    @NotNull
+    @Override
+    public Iterator<Integer> iterator() {
+        return new QueueArrayIterator(begin);
     }
 
     @Override
@@ -33,17 +33,46 @@ public class QueueArrayImpl extends AbstractQueue<Integer> {
         return size;
     }
 
-    @Override
-    public Iterator iterator() {
-        return new ArrayQueueIterator();
+    private void rearrangeQueue() {
+        if (begin == 0) {
+            return;
+        }
+        setRange(queue, queue, begin, size);
+        begin = 0;
+        end = size;
+    }
+
+    private boolean isIndexInside(int index) {
+        return begin <= index && index < end;
+    }
+
+    private int getElementAt(int index) {
+        if (isIndexInside(index)) {
+            return queue[index];
+        } else {
+            throw new IndexOutOfBoundsException();
+        }
+    }
+
+    private void setRange(Integer[] from, Integer[] to, int begin, int size) {
+        System.arraycopy(from, begin, to, 0, size);
+    }
+
+    private void reallocate(int newCapacity) {
+        rearrangeQueue();
+        Integer[] temp = new Integer[size];
+        setRange(queue, temp, 0, size);
+        capacity = newCapacity;
+        queue = new Integer[capacity];
+        setRange(temp, queue, 0, size);
     }
 
     @Override
-    public boolean offer(Integer item) {
+    public boolean offer(Integer element) {
         if (end == capacity) {
-            resizeQueue();
+            reallocate(capacity * coefficient);
         }
-        queue[end] = item;
+        queue[end] = element;
         size++;
         end++;
         return true;
@@ -55,8 +84,13 @@ public class QueueArrayImpl extends AbstractQueue<Integer> {
             return null;
         }
         size--;
-        return queue[begin++];
-
+        int returnValue = queue[begin];
+        begin++;
+        int minUpdateSize = capacity / 2 * coefficient;
+        if (size < minUpdateSize && capacity % coefficient == 0) {
+            reallocate(minUpdateSize);
+        }
+        return returnValue;
     }
 
     @Override
@@ -67,25 +101,23 @@ public class QueueArrayImpl extends AbstractQueue<Integer> {
         return queue[begin];
     }
 
-    private class ArrayQueueIterator implements Iterator<Integer> {
-        private int currentIndex;
+    private class QueueArrayIterator implements Iterator<Integer> {
+
+        private int currentElementIndex;
+
+        QueueArrayIterator(int begin) {
+            currentElementIndex = begin - 1;
+        }
 
         @Override
         public boolean hasNext() {
-            return currentIndex < end;
-        }
-
-        ArrayQueueIterator() {
-            currentIndex = begin;
+            return isIndexInside(currentElementIndex + 1);
         }
 
         @Override
         public Integer next() {
-            if (!hasNext()) {
-                throw new NoSuchElementException();
-            }
-            currentIndex++;
-            return queue[currentIndex];
+            currentElementIndex++;
+            return getElementAt(currentElementIndex);
         }
     }
 }
