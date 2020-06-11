@@ -1,10 +1,8 @@
 package impl.file;
 
 import api.file.FileEncodingReader;
-
 import java.io.*;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 
 public class FileEncodingReaderImpl implements FileEncodingReader {
     @Override
@@ -12,7 +10,7 @@ public class FileEncodingReaderImpl implements FileEncodingReader {
         try {
             return new FileReader(file, fileEncoding);
         } catch (IOException e) {
-            throw new RuntimeException(e.getMessage());
+            throw new FileEncodingException(e.getMessage());
         }
     }
 }
