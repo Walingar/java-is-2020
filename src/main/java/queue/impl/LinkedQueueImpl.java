@@ -5,16 +5,6 @@ import java.util.Iterator;
 
 public class LinkedQueueImpl extends AbstractQueue<Integer> {
 
-    private class Node {
-
-        private int value;
-        private Node next;
-
-        public Node(int value) {
-            this.value = value;
-        }
-    }
-
     private Node head;
     private Node tail;
     private int size;
@@ -56,6 +46,16 @@ public class LinkedQueueImpl extends AbstractQueue<Integer> {
     @Override
     public Iterator<Integer> iterator() {
         return new QueueIterator();
+    }
+
+    private static class Node {
+
+        private final int value;
+        private Node next;
+
+        public Node(int value) {
+            this.value = value;
+        }
     }
 
     private class QueueIterator implements Iterator<Integer> {
