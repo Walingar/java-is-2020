@@ -59,7 +59,7 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
     }
 
     private boolean isFull() {
-        return size() == values.length;
+        return size() == values.length - 1;
     }
 
     private boolean extendValues() {
