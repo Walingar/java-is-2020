@@ -59,7 +59,7 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
     }
 
     private boolean isFull() {
-        return size() == values.length - 1 ? true : false;
+        return size() == values.length;
     }
 
     private boolean extendValues() {
@@ -67,7 +67,7 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
         try {
             int newSize = Math.multiplyExact(values.length, 2);
             newQueue = new ArrayQueueImpl(newSize);
-        } catch (Exception e) {
+        } catch (ArithmeticException e) {
             return false;
         }
         Integer value;
