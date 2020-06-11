@@ -1,3 +1,5 @@
 /build/
 /.gradle/
 /.idea/
+*.txt
+.DS_Store
