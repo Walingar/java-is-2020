@@ -17,7 +17,7 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
         createFile(file);
         var c = 0;
         try (Writer writer = new FileWriter(file, fileEncoding);
-             InputStreamReader inputStreamReader = new InputStreamReader(data, dataEncoding)){
+             InputStreamReader inputStreamReader = new InputStreamReader(data, dataEncoding)) {
             while ((c = inputStreamReader.read()) >= 0) {
                 writer.write(c);
             }
@@ -28,9 +28,14 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
 
     private void createFile(File file) {
         try {
-            var dirs = file.getParentFile();
-            dirs.mkdirs();
-            dirs.createNewFile();
+            if (!file.exists()) {
+                var dirs = file.getParentFile();
+                if (dirs.exists() || dirs.mkdirs()) {
+                    if (!dirs.createNewFile()) {
+                        System.out.println("File already exists");
+                    }
+                }
+            }
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
