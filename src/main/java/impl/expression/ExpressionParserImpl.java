@@ -15,28 +15,19 @@ public class ExpressionParserImpl implements ExpressionParser {
         for (int i = 0; i < expression.length(); i++) {
             char element = expression.charAt(i);
             if (Character.isDigit(element)) {
-                if ((long) number * 10 + Character.getNumericValue(element) > Integer.MAX_VALUE) {
+                try {
+                    number = Math.addExact(Math.multiplyExact(number, 10), Character.getNumericValue(element));
+                } catch (ArithmeticException ex) {
                     throw new ParseException("parse long number");
                 }
-                number = number * 10 + Character.getNumericValue(element);
             } else if (element == '+' || element == '-') {
-                if (Integer.MAX_VALUE < ((long) previous + sign * number)) {
-                    throw new ArithmeticException();
-                }
-                previous = previous + sign * number;
+                previous = Math.addExact(previous, sign * number);
                 number = 0;
                 sign = (element == '+') ? 1 : -1;
-            } else {
-                if (!Character.isWhitespace(element)) {
-                    throw new ParseException("parse nonNumber");
-                }
+            } else if (!Character.isWhitespace(element)) {
+                throw new ParseException("parse nonNumber");
             }
-
         }
-        if (Integer.MAX_VALUE < ((long) previous + sign * number)) {
-            throw new ArithmeticException();
-        }
-        previous += sign * number;
-        return previous;
+        return Math.addExact(previous, sign * number);
     }
 }
