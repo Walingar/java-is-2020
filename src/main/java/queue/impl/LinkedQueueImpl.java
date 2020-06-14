@@ -42,25 +42,7 @@ public class LinkedQueueImpl extends AbstractQueue<Integer> {
 
     @Override
     public Iterator<Integer> iterator() {
-        var iterator = new Iterator<Integer>() {
-            Link current = first;
-
-            @Override
-            public boolean hasNext() {
-                if (current != null) {
-                    return true;
-                }
-                return false;
-            }
-
-            @Override
-            public Integer next() {
-                Integer result = current.item;
-                current = current.next;
-                return result;
-            }
-        };
-        return iterator;
+        return new LinkedIterator();
     }
 
     @Override
@@ -76,12 +58,28 @@ public class LinkedQueueImpl extends AbstractQueue<Integer> {
         return 0;
     }
 
-    private class Link {
-        public int item;
-        public Link next = null;
+    private static class Link {
+        private final int item;
+        private Link next = null;
 
         Link(int item) {
             this.item = item;
+        }
+    }
+
+    private class LinkedIterator implements Iterator<Integer> {
+        Link current = first;
+
+        @Override
+        public boolean hasNext() {
+            return current != null;
+        }
+
+        @Override
+        public Integer next() {
+            Integer result = current.item;
+            current = current.next;
+            return result;
         }
     }
 }
