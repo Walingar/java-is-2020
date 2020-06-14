@@ -10,6 +10,6 @@ public class NumberPairImpl<K extends Number, T extends Number> extends PairImpl
 
     @Override
     public boolean equals(Object o) {
-        return ((o instanceof NumberPair)&&(super.equals(o)));
+        return ((o instanceof NumberPair) && super.equals(o));
     }
 }
