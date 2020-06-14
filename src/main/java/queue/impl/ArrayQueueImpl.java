@@ -5,30 +5,32 @@ import java.util.Iterator;
 
 public class ArrayQueueImpl extends AbstractQueue<Integer> {
 
-    int[] mas = new int[20];
+    int[] array = new int[20];
     int sizeMas = 0;
+    int head = 0;
 
     @Override
     public boolean offer(Integer integer) {
-        if (mas.length == sizeMas) {
-            int[] newMas = new int[mas.length * 2];
-            System.arraycopy(mas, 0, newMas, 0, sizeMas);
-            mas = newMas;
+        if (array.length == sizeMas+head) {
+            int[] newQueue = new int[array.length * 2];
+            System.arraycopy(array, head, newQueue, 0, sizeMas);
+            array = newQueue;
+            head = 0;
         }
-        mas[sizeMas++] = integer;
+        array[head+sizeMas] = integer;
+        sizeMas++;
         return true;
     }
 
     @Override
     public Integer poll() {
         if (sizeMas > 0) {
-            int temp = mas[0];
-            if (mas.length - mas.length/3 >= --sizeMas) {
-                int[] newMas = new int[mas.length-mas.length/4];
-                System.arraycopy(mas, 1, newMas, 0, sizeMas);
-                mas = newMas;
-            } else {
-                System.arraycopy(mas, 1, mas, 0, sizeMas);
+            int temp = array[head++];
+            if (array.length - array.length / 3 >= --sizeMas) {
+                int[] newMas = new int[array.length - array.length / 4];
+                System.arraycopy(array, head, newMas, 0, sizeMas);
+                array = newMas;
+                head = 0;
             }
             return temp;
         }
@@ -37,34 +39,31 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
 
     @Override
     public Integer peek() {
-        if (sizeMas > 0) {
-            return mas[0];
-        } else {
-            return null;
-        }
+        return sizeMas > 0 ? array[head] : null;
     }
 
     @Override
     public Iterator<Integer> iterator() {
-        Iterator<Integer> iterator = new Iterator<>() {
-
-            int currentIndex = 0;
-
-            @Override
-            public boolean hasNext() {
-                return currentIndex < sizeMas;
-            }
-
-            @Override
-            public Integer next() {
-                return mas[currentIndex++];
-            }
-        };
-        return iterator;
+        return new ArrayIterator();
     }
 
     @Override
     public int size() {
         return sizeMas;
+    }
+
+    private class ArrayIterator implements Iterator<Integer> {
+
+        int currentIndex = head;
+
+        @Override
+        public boolean hasNext() {
+            return currentIndex < sizeMas+head;
+        }
+
+        @Override
+        public Integer next() {
+            return array[currentIndex++];
+        }
     }
 }
