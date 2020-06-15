@@ -7,31 +7,26 @@ import java.time.Month;
 import java.util.*;
 
 public class YearTemperatureStatsImpl implements YearTemperatureStats {
-    private Map<Month, MonthInfo> monthInfoMap = new HashMap<>();
+    private final Map<Month, MonthInfo> monthInfoMap = new HashMap<>();
 
 
     @Override
     public void updateStats(DayTemperatureInfo info) {
-        if (monthInfoMap.get(info.getMonth()) == null) {
-            monthInfoMap.put(info.getMonth(), new MonthInfo());
-        }
-        monthInfoMap.get(info.getMonth()).add(info);
+        Month month = info.getMonth();
+        monthInfoMap.putIfAbsent(month, new MonthInfo());
+        monthInfoMap.get(month).add(info);
     }
 
     @Override
     public Double getAverageTemperature(Month month) {
-        if (monthInfoMap.get(month) == null) {
-            return null;
-        }
-        return monthInfoMap.get(month).getAverage();
+        MonthInfo monthInfo = monthInfoMap.get(month);
+        return monthInfo == null ? null : monthInfo.getAverage();
     }
 
     @Override
     public Map<Month, Integer> getMaxTemperature() {
         Map<Month, Integer> maxTemp = new HashMap<>();
-        monthInfoMap.entrySet().forEach(temp -> {
-            maxTemp.put(temp.getKey(), temp.getValue().getMaxTemperature());
-        });
+        monthInfoMap.forEach((key, value) -> maxTemp.put(key, value.getMaxTemperature()));
         return maxTemp;
     }
 
@@ -39,8 +34,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
     public List<DayTemperatureInfo> getSortedTemperature(Month month) {
         if (monthInfoMap.get(month) != null) {
             List<DayTemperatureInfo> ofMonth = new ArrayList<>(monthInfoMap.get(month).getDayTemperatureMap().values());
-            Comparator<DayTemperatureInfo> comparator = Comparator.comparingInt(DayTemperatureInfo::getTemperature)
-                    .thenComparing((o1, o2) -> o2.getDay() - o1.getDay());   // костыль, так как я не могу контролировать последовательность, иначе оно не совпадает, так как у меня дни не совпадают с вами
+            Comparator<DayTemperatureInfo> comparator = Comparator.comparingInt(DayTemperatureInfo::getTemperature);
             ofMonth.sort(comparator);
             return ofMonth;
         }
@@ -49,9 +43,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
     @Override
     public DayTemperatureInfo getTemperature(int day, Month month) {
-        if (monthInfoMap.get(month) != null) {
-            return monthInfoMap.get(month).getTemperature(day);
-        }
-        return null;
+        MonthInfo monthInfo = monthInfoMap.get(month);
+        return monthInfo == null ? null : monthInfo.getTemperature(day);
     }
 }
