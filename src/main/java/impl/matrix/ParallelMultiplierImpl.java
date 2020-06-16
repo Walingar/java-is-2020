@@ -17,15 +17,14 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
         int step = (int) Math.ceil((double) a.length / maxThreadsCount);
         int startI = 0;
         int finishI = startI + step;
-
-        if (step * maxThreadsCount > a.length) {
-            maxThreadsCount = a.length;
-        }
-
         for (int i = 0; i < maxThreadsCount; i++) {
             t[i] = new Thread(new RunnableImpl(a, b, c, startI, finishI));
             t[i].start();
 
+            if (finishI == a.length) {
+                maxThreadsCount = i + 1;
+                break;
+            }
             startI += step;
             finishI = Math.min(finishI + startI, a.length);
         }
