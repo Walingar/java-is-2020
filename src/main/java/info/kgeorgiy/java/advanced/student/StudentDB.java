@@ -10,22 +10,12 @@ public class StudentDB implements StudentQuery {
 
     private static final String DEFAULT_EMPTY_STRING = "";
 
-    private enum Compare {
-        BY_NAME
-    }
-
-    private static final Map<Compare, Comparator<Student>> comparators = new HashMap<>() {{
-        put(Compare.BY_NAME, Comparator.comparing(Student::getLastName)
-                .thenComparing(Student::getFirstName)
-                .thenComparingInt(Student::getId));
-    }};
+    private final Comparator<Student> BY_NAME = Comparator.comparing(Student::getLastName)
+            .thenComparing(Student::getFirstName)
+            .thenComparingInt(Student::getId);
 
     private String getFullName(Student s) {
         return String.format("%s %s", s.getFirstName(), s.getLastName());
-    }
-
-    private Stream<Student> of(List<Student> students) {
-        return students.stream();
     }
 
     private Stream<Student> of(Collection<Student> students) {
@@ -42,10 +32,6 @@ public class StudentDB implements StudentQuery {
 
     private Stream<Student> sorted(Stream<Student> stream) {
         return stream.sorted();
-    }
-
-    private Comparator<Student> with(Compare comparatorKey) {
-        return comparators.getOrDefault(comparatorKey, Comparator.naturalOrder());
     }
 
     private Stream<Student> sorted(Stream<Student> stream, Comparator<Student> comparator) {
@@ -65,27 +51,27 @@ public class StudentDB implements StudentQuery {
 
     @Override
     public List<String> getFirstNames(List<Student> students) {
-        return Strings.list(of(students, Student::getFirstName));
+        return list(of(students, Student::getFirstName));
     }
 
     @Override
     public List<String> getLastNames(List<Student> students) {
-        return Strings.list(of(students, Student::getLastName));
+        return list(of(students, Student::getLastName));
     }
 
     @Override
     public List<String> getGroups(List<Student> students) {
-        return Strings.list(of(students, Student::getGroup));
+        return list(of(students, Student::getGroup));
     }
 
     @Override
     public List<String> getFullNames(List<Student> students) {
-        return Strings.list(of(students, this::getFullName));
+        return list(of(students, this::getFullName));
     }
 
     @Override
     public Set<String> getDistinctFirstNames(List<Student> students) {
-        return Strings.set(of(students, Student::getFirstName));
+        return set(of(students, Student::getFirstName));
     }
 
     @Override
@@ -97,42 +83,42 @@ public class StudentDB implements StudentQuery {
 
     @Override
     public List<Student> sortStudentsById(Collection<Student> students) {
-        return Students.list(sorted(of(students)));
+        return list(sorted(of(students)));
     }
 
     @Override
     public List<Student> sortStudentsByName(Collection<Student> students) {
-        return Students.list(
+        return list(
                 sorted(
                         of(students),
-                        with(Compare.BY_NAME)));
+                        BY_NAME));
     }
 
     @Override
     public List<Student> findStudentsByFirstName(Collection<Student> students, String name) {
-        return Students.list(
+        return list(
                 sorted(
                         filtered(of(students),
                                 Student::getFirstName, name),
-                        with(Compare.BY_NAME)));
+                        BY_NAME));
     }
 
     @Override
     public List<Student> findStudentsByLastName(Collection<Student> students, String name) {
-        return Students.list(
+        return list(
                 sorted(
-                    filtered(of(students),
-                            Student::getLastName, name),
-                        with(Compare.BY_NAME)));
+                        filtered(of(students),
+                                Student::getLastName, name),
+                        BY_NAME));
     }
 
     @Override
     public List<Student> findStudentsByGroup(Collection<Student> students, String group) {
-        return Students.list(
+        return list(
                 sorted(
                         filtered(of(students),
                                 Student::getGroup, group),
-                        with(Compare.BY_NAME)));
+                        BY_NAME));
     }
 
     @Override
@@ -146,24 +132,12 @@ public class StudentDB implements StudentQuery {
                 BinaryOperator.minBy(Comparable::compareTo));
     }
 
-    //region Helper Collector Stuff
 
-    /**
-     * Had to do all of it since I can't just make beautiful Stream to List type safe converted method
-     *
-     * @param <T>
-     */
-    private static class Helper<T> {
-        private List<T> list(Stream<T> stream) {
-            return stream.collect(Collectors.toList());
-        }
-
-        private Set<T> set(Stream<T> stream) {
-            return stream.collect(Collectors.toSet());
-        }
+    private static <T> List<T> list(Stream<T> stream) {
+        return stream.collect(Collectors.toList());
     }
 
-    private Helper<Student> Students = new Helper<>();
-    private Helper<String> Strings = new Helper<>();
-    //endregion
+    private static <T> Set<T> set(Stream<T> stream) {
+        return stream.collect(Collectors.toSet());
+    }
 }
