@@ -33,9 +33,8 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
     @Override
     public Map<Month, Integer> getMaxTemperature() {
         Map<Month, Integer> monthlyMaxTemperatures = new HashMap<>();
-        Set<Map.Entry<Integer, MonthTemperatureStatsImpl>> knownMonths = monthlyTemperatures.entrySet();
 
-        for (Map.Entry<Integer, MonthTemperatureStatsImpl> monthStat : knownMonths) {
+        for (Map.Entry<Integer, MonthTemperatureStatsImpl> monthStat : monthlyTemperatures.entrySet()) {
             Month month = Month.of(monthStat.getKey());
             int maxTemperature = monthStat.getValue().getMaxTemperature();
 
