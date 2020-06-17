@@ -29,5 +29,4 @@ public class DayTemperatureInfoImpl implements DayTemperatureInfo {
     public int getTemperature() {
         return temperature;
     }
-
 }
