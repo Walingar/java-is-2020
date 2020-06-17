@@ -6,7 +6,6 @@ import java.io.*;
 import java.nio.charset.Charset;
 
 public class FileEncodingReaderImpl implements FileEncodingReader {
-
     @Override
     public Reader read(File file, Charset fileEncoding){
         try {

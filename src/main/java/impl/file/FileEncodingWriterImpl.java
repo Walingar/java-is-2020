@@ -7,9 +7,7 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 public class FileEncodingWriterImpl implements FileEncodingWriter {
-
     private final int size = 512;
-
     @Override
     public void write(File file, InputStream data, Charset dataEncoding) {
         write(file, data, dataEncoding, StandardCharsets.UTF_8);
