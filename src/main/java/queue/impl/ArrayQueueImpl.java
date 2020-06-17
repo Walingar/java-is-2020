@@ -5,7 +5,7 @@ import java.util.AbstractQueue;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
-class ArrayQueueImpl extends AbstractQueue<Integer> {
+class ArrayQueueImpl<T> extends AbstractQueue<T> {
 
     private static final double CAPACITY_FACTOR = 2;
     private static final int MINIMAL_CAPACITY = 128;
@@ -17,7 +17,7 @@ class ArrayQueueImpl extends AbstractQueue<Integer> {
     private int capacity = MINIMAL_CAPACITY;
 
     @Override
-    public Iterator<Integer> iterator() {
+    public Iterator<T> iterator() {
         return new ArrayIterator();
     }
 
@@ -27,7 +27,7 @@ class ArrayQueueImpl extends AbstractQueue<Integer> {
     }
 
     @Override
-    public boolean offer(Integer t) {
+    public boolean offer(T t) {
         increaseCapacity();
         queueElements[tail] = t;
         tail = increasePointer(tail);
@@ -36,7 +36,7 @@ class ArrayQueueImpl extends AbstractQueue<Integer> {
     }
 
     @Override
-    public Integer poll() {
+    public T poll() {
         if (isEmpty()) {
             return null;
         }
@@ -49,7 +49,7 @@ class ArrayQueueImpl extends AbstractQueue<Integer> {
     }
 
     @Override
-    public Integer peek() {
+    public T peek() {
         return getElement(head);
     }
 
@@ -77,16 +77,16 @@ class ArrayQueueImpl extends AbstractQueue<Integer> {
         capacity = newCapacity;
     }
 
-
-    private Integer getElement(int index) {
-        return (Integer) queueElements[index];
+    @SuppressWarnings("unchecked")
+    private T getElement(int index) {
+        return (T) queueElements[index];
     }
 
     private int increasePointer(int pointer) {
         return (pointer + 1) % capacity;
     }
 
-    private class ArrayIterator implements Iterator<Integer> {
+    private class ArrayIterator implements Iterator<T> {
         int currentPointer = head;
 
         @Override
@@ -95,7 +95,7 @@ class ArrayQueueImpl extends AbstractQueue<Integer> {
         }
 
         @Override
-        public Integer next() {
+        public T next() {
             if (!hasNext()) {
                 throw new NoSuchElementException();
             }
