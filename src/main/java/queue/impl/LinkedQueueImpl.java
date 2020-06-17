@@ -13,24 +13,7 @@ public class LinkedQueueImpl extends AbstractQueue<Integer> {
     @NotNull
     @Override
     public Iterator<Integer> iterator() {
-        return new Iterator<>() {
-            MyNode currentNode = head;
-
-            @Override
-            public boolean hasNext() {
-                return currentNode.prevNode != null;
-            }
-
-            @Override
-            public Integer next() {
-                if (hasNext()) {
-                    currentNode = currentNode.prevNode;
-                    return currentNode.value;
-                } else {
-                    return null;
-                }
-            }
-        };
+        return new MyIterator();
     }
 
     @Override
@@ -55,7 +38,6 @@ public class LinkedQueueImpl extends AbstractQueue<Integer> {
     @Override
     public Integer poll() {
         if (size == 0) {
-            System.out.println("There are no elements in the queue");
             return null;
         }
         Integer result = head.value;
@@ -67,7 +49,6 @@ public class LinkedQueueImpl extends AbstractQueue<Integer> {
     @Override
     public Integer peek() {
         if (size == 0) {
-            System.out.println("There are no elements in the queue");
             return null;
         } else {
             return head.value;
@@ -75,12 +56,31 @@ public class LinkedQueueImpl extends AbstractQueue<Integer> {
     }
 
     public static class MyNode {
-        private int value;
+        private final int value;
         private MyNode prevNode;
 
         MyNode(int value) {
             this.value = value;
             prevNode = null;
+        }
+    }
+
+    private class MyIterator implements Iterator<Integer> {
+        MyNode currentNode = head;
+
+        @Override
+        public boolean hasNext() {
+            return currentNode.prevNode != null;
+        }
+
+        @Override
+        public Integer next() {
+            if (hasNext()) {
+                currentNode = currentNode.prevNode;
+                return currentNode.value;
+            } else {
+                return null;
+            }
         }
     }
 }
