@@ -12,9 +12,12 @@ public class YearTemperatureStatsParserImpl implements YearTemperatureStatsParse
     public YearTemperatureStats parse(Collection<String> rawData) {
         YearTemperatureStats result = new YearTemperatureStatsImpl();
         for (String str : rawData) {
-            int day = Integer.parseInt(str.substring(0, str.indexOf('.')));
-            Month month = Month.of(Integer.parseInt(str.substring(str.indexOf('.') + 1, str.indexOf(' '))));
-            int temperature = Integer.parseInt(str.substring(str.indexOf(' ') + 1));
+            int dot = str.indexOf('.');
+            int space = str.indexOf(' ');
+
+            int day = Integer.parseInt(str.substring(0, dot));
+            Month month = Month.of(Integer.parseInt(str.substring(dot + 1, space)));
+            int temperature = Integer.parseInt(str.substring(space + 1));
             result.updateStats(new DayTemperatureInfoImpl(day, month, temperature));
         }
         return result;
