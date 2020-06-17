@@ -83,8 +83,8 @@ public class StudentDB implements StudentQuery {
                         functions.stream()
                                 .map(function ->
                                         function.apply(student))
-                                .collect(Collectors.joining(" "))
-                ).collect(Collectors.toList());
+                                .collect(Collectors.joining(" ")))
+                .collect(Collectors.toList());
     }
 
     private List<Student> getListOfSortedStudentsByNames(Collection<Student> students) {
