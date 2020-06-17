@@ -3,7 +3,6 @@ package queue.impl;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.AbstractQueue;
-import java.util.Arrays;
 import java.util.Iterator;
 
 public class ArrayQueueImpl extends AbstractQueue<Integer> {
