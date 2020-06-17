@@ -4,7 +4,6 @@ import api.pair.Pair;
 
 import java.util.Objects;
 
-
 public class PairImpl<T, E> implements Pair<T, E> {
     private final T first;
     private final E second;
