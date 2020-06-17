@@ -9,7 +9,7 @@ import static java.lang.Math.max;
 
 public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
-    private Map<Month, MonthInfo> monthInfo;
+    private final Map<Month, MonthInfo> monthInfo;
 
     YearTemperatureStatsImpl() {
         monthInfo = new HashMap<>();
