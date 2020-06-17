@@ -27,6 +27,7 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
             int[] newMas = new int[lastIndex * 2];
             System.arraycopy(arr, 0, newMas, 0, arr.length);
             arr = newMas;
+            clearTrash();
         }
         arr[lastIndex] = integer;
         lastIndex++;
@@ -39,11 +40,11 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
             Integer polledElement = arr[firstIndex];
             firstIndex++;
             if (lastIndex < arr.length / 2) {
-                int[] newMas = new int[lastIndex + 1];
+                int[] newMas = new int[lastIndex];
                 System.arraycopy(arr, 0, newMas, 0, lastIndex);
                 arr = newMas;
+                clearTrash();
             }
-            clearTrash();
             return polledElement;
         } else {
             return null;
@@ -60,8 +61,8 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
     }
 
     private void clearTrash() {
-        if (firstIndex != 0 && firstIndex == lastIndex - firstIndex) {
-            int[] newMas = new int[lastIndex - firstIndex];
+        if (firstIndex != 0 && firstIndex >= lastIndex - firstIndex) {
+            int[] newMas = new int[arr.length];
             System.arraycopy(arr, firstIndex, newMas, 0, lastIndex - firstIndex);
             arr = newMas;
             lastIndex -= firstIndex;
