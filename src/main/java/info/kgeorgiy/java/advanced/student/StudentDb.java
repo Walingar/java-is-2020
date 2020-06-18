@@ -1,6 +1,7 @@
 package info.kgeorgiy.java.advanced.student;
 
 import java.util.*;
+import java.util.function.Function;
 
 import static java.util.stream.Collectors.*;
 
@@ -12,30 +13,26 @@ public class StudentDb implements StudentQuery {
 
     @Override
     public List<String> getFirstNames(List<Student> students) {
-        return students.stream()
-                .map(Student::getFirstName)
-                .collect(toList());
+        return mapStudentsToStrings(students, Student::getFirstName);
     }
 
     @Override
     public List<String> getLastNames(List<Student> students) {
-        return students.stream()
-                .map(Student::getLastName)
-                .collect(toList());
+        return mapStudentsToStrings(students, Student::getLastName);
     }
 
     @Override
     public List<String> getGroups(List<Student> students) {
-        return students.stream()
-                .map(Student::getGroup)
-                .collect(toList());
+        return mapStudentsToStrings(students, Student::getGroup);
     }
 
     @Override
     public List<String> getFullNames(List<Student> students) {
-        return students.stream()
-                .map(student -> student.getFirstName() + " " + student.getLastName())
-                .collect(toList());
+        return mapStudentsToStrings(students, student -> student.getFirstName() + " " + student.getLastName());
+    }
+
+    private List<String> mapStudentsToStrings(List<Student> students, Function<? super Student, String> mapping) {
+        return students.stream().map(mapping).collect(toList());
     }
 
     @Override
