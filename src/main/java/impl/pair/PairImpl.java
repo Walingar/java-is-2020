@@ -24,14 +24,14 @@ public class PairImpl<K, T> implements Pair<K, T> {
     }
 
     public boolean equals(Object obj) {
-        boolean result = false;
         if (this == obj) {
-            result = true;
-        } else if (obj instanceof Pair) {
-            PairImpl<?, ?> temp = (PairImpl<?, ?>) obj;
-            result = Objects.equals(first, temp.first) && Objects.equals(second, temp.second);
+            return true;
         }
-        return result;
+        if (obj instanceof Pair) {
+            PairImpl<?, ?> temp = (PairImpl<?, ?>) obj;
+            return Objects.equals(first, temp.first) && Objects.equals(second, temp.second);
+        }
+        return false;
     }
 
     public String toString() {
