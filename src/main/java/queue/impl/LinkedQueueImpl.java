@@ -17,12 +17,12 @@ public class LinkedQueueImpl extends BaseQueue {
     @Override
     public boolean add(Integer newValue) {
         Node New = new Node(newValue, null);
-        if (this.size == 0) {
+        if (size == 0) {
             head = new Node(newValue, null);
             last = head;
         } else {
-            this.last.setNext(New);
-            this.last = New;
+            last.setNext(New);
+            last = New;
         }
         size++;
         return false;
@@ -30,7 +30,7 @@ public class LinkedQueueImpl extends BaseQueue {
 
     @Override
     public boolean offer(Integer integer) {
-        this.add(integer);
+        add(integer);
         return true;
     }
 
@@ -39,7 +39,7 @@ public class LinkedQueueImpl extends BaseQueue {
         if (size == 0) {
             return null;
         }
-        int res = (int) head.getValue();
+        int res = head.getValue();
         head = head.getNext();
         size--;
         return res;
@@ -50,7 +50,7 @@ public class LinkedQueueImpl extends BaseQueue {
         if (size == 0) {
             return null;
         }
-        return (int) head.getValue();
+        return head.getValue();
     }
 
     public static class Node {
@@ -64,15 +64,15 @@ public class LinkedQueueImpl extends BaseQueue {
         }
 
         public Node getNext() {
-            return this.next;
+            return next;
         }
 
-        public Object getValue() {
-            return this.value;
+        public Integer getValue() {
+            return value;
         }
 
         public void setNext(Node x) {
-            this.next = x;
+            next = x;
         }
     }
 
@@ -86,9 +86,9 @@ public class LinkedQueueImpl extends BaseQueue {
 
         @Override
         public Integer next() {
-            Object value = index.getValue();
+            Integer value = index.getValue();
             index = index.getNext();
-            return (int) value;
+            return value;
         }
 
         @Override
