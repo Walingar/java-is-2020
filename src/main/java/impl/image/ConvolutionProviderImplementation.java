@@ -21,26 +21,26 @@ public class ConvolutionProviderImplementation implements ConvolutionProvider {
                 int bluredImageColorRed = 0;
                 int bluredImageColorGreen = 0;
                 int bluredImageColorBlue = 0;
-                int imageRow = -step;
+                int shiftRow = -step;
                 int kernelRow = size - 1;
 
-                while (imageRow <= i + step && kernelRow >= 0) {
-                    int imageColumn = -step;
+                while (shiftRow <= i + step && kernelRow >= 0) {
+                    int shiftColumn = -step;
                     int kernelColumn = size - 1;
 
-                    while (imageColumn <= j + step && kernelColumn >= 0) {
+                    while (shiftColumn <= j + step && kernelColumn >= 0) {
                         double kernelItem = kernel[kernelRow][kernelColumn];
-                        if (isInRange(i + imageRow, imageSizeRow) && isInRange(j + imageColumn, imageSizeColumn)) {
-                            Color imageColor = image[i + imageRow][j + imageColumn];
+                        if (isInRange(i + shiftRow, imageSizeRow) && isInRange(j + shiftColumn, imageSizeColumn)) {
+                            Color imageColor = image[i + shiftRow][j + shiftColumn];
                             bluredImageColorRed += imageColor.getRed() * kernelItem;
                             bluredImageColorGreen += imageColor.getGreen() * kernelItem;
                             bluredImageColorBlue += imageColor.getBlue() * kernelItem;
                         }
 
-                        imageColumn++;
+                        shiftColumn++;
                         kernelColumn--;
                     }
-                    imageRow++;
+                    shiftRow++;
                     kernelRow--;
                 }
                 bluredImage[i][j] = new Color(bluredImageColorRed, bluredImageColorGreen, bluredImageColorBlue, bluredImageColorAlpha);
