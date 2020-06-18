@@ -31,7 +31,7 @@ public class PairImpl<T, E> implements Pair<T, E> {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        PairImpl<?, ?> pair = (PairImpl<?, ?>) obj;
+        PairImpl < ?, ? > pair = (PairImpl < ?, ? > ) obj;
         return Objects.equals(getFirst(), pair.getFirst()) && Objects.equals(getSecond(), pair.getSecond());
     }
 
