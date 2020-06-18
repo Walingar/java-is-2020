@@ -5,11 +5,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class ArrayQueueImpl extends BaseQueue {
-    private int head = 0;
     private final int limit = 10;
+    private final int scaleFactor = 2;
+    private int head = 0;
     private int cap = limit;
     private int indexCircularArray = 0;
-    private final int scaleFactor = 2;
     private Integer[] elements = new Integer[cap];
 
     private void ensureCapacity(int bias) {
