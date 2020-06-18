@@ -2,6 +2,7 @@ package info.kgeorgiy.java.advanced.student;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.*;
 
@@ -59,33 +60,26 @@ public class StudentDb implements StudentQuery {
 
     @Override
     public List<Student> sortStudentsByName(Collection<Student> students) {
-        return students.stream()
-                .sorted(STUDENT_NAME_COMPARATOR)
-                .collect(toList());
+        return filterStudentsAndSortByName(students, student -> true);
     }
 
     @Override
     public List<Student> findStudentsByFirstName(Collection<Student> students, String name) {
-        return students.stream()
-                .filter(student -> student.getFirstName().equals(name))
-                .sorted(STUDENT_NAME_COMPARATOR)
-                .collect(toList());
+        return filterStudentsAndSortByName(students, student -> student.getFirstName().equals(name));
     }
 
     @Override
     public List<Student> findStudentsByLastName(Collection<Student> students, String name) {
-        return students.stream()
-                .filter(student -> student.getLastName().equals(name))
-                .sorted(STUDENT_NAME_COMPARATOR)
-                .collect(toList());
+        return filterStudentsAndSortByName(students, student -> student.getLastName().equals(name));
     }
 
     @Override
     public List<Student> findStudentsByGroup(Collection<Student> students, String group) {
-        return students.stream()
-                .filter(student -> student.getGroup().equals(group))
-                .sorted(STUDENT_NAME_COMPARATOR)
-                .collect(toList());
+        return filterStudentsAndSortByName(students, student -> student.getGroup().equals(group));
+    }
+
+    private List<Student> filterStudentsAndSortByName(Collection<Student> students, Predicate<? super Student> filter) {
+        return students.stream().filter(filter).sorted(STUDENT_NAME_COMPARATOR).collect(toList());
     }
 
     @Override
