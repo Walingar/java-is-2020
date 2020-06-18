@@ -2,6 +2,8 @@ package impl.pair;
 
 import api.pair.Pair;
 
+import java.util.Objects;
+
 public class PairImpl<K, T> implements Pair<K, T> {
     K first;
     T second;
@@ -27,7 +29,7 @@ public class PairImpl<K, T> implements Pair<K, T> {
             result = true;
         } else if (obj instanceof Pair) {
             PairImpl<?, ?> temp = (PairImpl<?, ?>) obj;
-            result = first.toString().equals(temp.getFirst().toString()) && second.toString().equals(temp.getSecond().toString());
+            result = Objects.equals(first, temp.first) && Objects.equals(second, temp.second);
         }
         return result;
     }
