@@ -5,7 +5,7 @@ import api.expression.ParseException;
 
 public class ExpressionParserImpl implements ExpressionParser {
     private final StringBuilder currentNumber;
-
+    private final int maxIntLen = (int) Math.floor(Math.log10(Integer.MAX_VALUE)) + 2; // +1 for - in negatives, +1 to compensate floor
     public ExpressionParserImpl() {
         currentNumber = new StringBuilder();
     }
@@ -18,11 +18,13 @@ public class ExpressionParserImpl implements ExpressionParser {
         if (expression.isBlank()) {
             throw new IllegalArgumentException("Expression is empty");
         }
+        int expressionLength = expression.length();
         try {
+            checkNumber(expressionLength);
             return Integer.parseInt(expression);
         } catch (NumberFormatException e) {
             int result = 0;
-            for (int pos = 0; pos < expression.length(); pos++) {
+            for (int pos = 0; pos < expressionLength; pos++) {
 
                 char processed_char = expression.charAt(pos);
                 if (Character.isWhitespace(processed_char)) {
@@ -30,10 +32,12 @@ public class ExpressionParserImpl implements ExpressionParser {
                 }
                 if (Character.isDigit(processed_char)) {
                     currentNumber.append(processed_char);
+                    checkNumber(currentNumber.length());
                 } else {
                     if (processed_char == '+' || processed_char == '-') {
                         if (currentNumber.length() != 0) {
                             result = calculate(result, getValue(currentNumber));
+                            currentNumber.setLength(0);
                         }
                         currentNumber.append(processed_char);
                     } else {
@@ -42,7 +46,7 @@ public class ExpressionParserImpl implements ExpressionParser {
                 }
             }
             if (currentNumber.length() != 0) {
-                result = calculate(result, getValue(currentNumber));
+                return calculate(result, getValue(currentNumber));
             }
             return result;
         }
@@ -58,11 +62,17 @@ public class ExpressionParserImpl implements ExpressionParser {
     }
 
     private int calculate(int a, int b) {
-        currentNumber.setLength(0);
+
         try {
             return Math.addExact(a, b);
         } catch (ArithmeticException e) {
             throw new ArithmeticException("Unable to compute math operation");
+        }
+    }
+
+    private void checkNumber(int len) {
+        if (len > maxIntLen) {
+            throw new NumberFormatException("Value is too large for int");
         }
     }
 }
