@@ -16,7 +16,9 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
     @Override
     public void updateStats(DayTemperatureInfo info) {
-        int monthNumber = info.getMonth().getValue();
+        Month month = info.getMonth();
+        int monthNumber = month.getValue();
+
         MonthTemperatureStatsImpl monthStat = GetOrCreateMonthTemperatureStat(monthNumber);
 
         monthStat.updateTemperatureInfo(info);
