@@ -29,8 +29,7 @@ public class ExpressionParserImplementation implements ExpressionParser {
                         throw new ParseException("Two operands one after another");
                     }
                     curOperand = add(Math.multiplyExact(Character.getNumericValue(expressionCharArray[i]),
-                                                        (int) Math.pow(10, numberDigits)),
-                                    curOperand);
+                            (int) Math.pow(10, numberDigits)), curOperand);
                     numberDigits++;
                     newOperand = false;
                     doubleOperator = false;
