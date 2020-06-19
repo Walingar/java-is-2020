@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 import static java.util.Comparator.comparingInt;
 
 public class MonthTemperatureStatsImpl implements MonthTemperatureStats {
-    private Month month;
+    private final Month month;
     private Map<Integer, DayTemperatureInfo> dayTemperatureInfoMap;
     private Integer maxTemperature;
     private Double averageTemperature;
