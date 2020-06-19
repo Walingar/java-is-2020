@@ -36,6 +36,7 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
 
             public Integer next() {
                 Integer elementToReturn = elements[currentPosition];
+
                 currentPosition++;
                 if (currentPosition != lastElementIndex && currentPosition >= capacity)
                     currentPosition = 0;
@@ -51,60 +52,57 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
             return 0;
 
         if (lastElementIndex >= firstElementIndex)
-            return (lastElementIndex - firstElementIndex + 1);
+            return lastElementIndex - firstElementIndex + 1;
 
-        return (firstElementIndex - lastElementIndex + 1);
+        return firstElementIndex - lastElementIndex + 1;
     }
 
 
     @Override
     public boolean offer(Integer integer) {
-        if (firstElementIndex == -1) {
-            firstElementIndex = 0;
-            lastElementIndex = 0;
+        boolean exceedsLinearCapacity = (lastElementIndex + 1) >= capacity;
+        boolean exceedsCyclicCapacity = (lastElementIndex < firstElementIndex) &&
+                ((lastElementIndex + 1) >= firstElementIndex);
 
-            elements[firstElementIndex] = integer;
-        } else {
-            boolean exceedsLinearCapacity = (lastElementIndex + 1) >= capacity;
-            boolean exceedsCyclicCapacity = (lastElementIndex < firstElementIndex) &&
-                    ((lastElementIndex + 1) >= firstElementIndex);
+        if (exceedsLinearCapacity || exceedsCyclicCapacity) {
+            capacity = capacity * CAPACITY_MULTIPLIER;
+            Integer[] newArray = new Integer[capacity];
 
-            if (exceedsLinearCapacity || exceedsCyclicCapacity) {
-                capacity = capacity * CAPACITY_MULTIPLIER;
-                Integer[] newArray = new Integer[capacity];
+            if (exceedsLinearCapacity) {
+                if (lastElementIndex + 1 - firstElementIndex >= 0)
+                    System.arraycopy(elements, firstElementIndex, newArray, 0, lastElementIndex + 1 - firstElementIndex);
 
-                if (exceedsLinearCapacity) {
-                    if (lastElementIndex + 1 - firstElementIndex >= 0)
-                        System.arraycopy(elements, firstElementIndex, newArray, 0, lastElementIndex + 1 - firstElementIndex);
+                lastElementIndex = lastElementIndex - firstElementIndex;
+                firstElementIndex = 0;
+            } else {
+                if (firstElementIndex + 1 - lastElementIndex >= 0)
+                    System.arraycopy(elements, lastElementIndex, newArray, 0, firstElementIndex + 1 - lastElementIndex);
 
-                    lastElementIndex = lastElementIndex - firstElementIndex;
-                    firstElementIndex = 0;
-                } else {
-                    if (firstElementIndex + 1 - lastElementIndex >= 0)
-                        System.arraycopy(elements, lastElementIndex, newArray, 0, firstElementIndex + 1 - lastElementIndex);
+                firstElementIndex = firstElementIndex - lastElementIndex;
+                lastElementIndex = 0;
 
-                    firstElementIndex = firstElementIndex - lastElementIndex;
-                    lastElementIndex = 0;
-
-                    //Reverse array for linear state
-                    Integer temporary;
-                    for (int index = 0; index <= firstElementIndex; index++) {
-                        temporary = newArray[firstElementIndex - index];
-                        newArray[firstElementIndex - index] = newArray[index];
-                        newArray[index] = temporary;
-                    }
-
-                    lastElementIndex = firstElementIndex;
-                    firstElementIndex = 0;
+                //Reverse array for linear state
+                Integer temporary;
+                for (int index = 0; index <= firstElementIndex; index++) {
+                    temporary = newArray[firstElementIndex - index];
+                    newArray[firstElementIndex - index] = newArray[index];
+                    newArray[index] = temporary;
                 }
 
-                elements = newArray;
+                lastElementIndex = firstElementIndex;
+                firstElementIndex = 0;
             }
 
-            lastElementIndex++;
-
-            elements[lastElementIndex] = integer;
+            elements = newArray;
         }
+
+        if (size() == 0) {
+            firstElementIndex = 0;
+        }
+
+        lastElementIndex++;
+
+        elements[lastElementIndex] = integer;
 
         return true;
     }
