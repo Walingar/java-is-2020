@@ -9,7 +9,7 @@ class ArrayQueueImpl extends AbstractQueue<Integer> {
     private static final double FACTOR = 2;
     private static final int MINIMAL_CAPACITY = 64;
 
-    private Object[] elements = new Object[MINIMAL_CAPACITY];
+    private Integer[] elements = new Integer[MINIMAL_CAPACITY];
     private int size = 0;
     private int head = 0;
     private int tail = 0;
@@ -61,7 +61,7 @@ class ArrayQueueImpl extends AbstractQueue<Integer> {
     }
 
     private void applyCapacity(int newCapacity) {
-        elements = toArray(new Object[newCapacity]);
+        elements = toArray(new Integer[newCapacity]);
         tail = size;
         head = 0;
         capacity = newCapacity;
@@ -69,7 +69,7 @@ class ArrayQueueImpl extends AbstractQueue<Integer> {
 
 
     private Integer getElement(int index) {
-        return (Integer) elements[index];
+        return elements[index];
     }
 
     private int increasePointer(int pointer) {
