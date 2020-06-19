@@ -5,11 +5,6 @@ import api.expression.ParseException;
 
 public class ExpressionParserImpl implements ExpressionParser {
 
-    private enum Operator {
-        ADDITION,
-        SUBSTRACTION
-    }
-
     @Override
     public int parse(String expression) throws ParseException {
         if (expression == null) {
@@ -22,11 +17,8 @@ public class ExpressionParserImpl implements ExpressionParser {
 
         for (var currentSymbol : expression.toCharArray()) {
             if (currentSymbol == '+' || currentSymbol == '-') {
-                if (currentOperator == Operator.ADDITION) {
-                    result = Math.addExact(result, currentNumber);
-                } else {
-                    result = Math.addExact(result, -currentNumber);
-                }
+                var sign = getSign(currentOperator);
+                result = Math.addExact(result, sign * currentNumber);
 
                 if (currentSymbol == '+') {
                     currentOperator = Operator.ADDITION;
@@ -50,14 +42,23 @@ public class ExpressionParserImpl implements ExpressionParser {
 
         }
 
-        if (currentOperator == Operator.ADDITION) {
-            result = Math.addExact(result, currentNumber);
-        } else {
-            result = Math.addExact(result, -currentNumber);
-        }
+        var sign = getSign(currentOperator);
+        result = Math.addExact(result, sign * currentNumber);
 
         return result;
     }
 
+    private int getSign(Operator operator) {
+        if (operator == Operator.ADDITION) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+
+    private enum Operator {
+        ADDITION,
+        SUBSTRACTION
+    }
 
 }
