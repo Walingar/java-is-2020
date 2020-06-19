@@ -17,7 +17,9 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
         try {
             File directory = new File((file.getParent()));
             if (!directory.exists()) {
-                directory.mkdirs();
+                if (!directory.mkdirs()) {
+                    throw new RuntimeException("Unable to create directory " + directory.toString());
+                }
             }
             try (var dataReader = new InputStreamReader(data, dataEncoding);
                  var fileWriter = new FileWriter(file.getAbsoluteFile(), fileEncoding)) {
