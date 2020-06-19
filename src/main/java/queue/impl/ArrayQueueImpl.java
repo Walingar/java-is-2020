@@ -65,35 +65,12 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
                 ((lastElementIndex + 1) >= firstElementIndex);
 
         if (exceedsLinearCapacity || exceedsCyclicCapacity) {
-            capacity = capacity * CAPACITY_MULTIPLIER;
-            Integer[] newArray = new Integer[capacity];
+            int extendedCapacity = capacity * CAPACITY_MULTIPLIER;
 
-            if (exceedsLinearCapacity) {
-                if (lastElementIndex + 1 - firstElementIndex >= 0)
-                    System.arraycopy(elements, firstElementIndex, newArray, 0, lastElementIndex + 1 - firstElementIndex);
-
-                lastElementIndex = lastElementIndex - firstElementIndex;
-                firstElementIndex = 0;
-            } else {
-                if (firstElementIndex + 1 - lastElementIndex >= 0)
-                    System.arraycopy(elements, lastElementIndex, newArray, 0, firstElementIndex + 1 - lastElementIndex);
-
-                firstElementIndex = firstElementIndex - lastElementIndex;
-                lastElementIndex = 0;
-
-                //Reverse array for linear state
-                Integer temporary;
-                for (int index = 0; index <= firstElementIndex; index++) {
-                    temporary = newArray[firstElementIndex - index];
-                    newArray[firstElementIndex - index] = newArray[index];
-                    newArray[index] = temporary;
-                }
-
-                lastElementIndex = firstElementIndex;
-                firstElementIndex = 0;
-            }
-
-            elements = newArray;
+            if (exceedsLinearCapacity)
+                ChangeCapacityLinear(extendedCapacity);
+            else
+                ChangeCapacityCyclic(extendedCapacity);
         }
 
         if (size() == 0) {
@@ -127,6 +104,10 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
             }
         }
 
+        int size = size();
+        if ((size != 0) && (capacity / size > CAPACITY_MULTIPLIER))
+            Shrink();
+
         return elementToReturn;
     }
 
@@ -136,5 +117,56 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
             return null;
 
         return elements[firstElementIndex];
+    }
+
+    private void Shrink() {
+        boolean isLinear = (lastElementIndex > firstElementIndex);
+        boolean isCyclic = (lastElementIndex < firstElementIndex);
+
+        int shrinkedCapacity = capacity / CAPACITY_MULTIPLIER;
+
+        if (isLinear)
+            ChangeCapacityLinear(shrinkedCapacity);
+        else if (isCyclic)
+            ChangeCapacityCyclic(shrinkedCapacity);
+    }
+
+    private void ChangeCapacityCyclic(int newCapacity) {
+        capacity = newCapacity;
+
+        Integer[] newArray = new Integer[capacity];
+
+        if (firstElementIndex + 1 - lastElementIndex >= 0)
+            System.arraycopy(elements, lastElementIndex, newArray, 0, firstElementIndex + 1 - lastElementIndex);
+
+        firstElementIndex = firstElementIndex - lastElementIndex;
+        lastElementIndex = 0;
+
+        //Reverse array for linear state
+        Integer temporary;
+        for (int index = 0; index <= firstElementIndex; index++) {
+            temporary = newArray[firstElementIndex - index];
+            newArray[firstElementIndex - index] = newArray[index];
+            newArray[index] = temporary;
+        }
+
+        lastElementIndex = firstElementIndex;
+        firstElementIndex = 0;
+
+        elements = newArray;
+    }
+
+    private void ChangeCapacityLinear(int newCapacity) {
+        capacity = newCapacity;
+
+        Integer[] newArray = new Integer[capacity];
+
+        if (lastElementIndex + 1 - firstElementIndex >= 0)
+            System.arraycopy(elements, firstElementIndex, newArray, 0, lastElementIndex + 1 - firstElementIndex);
+
+        lastElementIndex = lastElementIndex - firstElementIndex;
+        firstElementIndex = 0;
+
+        elements = newArray;
     }
 }
