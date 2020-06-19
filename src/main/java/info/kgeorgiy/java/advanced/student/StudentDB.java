@@ -27,14 +27,12 @@ public class StudentDB implements StudentQuery{
 
     @Override
     public List<String> getFullNames(List<Student> students) {
-        return toList(it -> it.getFirstName() + " " + it.getLastName(),students);
+        return toList(it -> it.getFirstName() + " " + it.getLastName(), students);
     }
 
     @Override
     public Set<String> getDistinctFirstNames(List<Student> students) {
-        return students.stream()
-                .map(Student::getFirstName)
-                .collect(Collectors.toSet());
+        return toSet(Student::getFirstName, students);
     }
 
     @Override
@@ -54,33 +52,22 @@ public class StudentDB implements StudentQuery{
 
     @Override
     public List<Student> sortStudentsByName(Collection<Student> students) {
-        return students.stream()
-                .sorted(STUDENT_COMPARATOR)
-                .collect(Collectors.toList());
+        return toSortedList(students);
     }
 
     @Override
     public List<Student> findStudentsByFirstName(Collection<Student> students, String name) {
-        return students.stream()
-                .filter(student -> name.equals(student.getFirstName()))
-                .sorted(STUDENT_COMPARATOR)
-                .collect(Collectors.toList());
+        return toSortedList(filterByValue(students, Student::getFirstName, name));
     }
 
     @Override
     public List<Student> findStudentsByLastName(Collection<Student> students, String name) {
-        return students.stream()
-                .filter(student -> name.equals(student.getLastName()))
-                .sorted(STUDENT_COMPARATOR)
-                .collect(Collectors.toList());
+        return toSortedList(filterByValue(students, Student::getLastName, name));
     }
 
     @Override
     public List<Student> findStudentsByGroup(Collection<Student> students, String group) {
-        return students.stream()
-                .filter(student -> group.equals(student.getGroup()))
-                .sorted(STUDENT_COMPARATOR)
-                .collect(Collectors.toList());
+        return toSortedList(filterByValue(students, Student::getGroup, group));
     }
 
     @Override
@@ -90,8 +77,24 @@ public class StudentDB implements StudentQuery{
                 .collect(Collectors.toMap(Student::getLastName, Student::getFirstName, (a, b) -> a.compareTo(b) < 0 ? a : b));
     }
 
-    private List<String> toList(Function<Student, String> mapper, List<Student> students){
+    private List<String> toList(Function<Student, String> mapper, Collection<Student> students){
         return students.stream().map(mapper).collect(Collectors.toList());
+    }
+
+    private Set<String> toSet(Function<Student, String> mapper, Collection<Student> students){
+        return students.stream().map(mapper).collect(Collectors.toSet());
+    }
+
+    private List<Student> toSortedList(Collection<Student> students) {
+        return students.stream()
+                .sorted(STUDENT_COMPARATOR)
+                .collect(Collectors.toList());
+    }
+
+    private List<Student> filterByValue(Collection<Student> students, Function<Student, String> filter, String value) {
+        return students.stream()
+                .filter(student -> filter.apply(student).equals(value))
+                .collect(Collectors.toList());
     }
 
 }
