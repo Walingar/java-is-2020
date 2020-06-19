@@ -25,11 +25,14 @@ public class PairImpl<T, K> implements Pair<T, K> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         PairImpl<?, ?> pair = (PairImpl<?, ?>) o;
-        return Objects.equals(first, pair.first) &&
-                Objects.equals(second, pair.second);
+        return Objects.equals(first, pair.first) && Objects.equals(second, pair.second);
     }
 
     @Override
