@@ -6,6 +6,7 @@ import api.expression.ParseException;
 public class ExpressionParserImpl implements ExpressionParser {
     private final StringBuilder currentNumber;
     private final int maxIntLen = (int) Math.floor(Math.log10(Integer.MAX_VALUE)) + 2; // +1 for - in negatives, +1 to compensate floor
+
     public ExpressionParserImpl() {
         currentNumber = new StringBuilder();
     }
@@ -21,7 +22,7 @@ public class ExpressionParserImpl implements ExpressionParser {
         try {
             checkNumber(expressionLength);
             return Integer.parseInt(expression);
-        } catch (NumberFormatException | ParseException  e) {
+        } catch (NumberFormatException | ParseException e) {
             currentNumber.setLength(0);
             int result = 0;
             for (int pos = 0; pos < expressionLength; pos++) {
