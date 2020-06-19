@@ -11,7 +11,6 @@ public class ExpressionParserImpl implements ExpressionParser {
     }
 
     public int parse(String expression) throws ParseException {
-
         if (expression == null) {
             throw new IllegalArgumentException("Expression is null");
         }
@@ -22,7 +21,8 @@ public class ExpressionParserImpl implements ExpressionParser {
         try {
             checkNumber(expressionLength);
             return Integer.parseInt(expression);
-        } catch (NumberFormatException e) {
+        } catch (NumberFormatException | ParseException  e) {
+            currentNumber.setLength(0);
             int result = 0;
             for (int pos = 0; pos < expressionLength; pos++) {
 
@@ -62,7 +62,6 @@ public class ExpressionParserImpl implements ExpressionParser {
     }
 
     private int calculate(int a, int b) {
-
         try {
             return Math.addExact(a, b);
         } catch (ArithmeticException e) {
@@ -70,9 +69,9 @@ public class ExpressionParserImpl implements ExpressionParser {
         }
     }
 
-    private void checkNumber(int len) {
+    private void checkNumber(int len) throws ParseException {
         if (len > maxIntLen) {
-            throw new NumberFormatException("Value is too large for int");
+            throw new ParseException("Value is too large for int");
         }
     }
 }
