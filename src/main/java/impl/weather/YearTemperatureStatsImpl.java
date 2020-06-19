@@ -20,7 +20,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
     @Override
     public void updateStats(DayTemperatureInfo info) {
         var month = info.getMonth();
-        if (!monthTemperatureStatsMap.containsKey(info.getMonth())) {
+        if (!monthTemperatureStatsMap.containsKey(month)) {
             monthTemperatureStatsMap.put(month, new MonthTemperatureStatsImpl(month));
         }
         var monthTemperatureStats = monthTemperatureStatsMap.get(month);
@@ -29,8 +29,9 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
     @Override
     public Double getAverageTemperature(Month month) {
-        if (monthTemperatureStatsMap.containsKey(month)) {
-            return monthTemperatureStatsMap.get(month).getAverageTemperature();
+        var monthTemperatureStats = monthTemperatureStatsMap.get(month);
+        if (monthTemperatureStats != null) {
+            return monthTemperatureStats.getAverageTemperature();
         } else {
             return null;
         }
@@ -47,8 +48,9 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
     @Override
     public List<DayTemperatureInfo> getSortedTemperature(Month month) {
-        if (monthTemperatureStatsMap.containsKey(month)) {
-            return monthTemperatureStatsMap.get(month).getSortedTemperature();
+        var monthTemperatureStats = monthTemperatureStatsMap.get(month);
+        if (monthTemperatureStats != null) {
+            return monthTemperatureStats.getSortedTemperature();
         } else {
             return new ArrayList<>();
         }
@@ -56,8 +58,9 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
     @Override
     public DayTemperatureInfo getTemperature(int day, Month month) {
-        if (monthTemperatureStatsMap.containsKey(month)) {
-            return monthTemperatureStatsMap.get(month).getTemperature(day);
+        var monthTemperatureStats = monthTemperatureStatsMap.get(month);
+        if (monthTemperatureStats != null) {
+            return monthTemperatureStats.getTemperature(day);
         } else {
             return null;
         }
