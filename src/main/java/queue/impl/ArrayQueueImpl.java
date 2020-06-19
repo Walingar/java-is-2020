@@ -25,32 +25,6 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
         capacity = MIN_CAPACITY;
     }
 
-    @NotNull
-    @Override
-    public Iterator<Integer> iterator() {
-        return new ArrayQueueIterator();
-    }
-
-    private class ArrayQueueIterator implements Iterator<Integer> {
-        private int currentIndex = headIndex;
-
-        @Override
-        public boolean hasNext() {
-            return currentIndex != tailIndex + 1;
-        }
-
-        @Override
-        public Integer next() {
-            if (currentIndex > tailIndex) {
-                return null;
-            }
-            Integer value = elements[currentIndex];
-            currentIndex += 1;
-            return value;
-        }
-    }
-
-
     @Override
     public int size() {
         return size;
@@ -112,4 +86,30 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
             return elements[headIndex];
         }
     }
+
+    @NotNull
+    @Override
+    public Iterator<Integer> iterator() {
+        return new ArrayQueueIterator();
+    }
+
+    private class ArrayQueueIterator implements Iterator<Integer> {
+        private int currentIndex = headIndex;
+
+        @Override
+        public boolean hasNext() {
+            return currentIndex != tailIndex + 1;
+        }
+
+        @Override
+        public Integer next() {
+            if (currentIndex > tailIndex) {
+                return null;
+            }
+            Integer value = elements[currentIndex];
+            currentIndex += 1;
+            return value;
+        }
+    }
+
 }
