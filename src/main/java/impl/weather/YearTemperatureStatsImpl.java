@@ -8,7 +8,7 @@ import java.util.*;
 import java.util.List;
 
 public class YearTemperatureStatsImpl implements YearTemperatureStats {
-    private final Map < Month, MonthInfo > status = new EnumMap < > (Month.class);
+    private final Map<Month, MonthInfo> status = new EnumMap<>(Month.class);
 
     @Override
     public void updateStats(DayTemperatureInfo info) {
@@ -26,18 +26,18 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
     }
 
     @Override
-    public Map < Month, Integer > getMaxTemperature() {
-        Map < Month, Integer > ans = new HashMap < > ();
+    public Map<Month, Integer> getMaxTemperature() {
+        Map<Month, Integer> ans = new HashMap<>();
         status.forEach((Month, MonthInfo) -> ans.put(Month, MonthInfo.getMaxTemperatureOnMonth()));
         return ans;
     }
 
     @Override
-    public List < DayTemperatureInfo > getSortedTemperature(Month month) {
+    public List<DayTemperatureInfo> getSortedTemperature(Month month) {
         MonthInfo current;
         current = status.get(month);
         if (current == null) {
-            return new ArrayList < > ();
+            return new ArrayList<>();
         }
         return current.getSortedTemp();
     }
