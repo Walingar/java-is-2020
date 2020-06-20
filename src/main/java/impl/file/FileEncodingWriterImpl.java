@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 
 public class FileEncodingWriterImpl implements FileEncodingWriter {
     private final int size = 512;
+
     @Override
     public void write(File file, InputStream data, Charset dataEncoding) {
         write(file, data, dataEncoding, StandardCharsets.UTF_8);
@@ -18,7 +19,7 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
         if (!file.exists()) {
             var parent = file.getParentFile();
             if (parent != null && !parent.exists() && !parent.mkdirs()) {
-                    System.err.println("Unable to create a File");
+                System.err.println("Unable to create a File");
             }
         }
         try (FileWriter writer = new FileWriter(file, fileEncoding);
