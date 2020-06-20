@@ -13,11 +13,10 @@ public class ArrayQueueImpl extends BaseQueue {
     private Integer[] elements = new Integer[cap];
 
     private void ensureCapacity(int bias) {
-        if (bias == 0){
-            cap *= scaleFactor;
-        }
-        else {
-            cap /= scaleFactor;
+        if (bias == 0) {
+            cap = cap * scaleFactor;
+        } else {
+            cap = cap / scaleFactor;
         }
         int firstArraySegment = size - head;
         Integer[] newElements = new Integer[cap];
@@ -37,7 +36,7 @@ public class ArrayQueueImpl extends BaseQueue {
     @Override
     public boolean add(Integer integer) {
         assert integer != null;
-        if (size == cap){
+        if (size == cap) {
             ensureCapacity(0);
         }
         elements[indexCircularArray] = integer;
@@ -64,7 +63,7 @@ public class ArrayQueueImpl extends BaseQueue {
         int value = elements[head];
         elements[head] = null;
         head = (head + 1) % cap;
-        if (size == cap / (scaleFactor * scaleFactor) && size >= limit){
+        if (size == cap / (scaleFactor * scaleFactor) && size >= limit) {
             ensureCapacity(1);
         }
         return value;
