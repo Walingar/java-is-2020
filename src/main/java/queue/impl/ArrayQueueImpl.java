@@ -24,9 +24,9 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
     @Override
     public boolean offer(Integer integer) {
         if (lastIndex == arr.length) {
-            int[] newMas = new int[lastIndex * 2];
-            System.arraycopy(arr, 0, newMas, 0, arr.length);
-            arr = newMas;
+            int[] newArr = new int[lastIndex * 2];
+            System.arraycopy(arr, 0, newArr, 0, arr.length);
+            arr = newArr;
             clearTrash();
         }
         arr[lastIndex] = integer;
@@ -36,13 +36,13 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
 
     @Override
     public Integer poll() {
-        if (lastIndex - firstIndex > 0) {
+        if (size() > 0) {
             Integer polledElement = arr[firstIndex];
             firstIndex++;
             if (lastIndex < arr.length / 2) {
-                int[] newMas = new int[lastIndex];
-                System.arraycopy(arr, 0, newMas, 0, lastIndex);
-                arr = newMas;
+                int[] newArr = new int[lastIndex];
+                System.arraycopy(arr, 0, newArr, 0, lastIndex);
+                arr = newArr;
                 clearTrash();
             }
             return polledElement;
@@ -53,7 +53,7 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
 
     @Override
     public Integer peek() {
-        if (lastIndex - firstIndex == 0) {
+        if (size() == 0) {
             return null;
         } else {
             return arr[firstIndex];
@@ -61,10 +61,10 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
     }
 
     private void clearTrash() {
-        if (firstIndex != 0 && firstIndex >= lastIndex - firstIndex) {
-            int[] newMas = new int[arr.length];
-            System.arraycopy(arr, firstIndex, newMas, 0, lastIndex - firstIndex);
-            arr = newMas;
+        if (firstIndex != 0 && firstIndex >= size()) {
+            int[] newArr = new int[arr.length];
+            System.arraycopy(arr, firstIndex, newArr, 0, size());
+            arr = newArr;
             lastIndex -= firstIndex;
             firstIndex = 0;
         }
