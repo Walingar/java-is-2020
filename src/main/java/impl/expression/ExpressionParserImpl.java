@@ -20,11 +20,7 @@ public class ExpressionParserImpl implements ExpressionParser {
                     number.append(character);
                     continue;
                 }
-                try {
-                    sum = Math.addExact(sum, Integer.parseInt(number.toString()));
-                } catch (NumberFormatException e) {
-                    throw new ParseException(e.getMessage());
-                }
+                sum = inRangeSum(sum, number);
                 number.setLength(0);
                 number.append(character);
             } else if (java.lang.Character.isWhitespace(character)) {
@@ -33,11 +29,15 @@ public class ExpressionParserImpl implements ExpressionParser {
                 number.append(character);
             }
         }
+        sum = inRangeSum(sum, number);
+        return sum;
+    }
+
+    private Integer inRangeSum(int sum, StringBuilder value) throws ParseException {
         try {
-            sum = Math.addExact(sum, Integer.parseInt(number.toString()));
+            return Math.addExact(sum, Integer.parseInt(value.toString()));
         } catch (NumberFormatException e) {
             throw new ParseException(e.getMessage());
         }
-        return sum;
     }
 }
