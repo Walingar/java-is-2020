@@ -65,6 +65,7 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
         }
         return queue[head];
     }
+
     private class ArrayQueueIterator implements Iterator<Integer> {
         private int currentIndex;
 

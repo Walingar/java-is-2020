@@ -4,12 +4,11 @@ import java.util.*;
 
 public class LinkedQueueImpl extends AbstractQueue<Integer> {
 
-
     private int size = 0;
     private Item head = null;
     private Item tail = null;
 
-    private static class LinkedQueueIterator implements Iterator<Item>{
+    private static class LinkedQueueIterator implements Iterator<Item> {
         Item current;
 
         LinkedQueueIterator(Item head) {
@@ -70,29 +69,26 @@ public class LinkedQueueImpl extends AbstractQueue<Integer> {
         }
         return head.getValue();
     }
-    private static class Item {
+
+    private final class Item {
         private Integer value;
         private Item nextItem;
 
         Item(Item next, int value) {
-            this.nextItem = next;
+            nextItem = next;
             this.value = value;
         }
 
         Integer getValue() {
             return value;
         }
-    /*
-        void setValue(int newValue) {
-            this.value = newValue;
-        }
-    */
+
         Item getNext() {
             return nextItem;
         }
 
         void setNext(Item next) {
-            this.nextItem = next;
+            nextItem = next;
         }
     }
 }
