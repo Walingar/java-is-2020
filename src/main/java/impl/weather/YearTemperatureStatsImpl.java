@@ -32,8 +32,9 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
     @Override
     public List<DayTemperatureInfo> getSortedTemperature(Month month) {
-        if (monthInfoMap.get(month) != null) {
-            List<DayTemperatureInfo> ofMonth = new ArrayList<>(monthInfoMap.get(month).getDayTemperatureMap().values());
+        MonthInfo monthInfo = monthInfoMap.get(month);
+        if (monthInfo != null) {
+            List<DayTemperatureInfo> ofMonth = new ArrayList<>(monthInfo.getDayTemperatureMap().values());
             Comparator<DayTemperatureInfo> comparator = Comparator.comparingInt(DayTemperatureInfo::getTemperature);
             ofMonth.sort(comparator);
             return ofMonth;
