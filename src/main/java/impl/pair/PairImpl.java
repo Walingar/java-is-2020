@@ -24,14 +24,14 @@ public class PairImpl<T, E> implements Pair<T, E> {
     }
 
     @Override
-    public boolean equals(Object obj){
+    public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        PairImpl < ?, ? > pair = (PairImpl < ?, ? > ) obj;
+        PairImpl<?, ?> pair = (PairImpl<?, ?>) obj;
         return Objects.equals(getFirst(), pair.getFirst()) && Objects.equals(getSecond(), pair.getSecond());
     }
 
