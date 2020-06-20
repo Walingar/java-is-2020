@@ -38,8 +38,9 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
                 Integer elementToReturn = elements[currentPosition];
 
                 currentPosition++;
-                if (currentPosition != lastElementIndex && currentPosition >= capacity)
+                if (currentPosition != lastElementIndex && currentPosition >= capacity) {
                     currentPosition = 0;
+                }
 
                 return elementToReturn;
             }
@@ -48,11 +49,13 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
 
     @Override
     public int size() {
-        if (firstElementIndex == -1)
+        if (firstElementIndex == -1) {
             return 0;
+        }
 
-        if (lastElementIndex >= firstElementIndex)
+        if (lastElementIndex >= firstElementIndex) {
             return lastElementIndex - firstElementIndex + 1;
+        }
 
         return firstElementIndex - lastElementIndex + 1;
     }
@@ -67,10 +70,11 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
         if (exceedsLinearCapacity || exceedsCyclicCapacity) {
             int extendedCapacity = capacity * CAPACITY_MULTIPLIER;
 
-            if (exceedsLinearCapacity)
+            if (exceedsLinearCapacity) {
                 ChangeCapacityLinear(extendedCapacity);
-            else
+            } else {
                 ChangeCapacityCyclic(extendedCapacity);
+            }
         }
 
         if (size() == 0) {
@@ -86,16 +90,18 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
 
     @Override
     public Integer poll() {
-        if (firstElementIndex == -1)
+        if (firstElementIndex == -1) {
             return null;
+        }
 
         Integer elementToReturn = elements[firstElementIndex];
 
         if (lastElementIndex < firstElementIndex) {
             firstElementIndex++;
 
-            if (firstElementIndex >= capacity)
+            if (firstElementIndex >= capacity) {
                 firstElementIndex = 0;
+            }
         } else {
             firstElementIndex++;
             if (firstElementIndex > lastElementIndex) {
@@ -105,16 +111,18 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
         }
 
         int size = size();
-        if ((size != 0) && (capacity / size > CAPACITY_MULTIPLIER))
+        if ((size != 0) && (capacity / size > CAPACITY_MULTIPLIER)) {
             Shrink();
+        }
 
         return elementToReturn;
     }
 
     @Override
     public Integer peek() {
-        if (firstElementIndex == -1)
+        if (firstElementIndex == -1) {
             return null;
+        }
 
         return elements[firstElementIndex];
     }
@@ -125,10 +133,11 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
 
         int shrinkedCapacity = capacity / CAPACITY_MULTIPLIER;
 
-        if (isLinear)
+        if (isLinear) {
             ChangeCapacityLinear(shrinkedCapacity);
-        else if (isCyclic)
+        } else if (isCyclic) {
             ChangeCapacityCyclic(shrinkedCapacity);
+        }
     }
 
     private void ChangeCapacityCyclic(int newCapacity) {
@@ -136,8 +145,9 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
 
         Integer[] newArray = new Integer[capacity];
 
-        if (firstElementIndex + 1 - lastElementIndex >= 0)
+        if (firstElementIndex + 1 - lastElementIndex >= 0) {
             System.arraycopy(elements, lastElementIndex, newArray, 0, firstElementIndex + 1 - lastElementIndex);
+        }
 
         firstElementIndex = firstElementIndex - lastElementIndex;
         lastElementIndex = 0;
@@ -161,8 +171,9 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
 
         Integer[] newArray = new Integer[capacity];
 
-        if (lastElementIndex + 1 - firstElementIndex >= 0)
+        if (lastElementIndex + 1 - firstElementIndex >= 0) {
             System.arraycopy(elements, firstElementIndex, newArray, 0, lastElementIndex + 1 - firstElementIndex);
+        }
 
         lastElementIndex = lastElementIndex - firstElementIndex;
         firstElementIndex = 0;

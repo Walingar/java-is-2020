@@ -64,8 +64,9 @@ public class LinkedQueueImpl extends AbstractQueue<Integer> {
 
     @Override
     public Integer poll() {
-        if (currentSize == 0)
+        if (currentSize == 0) {
             return null;
+        }
 
         Integer valueToReturn = firstElement.getValue();
         firstElement = firstElement.getNext();
@@ -77,8 +78,9 @@ public class LinkedQueueImpl extends AbstractQueue<Integer> {
 
     @Override
     public Integer peek() {
-        if (currentSize == 0)
+        if (currentSize == 0) {
             return null;
+        }
 
         return firstElement.getValue();
     }
