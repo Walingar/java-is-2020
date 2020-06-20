@@ -35,12 +35,14 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
             int end = (index + 1) * partitionSize;
 
             //Check if we have too much threads
-            if (start > iterationsCount)
+            if (start > iterationsCount) {
                 break;
+            }
 
             //Check boundary case
-            if (index == maxThreadsCount - 1)
+            if (index == maxThreadsCount - 1) {
                 end = iterationsCount;
+            }
 
             var thread = new Thread(new Multiplicator(firstMatrix, secondMatrix, resultMatrix, start, end));
             threads.add(thread);
