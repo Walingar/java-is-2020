@@ -6,40 +6,40 @@ import java.util.Iterator;
 public class ArrayQueueImpl extends AbstractQueue<Integer> {
 
     int[] array = new int[20];
-    int sizeMas = 0;
+    int sizeArray = 0;
     int head = 0;
 
     @Override
     public boolean offer(Integer integer) {
-        if (array.length == sizeMas+head) {
+        if (array.length == sizeArray + head) {
             int[] newQueue = new int[array.length * 2];
-            System.arraycopy(array, head, newQueue, 0, sizeMas);
+            System.arraycopy(array, head, newQueue, 0, sizeArray);
             array = newQueue;
             head = 0;
         }
-        array[head+sizeMas] = integer;
-        sizeMas++;
+        array[head + sizeArray] = integer;
+        sizeArray++;
         return true;
     }
 
     @Override
     public Integer poll() {
-        if (sizeMas > 0) {
-            int temp = array[head++];
-            if (array.length - array.length / 3 >= --sizeMas) {
+        if (sizeArray > 0) {
+            int first = array[head++];
+            if (array.length - array.length / 3 >= --sizeArray) {
                 int[] newMas = new int[array.length - array.length / 4];
-                System.arraycopy(array, head, newMas, 0, sizeMas);
+                System.arraycopy(array, head, newMas, 0, sizeArray);
                 array = newMas;
                 head = 0;
             }
-            return temp;
+            return first;
         }
         return null;
     }
 
     @Override
     public Integer peek() {
-        return sizeMas > 0 ? array[head] : null;
+        return sizeArray > 0 ? array[head] : null;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
 
     @Override
     public int size() {
-        return sizeMas;
+        return sizeArray;
     }
 
     private class ArrayIterator implements Iterator<Integer> {
@@ -58,7 +58,7 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
 
         @Override
         public boolean hasNext() {
-            return currentIndex < sizeMas+head;
+            return currentIndex < sizeArray + head;
         }
 
         @Override
