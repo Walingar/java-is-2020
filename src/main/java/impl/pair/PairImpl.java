@@ -15,6 +15,16 @@ public class PairImpl<K, T> implements Pair<K, T> {
     }
 
     @Override
+    public K getFirst() {
+        return first;
+    }
+
+    @Override
+    public T getSecond() {
+        return second;
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof PairImpl)) return false;
@@ -34,15 +44,5 @@ public class PairImpl<K, T> implements Pair<K, T> {
                 "first=" + first +
                 ", second=" + second +
                 '}';
-    }
-
-    @Override
-    public K getFirst() {
-        return first;
-    }
-
-    @Override
-    public T getSecond() {
-        return second;
     }
 }
