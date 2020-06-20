@@ -24,29 +24,22 @@ public class StudentDB implements StudentQuery {
 
     @Override
     public List<String> getFullNames(List<Student> students) {
-        return students
-                .stream()
-                .map(s -> s.getFirstName() + " " + s.getLastName())
-                .collect(Collectors.toList());
+        return getInfo(students, s -> s.getFirstName() + " " + s.getLastName());
     }
 
     @Override
     public Set<String> getDistinctFirstNames(List<Student> students) {
-        return students
-                .stream()
-                .distinct()
+        return students.stream()
                 .map(Student::getFirstName)
                 .collect(Collectors.toSet());
     }
 
     @Override
     public String getMinStudentFirstName(List<Student> students) {
-        return students
-                .stream()
-                .sorted(Comparator.comparing(Student::getId))
+        return students.stream()
+                .min(Student::compareTo)
                 .map(Student::getFirstName)
-                .limit(1)
-                .collect(Collectors.joining());
+                .orElse("");
     }
 
     @Override
@@ -79,7 +72,6 @@ public class StudentDB implements StudentQuery {
         return students
                 .stream()
                 .filter(s -> s.getGroup().equals(group))
-                .sorted(Comparator.comparing(s -> s.getLastName() + " " + s.getFirstName() + " " + s.getId()))
                 .collect(Collectors.toMap(Student::getLastName, Student::getFirstName, BinaryOperator.minBy(Comparable::compareTo)));
     }
 
