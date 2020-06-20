@@ -34,8 +34,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
     @Override
     public List<DayTemperatureInfo> getSortedTemperature(Month month) {
-        MonthInfo current;
-        current = status.get(month);
+        MonthInfo current = status.get(month);
         if (current == null) {
             return new ArrayList<>();
         }
