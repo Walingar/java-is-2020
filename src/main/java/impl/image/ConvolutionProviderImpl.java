@@ -7,34 +7,42 @@ import java.awt.*;
 public class ConvolutionProviderImpl implements ConvolutionProvider {
     @Override
     public Color[][] apply(Color[][] image, double[][] kernel) {
-        Color[][] convolution = new Color[image.length][image[0].length];
-        for (int i = 0; i < image.length; i++) {
-            for (int j = 0; j < image[i].length; j++) {
-                convolution[i][j] = multiply(image, kernel, i, j);
+        int imageHeight = image.length;
+        if (imageHeight == 0) {
+            return new Color[0][0];
+        }
+        int imageWidth = image[0].length;
+        int kernelHeight = kernel.length / 2;
+        int kernelWidth = 0;
+        if (kernelHeight > 0) {
+            kernelWidth = kernel[0].length / 2;
+        }
+        Color[][] resultImage = new Color[imageHeight][imageWidth];
+        for (int i = 0; i < imageHeight; i++) {
+            for (int j = 0; j < imageWidth; j++) {
+                int red = 0;
+                int green = 0;
+                int blue = 0;
+                for (int kernelRow = -kernelHeight; kernelRow <= kernelHeight; kernelRow++) {
+                    for (int kernelCol = -kernelWidth; kernelCol <= kernelWidth; kernelCol++) {
+                        int row = i + kernelRow;
+                        int col = j + kernelCol;
+                        if (row >= 0 && col >= 0 && row < imageHeight && col < imageWidth) {
+                            Color elem = image[row][col];
+                            double kernelElem = kernel[kernelRow + kernelHeight][kernelCol + kernelWidth];
+                            red += elem.getRed() * kernelElem;
+                            green += elem.getGreen() * kernelElem;
+                            blue += elem.getBlue() * kernelElem;
+                        }
+                    }
+                }
+                resultImage[i][j] = new Color(avgColor(red), avgColor(green), avgColor(blue));
             }
         }
-        return convolution;
+        return resultImage;
     }
 
-    private Color multiply(Color[][] image, double[][] kernel, int row, int col) {
-        int red = 0;
-        int green = 0;
-        int blue = 0;
-        for (int i = 0; i < kernel.length; i++) {
-            for (int j = 0; j < kernel[i].length; j++) {
-                int radiusRow = (kernel.length - 1) / 2;
-                int radiusCol = (kernel[i].length - 1) / 2;
-                int currentRow = row + i - radiusRow;
-                int currentCol = col + j - radiusCol;
-                if (currentRow >= 0 && currentCol >= 0 && currentRow < image.length && currentCol < image[row].length) {
-                    Color currentColor = image[currentRow][currentCol];
-                    double currentKernel = kernel[i][j];
-                    red += currentColor.getRed() * currentKernel;
-                    green += currentColor.getGreen() * currentKernel;
-                    blue += currentColor.getBlue() * currentKernel;
-                }
-            }
-        }
-        return new Color(Math.max(0, Math.min(red, 255)), Math.max(0, Math.min(green, 255)), Math.max(0, Math.min(blue, 255)));
+    private int avgColor(int value) {
+        return Math.min(Math.max(0, value), 255);
     }
 }
