@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class MonthInfo {
-    private final Map < Integer, DayTemperatureInfo > info = new LinkedHashMap < > ();
+    private final Map<Integer, DayTemperatureInfo> info = new LinkedHashMap<>();
     private Double averageInfo;
     private Integer maximumTemp;
 
@@ -25,7 +25,7 @@ public class MonthInfo {
         averageInfo = updateAverage(temperature);
     }
 
-    public Map < Integer, DayTemperatureInfo > getInfo() {
+    public Map<Integer, DayTemperatureInfo> getInfo() {
         return info;
     }
 
@@ -40,7 +40,7 @@ public class MonthInfo {
         return maximumTemp;
     }
 
-    public List < DayTemperatureInfo > getSortedTemp() {
+    public List<DayTemperatureInfo> getSortedTemp() {
         return info.values().stream()
                 .sorted(Comparator.comparingInt(DayTemperatureInfo::getTemperature))
                 .collect(Collectors.toUnmodifiableList());
