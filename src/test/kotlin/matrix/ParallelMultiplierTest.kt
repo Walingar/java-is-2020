@@ -4,7 +4,7 @@ import impl.matrix.ParallelMultiplierFactory
 import junit.framework.TestCase.assertEquals
 import org.junit.Test
 
-class ParallelRubMultiplyThreadTest {
+class ParallelMultiplierTest {
     companion object {
         private const val EPS = 1e-5
     }
