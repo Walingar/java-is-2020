@@ -5,9 +5,9 @@ import api.weather.DayTemperatureInfo;
 import java.time.Month;
 
 public class DayTemperatureInfoImpl implements DayTemperatureInfo {
-    final private int day;
-    final private Month month;
-    final private int temperature;
+    private final int day;
+    private final Month month;
+    private final int temperature;
 
     DayTemperatureInfoImpl(int day, Month month, int temperature) {
         this.day = day;
