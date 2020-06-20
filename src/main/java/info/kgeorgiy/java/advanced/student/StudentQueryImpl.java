@@ -35,9 +35,8 @@ public class StudentQueryImpl implements StudentQuery {
 
     @Override
     public String getMinStudentFirstName(List<Student> students) {
-        return sortStream(students, Comparator.comparingInt(Student::getId))
-                .map(Student::getFirstName)
-                .limit(1).collect(Collectors.joining());
+        return students.stream().min(Student::compareTo)
+                .map(Student::getFirstName).orElse("");
     }
 
     @Override
