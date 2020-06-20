@@ -30,7 +30,7 @@ public class StudentDB implements StudentQuery {
     public Set<String> getDistinctFirstNames(List<Student> students) {
         return students.stream()
                 .map(Student::getFirstName)
-                .collect(Collectors.toCollection(TreeSet::new));
+                .collect(Collectors.toCollection(HashSet::new));
     }
 
     @Override
@@ -53,17 +53,17 @@ public class StudentDB implements StudentQuery {
 
     @Override
     public List<Student> findStudentsByFirstName(Collection<Student> students, String name) {
-        return find(students,Student::getFirstName,name);
+        return find(students, Student::getFirstName, name);
     }
 
     @Override
     public List<Student> findStudentsByLastName(Collection<Student> students, String name) {
-        return find(students,Student::getLastName,name);
+        return find(students, Student::getLastName, name);
     }
 
     @Override
     public List<Student> findStudentsByGroup(Collection<Student> students, String group) {
-        return find(students,Student::getGroup,group);
+        return find(students, Student::getGroup, group);
     }
 
     @Override
