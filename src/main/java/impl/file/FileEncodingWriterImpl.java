@@ -10,7 +10,7 @@ import java.nio.file.Files;
 public class FileEncodingWriterImpl implements FileEncodingWriter {
     @Override
     public void write(File file, InputStream data, Charset dataEncoding) {
-        write(file,data,dataEncoding, StandardCharsets.UTF_8);
+        write(file, data, dataEncoding, StandardCharsets.UTF_8);
     }
 
     @Override
@@ -28,7 +28,7 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
                 }
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }
