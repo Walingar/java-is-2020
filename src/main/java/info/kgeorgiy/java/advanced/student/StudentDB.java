@@ -48,7 +48,9 @@ public class StudentDB implements StudentQuery {
 
     @Override
     public List<Student> sortStudentsByName(Collection<Student> students) {
-        return sort(students, Comparator.comparing(Student::getLastName).thenComparing(Student::getFirstName).thenComparing(Student::getId));
+        return sort(students, Comparator.comparing(Student::getLastName)
+                .thenComparing(Student::getFirstName)
+                .thenComparing(Student::getId));
     }
 
     @Override
@@ -68,7 +70,8 @@ public class StudentDB implements StudentQuery {
 
     @Override
     public Map<String, String> findStudentNamesByGroup(Collection<Student> students, String group) {
-        return students.stream().filter(student -> group.equals(student.getGroup()))
+        return students.stream()
+                .filter(student -> group.equals(student.getGroup()))
                 .collect(Collectors.toMap(Student::getLastName, Student::getFirstName, BinaryOperator.minBy(String::compareTo)));
     }
 
