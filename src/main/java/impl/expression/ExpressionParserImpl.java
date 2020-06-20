@@ -18,7 +18,7 @@ public class ExpressionParserImpl implements ExpressionParser {
                 currentNumber *= previousSign;
                 result = Math.addExact(result, currentNumber);
                 currentNumber = 0;
-                if ((aChar == '+')) {
+                if (aChar == '+') {
                     previousSign = 1;
                 } else {
                     previousSign = -1;
