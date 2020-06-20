@@ -3,7 +3,7 @@ package impl.pair;
 import api.pair.Pair;
 
 public class PairFactory {
-    public static <K, T> Pair<K, T> of(K first, T second) {
+    public static <T, K> Pair<T, K> of(T first, K second) {
         return new PairImpl<>(first ,second);
     }
 }
