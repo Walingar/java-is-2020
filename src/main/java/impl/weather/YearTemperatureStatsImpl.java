@@ -29,7 +29,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
     @Override
     public Map<Month, Integer> getMaxTemperature() {
-        Map<Month, Integer> result = new HashMap<Month, Integer>();
+        Map<Month, Integer> result = new HashMap<>();
         monthInfos.forEach((key, value) -> result.put(key, value.getMaxTemperature()));
         return result;
     }
@@ -37,7 +37,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
     @Override
     public List<DayTemperatureInfo> getSortedTemperature(Month month) {
         var monthTemp = monthInfos.get(month);
-        return monthTemp != null ? monthTemp.getSortedTemperature() : new LinkedList<DayTemperatureInfo>();
+        return monthTemp != null ? monthTemp.getSortedTemperature() : new LinkedList<>();
     }
 
     @Override
