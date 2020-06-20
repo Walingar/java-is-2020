@@ -11,7 +11,7 @@ import static java.util.Comparator.comparingDouble;
 public class MonthTemperatureInfo {
 
     private final Map<Integer, DayTemperatureInfo> dayInfos = new LinkedHashMap<>();
-    private Integer max = - 273;
+    private Integer max = -273;
     private Double average = 0.0;
 
     public void updateMonthStats(DayTemperatureInfo dayInfo) {
