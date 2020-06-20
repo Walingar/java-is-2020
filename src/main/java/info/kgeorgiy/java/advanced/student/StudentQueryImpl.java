@@ -11,27 +11,27 @@ public class StudentQueryImpl implements StudentQuery {
 
     @Override
     public List<String> getFirstNames(List<Student> students) {
-        return (List<String>) getMappedCollection(students, Student::getFirstName);
+        return getMappedListFromCollection(students, Student::getFirstName);
     }
 
     @Override
     public List<String> getLastNames(List<Student> students) {
-        return (List<String>) getMappedCollection(students, Student::getLastName);
+        return getMappedListFromCollection(students, Student::getLastName);
     }
 
     @Override
     public List<String> getGroups(List<Student> students) {
-        return (List<String>) getMappedCollection(students, Student::getGroup);
+        return getMappedListFromCollection(students, Student::getGroup);
     }
 
     @Override
     public List<String> getFullNames(List<Student> students) {
-        return (List<String>) getMappedCollection(students, s -> s.getFirstName() + " " + s.getLastName());
+        return getMappedListFromCollection(students, s -> s.getFirstName() + " " + s.getLastName());
     }
 
     @Override
     public Set<String> getDistinctFirstNames(List<Student> students) {
-        return new HashSet<>(getMappedCollection(students, Student::getFirstName));
+        return new HashSet<>(getMappedListFromCollection(students, Student::getFirstName));
     }
 
     @Override
@@ -44,29 +44,29 @@ public class StudentQueryImpl implements StudentQuery {
 
     @Override
     public List<Student> sortStudentsById(Collection<Student> students) {
-        return (List<Student>) getSortedCollection(students, Comparator.comparingInt(Student::getId));
+        return getSortedListFromCollection(students, Comparator.comparingInt(Student::getId));
     }
 
     @Override
     public List<Student> sortStudentsByName(Collection<Student> students) {
-        return (List<Student>) getSortedCollection(students, Comparator.comparing(Student::getLastName)
+        return getSortedListFromCollection(students, Comparator.comparing(Student::getLastName)
                 .thenComparing(Student::getFirstName)
                 .thenComparing(Student::getId));
     }
 
     @Override
     public List<Student> findStudentsByFirstName(Collection<Student> students, String name) {
-        return sortStudentsByName(getFilteredCollection(students, s -> s.getFirstName().equals(name)));
+        return sortStudentsByName(getFilteredListFromCollection(students, s -> s.getFirstName().equals(name)));
     }
 
     @Override
     public List<Student> findStudentsByLastName(Collection<Student> students, String name) {
-        return sortStudentsByName(getFilteredCollection(students, s -> s.getLastName().equals(name)));
+        return sortStudentsByName(getFilteredListFromCollection(students, s -> s.getLastName().equals(name)));
     }
 
     @Override
     public List<Student> findStudentsByGroup(Collection<Student> students, String group) {
-        return sortStudentsByName(getFilteredCollection(students, s -> s.getGroup().equals(group)));
+        return sortStudentsByName(getFilteredListFromCollection(students, s -> s.getGroup().equals(group)));
     }
 
 
@@ -80,19 +80,19 @@ public class StudentQueryImpl implements StudentQuery {
     }
 
 
-    private <T, R> Collection<R> getMappedCollection(Collection<T> collection, Function<T, R> function) {
+    private <T, R> List<R> getMappedListFromCollection(Collection<T> collection, Function<T, R> function) {
         return collection.stream()
                 .map(function)
                 .collect(Collectors.toList());
     }
 
-    private <T> Collection<T> getFilteredCollection(Collection<T> collection, Predicate<T> predicate) {
+    private <T> List<T> getFilteredListFromCollection(Collection<T> collection, Predicate<T> predicate) {
         return collection.stream()
                 .filter(predicate)
                 .collect(Collectors.toList());
     }
 
-    private <T> Collection<T> getSortedCollection(Collection<T> collection, Comparator<T> comparator) {
+    private <T> List<T> getSortedListFromCollection(Collection<T> collection, Comparator<T> comparator) {
         return collection.stream()
                 .sorted(comparator)
                 .collect(Collectors.toList());

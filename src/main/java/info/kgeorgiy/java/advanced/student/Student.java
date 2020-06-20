@@ -18,37 +18,27 @@ public class Student implements Comparable<Student> {
         this.group = group;
     }
 
-    /**
-     * Unique student id.
-     */
+    /** Unique student id. */
     public int getId() {
         return id;
     }
 
-    /**
-     * Student first name.
-     */
+    /** Student first name. */
     public String getFirstName() {
         return firstName;
     }
 
-    /**
-     * Student last name.
-     */
+    /** Student last name. */
     public String getLastName() {
         return lastName;
     }
 
-    /**
-     * Name of the group, this students belongs to.
-     */
+    /** Name of the group, this students belongs to. */
     public String getGroup() {
         return group;
     }
 
-    /**
-     * Compares students by {@link #getId() id}.
-     */
+    /** Compares students by {@link #getId() id}. */
     @Override
     public int compareTo(final Student that) {
         return Integer.compare(this.id, that.id);
