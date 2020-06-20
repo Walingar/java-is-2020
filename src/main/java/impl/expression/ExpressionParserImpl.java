@@ -12,30 +12,30 @@ public class ExpressionParserImpl implements ExpressionParser {
         if (expression == null)
             throw new IllegalArgumentException();
 
-        String expressionWithoutEmptySpaces = GetStringWithoutEmptySpace(expression);
+        String expressionWithoutEmptySpaces = getStringWithoutEmptySpace(expression);
 
-        String[] operations = GetOperations(expressionWithoutEmptySpaces);
-        String[] values = GetValues(expressionWithoutEmptySpaces);
+        String[] operations = getOperations(expressionWithoutEmptySpaces);
+        String[] values = getValues(expressionWithoutEmptySpaces);
 
         int numberOfValues = values.length;
         int numberOfOperations = operations.length;
 
-        if (!IsOperationsAndValuesMatch(numberOfValues, numberOfOperations))
+        if (!isOperationsAndValuesMatch(numberOfValues, numberOfOperations))
             throw new ParseException("Too much operations!");
 
-        if (!CanParseValues(values))
+        if (!canParseValues(values))
             throw new ParseException("Can't parse values!");
 
-        if (!CanParseOperations(operations))
+        if (!canParseOperations(operations))
             throw new ParseException("Can't parse operations!");
 
-        int[] parsedValues = ParseValues(values);
+        int[] parsedValues = parseValues(values);
 
         boolean firstValueHaveSign = numberOfOperations == numberOfValues;
-        int result = GetFirstValue(parsedValues[0], firstValueHaveSign, operations);
+        int result = getFirstValue(parsedValues[0], firstValueHaveSign, operations);
 
         for (int valueNumber = 1; valueNumber < parsedValues.length; valueNumber++) {
-            String operation = GetCurrentOperation(operations, valueNumber, firstValueHaveSign);
+            String operation = getCurrentOperation(operations, valueNumber, firstValueHaveSign);
             if (operation.equals("+"))
                 result = Math.addExact(result, parsedValues[valueNumber]);
             else
@@ -45,14 +45,14 @@ public class ExpressionParserImpl implements ExpressionParser {
         return result;
     }
 
-    private String GetCurrentOperation(String[] operations, int valueNumber, boolean firstValueHaveSign) {
+    private String getCurrentOperation(String[] operations, int valueNumber, boolean firstValueHaveSign) {
         if (firstValueHaveSign)
             return operations[valueNumber];
         else
             return operations[valueNumber - 1];
     }
 
-    private int GetFirstValue(int firstValue, boolean firstValueHaveSign, String[] operations) {
+    private int getFirstValue(int firstValue, boolean firstValueHaveSign, String[] operations) {
         int result = firstValue;
 
         if (firstValueHaveSign && operations[0].equals("-"))
@@ -61,7 +61,7 @@ public class ExpressionParserImpl implements ExpressionParser {
         return result;
     }
 
-    private boolean CanParseOperations(String[] operations) {
+    private boolean canParseOperations(String[] operations) {
         for (int i = 1; i < operations.length; i++) {
             if (!operations[i].equals("+") && !operations[i].equals("-"))
                 return false;
@@ -70,16 +70,16 @@ public class ExpressionParserImpl implements ExpressionParser {
         return true;
     }
 
-    private boolean CanParseValues(String[] values) {
+    private boolean canParseValues(String[] values) {
         for (String value : values) {
-            if (!CanParseInt(value))
+            if (!canParseInt(value))
                 return false;
         }
 
         return true;
     }
 
-    private int[] ParseValues(String[] values) {
+    private int[] parseValues(String[] values) {
         int[] parsedValues = new int[values.length];
         for (int i = 0; i < values.length; i++) {
                 parsedValues[i] = Integer.parseInt(values[i]);
@@ -88,11 +88,11 @@ public class ExpressionParserImpl implements ExpressionParser {
         return parsedValues;
     }
 
-    private boolean IsOperationsAndValuesMatch(int numberOfValues, int numberOfOperations) {
+    private boolean isOperationsAndValuesMatch(int numberOfValues, int numberOfOperations) {
         return numberOfOperations == numberOfValues || numberOfOperations == numberOfValues - 1;
     }
 
-    private boolean CanParseInt(String integer) {
+    private boolean canParseInt(String integer) {
         try {
             Integer.parseInt(integer);
             return true;
@@ -102,21 +102,17 @@ public class ExpressionParserImpl implements ExpressionParser {
         }
     }
 
-    private boolean IsFirstNumberHaveSign(String firstOperation) {
-        return firstOperation.equals("+") || firstOperation.equals("-");
-    }
-
-    private String[] GetValues(String source) {
+    private String[] getValues(String source) {
         String[] values = source.split("[+-]");
-        return RemoveEmptyStrings(values);
+        return removeEmptyStrings(values);
     }
 
-    private String[] GetOperations(String source) {
+    private String[] getOperations(String source) {
         String[] operations = source.split("[\\d]+");
-        return RemoveEmptyStrings(operations);
+        return removeEmptyStrings(operations);
     }
 
-    private String[] RemoveEmptyStrings(String[] strings) {
+    private String[] removeEmptyStrings(String[] strings) {
         ArrayList<String> result = new ArrayList<>();
         for (String string : strings) {
             if (!string.isEmpty())
@@ -129,14 +125,13 @@ public class ExpressionParserImpl implements ExpressionParser {
         return resultArray;
     }
 
-    private String GetStringWithoutEmptySpace(String source) {
+    private String getStringWithoutEmptySpace(String source) {
         String[] substrings = source.split("[\\s]+");
 
         StringBuilder stringBuilder = new StringBuilder();
         for (String substring : substrings) {
             if (substring.isEmpty() || substring.isBlank())
-                continue
-            ;
+                continue;
             stringBuilder.append(substring);
         }
 
