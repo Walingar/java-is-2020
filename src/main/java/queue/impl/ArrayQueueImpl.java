@@ -27,9 +27,9 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
         if (sizeArray > 0) {
             int first = array[head++];
             if (array.length - array.length / 3 >= --sizeArray) {
-                int[] newMas = new int[array.length - array.length / 4];
-                System.arraycopy(array, head, newMas, 0, sizeArray);
-                array = newMas;
+                int[] newArray = new int[array.length - array.length / 4];
+                System.arraycopy(array, head, newArray, 0, sizeArray);
+                array = newArray;
                 head = 0;
             }
             return first;
