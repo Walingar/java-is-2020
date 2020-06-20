@@ -9,8 +9,9 @@ public class ExpressionParserImpl implements ExpressionParser {
 
     @Override
     public int parse(String expression) throws ParseException {
-        if (expression == null)
+        if (expression == null) {
             throw new IllegalArgumentException();
+        }
 
         String expressionWithoutEmptySpaces = getStringWithoutEmptySpace(expression);
 
@@ -20,14 +21,17 @@ public class ExpressionParserImpl implements ExpressionParser {
         int numberOfValues = values.length;
         int numberOfOperations = operations.length;
 
-        if (!isOperationsAndValuesMatch(numberOfValues, numberOfOperations))
+        if (!isOperationsAndValuesMatch(numberOfValues, numberOfOperations)) {
             throw new ParseException("Too much operations!");
+        }
 
-        if (!canParseValues(values))
+        if (!canParseValues(values)) {
             throw new ParseException("Can't parse values!");
+        }
 
-        if (!canParseOperations(operations))
+        if (!canParseOperations(operations)) {
             throw new ParseException("Can't parse operations!");
+        }
 
         int[] parsedValues = parseValues(values);
 
@@ -36,35 +40,39 @@ public class ExpressionParserImpl implements ExpressionParser {
 
         for (int valueNumber = 1; valueNumber < parsedValues.length; valueNumber++) {
             String operation = getCurrentOperation(operations, valueNumber, firstValueHaveSign);
-            if (operation.equals("+"))
+            if (operation.equals("+")) {
                 result = Math.addExact(result, parsedValues[valueNumber]);
-            else
+            } else {
                 result = Math.subtractExact(result, parsedValues[valueNumber]);
+            }
         }
 
         return result;
     }
 
     private String getCurrentOperation(String[] operations, int valueNumber, boolean firstValueHaveSign) {
-        if (firstValueHaveSign)
+        if (firstValueHaveSign) {
             return operations[valueNumber];
-        else
+        } else {
             return operations[valueNumber - 1];
+        }
     }
 
     private int getFirstValue(int firstValue, boolean firstValueHaveSign, String[] operations) {
         int result = firstValue;
 
-        if (firstValueHaveSign && operations[0].equals("-"))
+        if (firstValueHaveSign && operations[0].equals("-")) {
             result *= -1;
+        }
 
         return result;
     }
 
     private boolean canParseOperations(String[] operations) {
         for (int i = 1; i < operations.length; i++) {
-            if (!operations[i].equals("+") && !operations[i].equals("-"))
+            if (!operations[i].equals("+") && !operations[i].equals("-")) {
                 return false;
+            }
         }
 
         return true;
@@ -72,8 +80,9 @@ public class ExpressionParserImpl implements ExpressionParser {
 
     private boolean canParseValues(String[] values) {
         for (String value : values) {
-            if (!canParseInt(value))
+            if (!canParseInt(value)) {
                 return false;
+            }
         }
 
         return true;
@@ -96,8 +105,7 @@ public class ExpressionParserImpl implements ExpressionParser {
         try {
             Integer.parseInt(integer);
             return true;
-        }
-        catch (NumberFormatException ex) {
+        } catch (NumberFormatException ex) {
             return false;
         }
     }
@@ -115,8 +123,9 @@ public class ExpressionParserImpl implements ExpressionParser {
     private String[] removeEmptyStrings(String[] strings) {
         ArrayList<String> result = new ArrayList<>();
         for (String string : strings) {
-            if (!string.isEmpty())
+            if (!string.isEmpty()) {
                 result.add(string);
+            }
         }
 
         String[] resultArray = new String[result.size()];
@@ -130,8 +139,9 @@ public class ExpressionParserImpl implements ExpressionParser {
 
         StringBuilder stringBuilder = new StringBuilder();
         for (String substring : substrings) {
-            if (substring.isEmpty() || substring.isBlank())
+            if (substring.isEmpty() || substring.isBlank()) {
                 continue;
+            }
             stringBuilder.append(substring);
         }
 
