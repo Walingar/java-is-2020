@@ -14,7 +14,7 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
 
         for (int imageRowNumber = 0; imageRowNumber < imageHeight; imageRowNumber++) {
             for (int imageColumnNumber = 0; imageColumnNumber < imageWidth; imageColumnNumber++) {
-                Color resultColor = ApplyKernel(image, kernel, imageRowNumber, imageColumnNumber, imageWidth, imageHeight);
+                Color resultColor = applyKernel(image, kernel, imageRowNumber, imageColumnNumber, imageWidth, imageHeight);
 
                 resultImage[imageRowNumber][imageColumnNumber] = resultColor;
             }
@@ -23,7 +23,7 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
         return resultImage;
     }
 
-    private Color ApplyKernel(Color[][] image, double[][] kernel, int imageRowNumber, int imageColumnNumber,
+    private Color applyKernel(Color[][] image, double[][] kernel, int imageRowNumber, int imageColumnNumber,
                               int imageWidth, int imageHeight) {
         int redAccumulator = 0;
         int greenAccumulator = 0;
@@ -53,14 +53,14 @@ public class ConvolutionProviderImpl implements ConvolutionProvider {
             }
         }
 
-        int redComponent = NormalizeColorComponent(redAccumulator);
-        int greenComponent = NormalizeColorComponent(greenAccumulator);
-        int blueComponent = NormalizeColorComponent(blueAccumulator);
+        int redComponent = normalizeColorComponent(redAccumulator);
+        int greenComponent = normalizeColorComponent(greenAccumulator);
+        int blueComponent = normalizeColorComponent(blueAccumulator);
 
         return new Color(redComponent, greenComponent, blueComponent, 255);
     }
 
-    private int NormalizeColorComponent(int colorComponent) {
+    private int normalizeColorComponent(int colorComponent) {
         int normalizedComponent = Math.max(0, colorComponent);
         normalizedComponent = Math.min(normalizedComponent, 255);
 
