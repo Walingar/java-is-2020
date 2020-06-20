@@ -8,7 +8,7 @@ import java.util.*;
 
 public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
-    private LinkedHashMap<Month, MonthTemperatureInfo> monthInfos = new LinkedHashMap<>();
+    private HashMap<Month, MonthTemperatureInfo> monthInfos = new LinkedHashMap<>();
 
     @Override
     public void updateStats(DayTemperatureInfo info) {
@@ -37,7 +37,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
     @Override
     public List<DayTemperatureInfo> getSortedTemperature(Month month) {
         var monthTemp = monthInfos.get(month);
-        return monthTemp != null ? monthTemp.getSortedTemperature() : new LinkedList<>();
+        return monthTemp != null ? monthTemp.getSortedTemperature() : new ArrayList<>();
     }
 
     @Override
