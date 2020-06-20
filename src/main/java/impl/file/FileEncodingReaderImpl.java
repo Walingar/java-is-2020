@@ -11,8 +11,7 @@ public class FileEncodingReaderImpl implements FileEncodingReader {
         try {
             return new BufferedReader(new FileReader(file, fileEncoding));
         } catch (IOException e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException(e);
         }
     }
 }
