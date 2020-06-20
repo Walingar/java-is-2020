@@ -3,6 +3,7 @@ package info.kgeorgiy.java.advanced.student;
 import java.util.*;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -53,17 +54,17 @@ public class StudentQueryImpl implements StudentQuery {
 
     @Override
     public List<Student> findStudentsByFirstName(Collection<Student> students, String name) {
-        return sortStudentsByName(findByParameter(students, name));
+        return sortStudentsByName(findByParameter(students, student -> student.getFirstName().equals(name)));
     }
 
     @Override
     public List<Student> findStudentsByLastName(Collection<Student> students, String name) {
-        return sortStudentsByName(findByParameter(students, name));
+        return sortStudentsByName(findByParameter(students, student -> student.getLastName().equals(name)));
     }
 
     @Override
     public List<Student> findStudentsByGroup(Collection<Student> students, String group) {
-        return sortStudentsByName(findByParameter(students, group));
+        return sortStudentsByName(findByParameter(students, student -> student.getGroup().equals(group)));
     }
 
     @Override
@@ -76,8 +77,8 @@ public class StudentQueryImpl implements StudentQuery {
         return students.stream().map(parameter).collect(Collectors.toList());
     }
 
-    private List<Student> findByParameter(Collection<Student> students, String parameter) {
-        return students.stream().filter(student -> student.getGroup().equals(parameter)).collect(Collectors.toList());
+    private List<Student> findByParameter(Collection<Student> students, Predicate<Student> predicate) {
+        return students.stream().filter(predicate).collect(Collectors.toList());
     }
 
     private Stream<Student> sortStream(Collection<Student> students, Comparator<Student> comparator) {
