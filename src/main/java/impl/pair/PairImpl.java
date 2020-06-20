@@ -5,8 +5,8 @@ import api.pair.Pair;
 import java.util.Objects;
 
 public class PairImpl<T, K> implements Pair<T, K> {
-    private T first;
-    private K second;
+    private final T first;
+    private final K second;
 
     public PairImpl(T first, K second) {
         this.first = first;
