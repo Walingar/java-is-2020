@@ -8,7 +8,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public final class MonthTemperatureStatsImpl {
-    private Map<Integer, DayTemperatureInfo> dailyTemperatures;
+    private final Map<Integer, DayTemperatureInfo> dailyTemperatures;
 
     private Integer maxTemperature;
     private Double averageTemperature;
