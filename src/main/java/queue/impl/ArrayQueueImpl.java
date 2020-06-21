@@ -27,6 +27,15 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
         queue = buffer;
     }
 
+    private void reduceCapacity() {
+        capacity = size;
+        Integer[] buffer = new Integer[capacity];
+        System.arraycopy(queue, head, buffer, 0, capacity);
+        queue = buffer;
+        head = 0;
+        tail = size;
+    }
+
     @Override
     public Iterator iterator() {
         return new ArrayQueueIterator();
@@ -53,9 +62,11 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
         if (size == 0) {
             return null;
         }
+        if (size < capacity / (resizeCoefficient * 2)) {
+            reduceCapacity();
+        }
         size--;
         return queue[head++];
-
     }
 
     @Override
