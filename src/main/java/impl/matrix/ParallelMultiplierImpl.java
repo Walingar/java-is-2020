@@ -12,21 +12,29 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
     @Override
     public double[][] mul(double[][] a, double[][] b) {
         Thread[] t = new Thread[maxThreadsCount];
-        double[][] c = new double[a.length][b[0].length];
+        int aRowsCount = a.length;
+        int bColumnsCount = b[0].length;
+        double[][] c = new double[aRowsCount][bColumnsCount];
 
-        int step = (int) Math.ceil((double) a.length / maxThreadsCount);
-        int startI = 0;
-        int finishI = startI + step;
+        if (a[0].length != b.length) {
+            return c;
+        }
+
+        int aRowsMulBColumns = aRowsCount * bColumnsCount;
+
+        long step = (int) Math.ceil((double) aRowsMulBColumns / maxThreadsCount);
+        long  startI = 0;
+        long finishI = startI + step;
         for (int i = 0; i < maxThreadsCount; i++) {
             t[i] = new Thread(new RunnableImpl(a, b, c, startI, finishI));
             t[i].start();
 
-            if (finishI == a.length) {
+            if (finishI == aRowsMulBColumns) {
                 maxThreadsCount = i + 1;
                 break;
             }
             startI += step;
-            finishI = Math.min(finishI + startI, a.length);
+            finishI = Math.min(finishI + startI, aRowsMulBColumns);
         }
 
         try {

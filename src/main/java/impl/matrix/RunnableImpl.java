@@ -4,10 +4,10 @@ public class RunnableImpl implements Runnable {
     double[][] a;
     double[][] b;
     double[][] c;
-    int startI;
-    int finishI;
+    long startI;
+    long finishI;
 
-    RunnableImpl(double[][] a, double[][] b, double[][] c, int startI, int finishI) {
+    RunnableImpl(double[][] a, double[][] b, double[][] c, long startI, long finishI) {
         this.a = a;
         this.b = b;
         this.c = c;
@@ -17,12 +17,17 @@ public class RunnableImpl implements Runnable {
 
     @Override
     public void run() {
-        for (int i = startI; i < finishI; i++) {
-            for (int j = 0; j < b[0].length; j++) {
-                for (int k = 0; k < b.length; k++) {
-                    c[i][j] += a[i][k] * b[k][j];
-                }
+
+        int bRowSize = b[0].length;
+        for (long i = startI; i < finishI; i++) {
+            int column = (int) i % bRowSize;
+            int row = (int) i / bRowSize;
+            double sum = 0;
+            for (int k = 0; k < a[0].length; k++) {
+                sum += a[row][k] * b[k][column];
             }
+            c[row][column] = sum;
         }
+
     }
 }
