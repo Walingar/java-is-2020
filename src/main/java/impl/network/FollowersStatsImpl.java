@@ -20,10 +20,16 @@ public class FollowersStatsImpl implements FollowersStats {
 
     @Override
     public Future<Integer> followersCountBy(int id, int depth, Predicate<UserInfo> predicate) {
-        return doCountFollowersBy(id, depth, predicate, new ConcurrentHashMap<>() {{ put(id, false); }} );
+        return doCountFollowersBy(id, depth, predicate,
+                new ConcurrentHashMap<>() {{
+                    put(id, false);
+                }});
     }
 
-    private CompletableFuture<Integer> doCountFollowersBy(int id, int depth, Predicate<UserInfo> predicate, ConcurrentHashMap<Integer, Boolean> visited) {
+    private CompletableFuture<Integer> doCountFollowersBy(int id,
+                                                          int depth,
+                                                          Predicate<UserInfo> predicate,
+                                                          ConcurrentHashMap<Integer, Boolean> visited) {
         var userCountFuture = network.getUserInfo(id)
                 .thenApply((userInfo) -> predicate.test(userInfo) ? 1 : 0);
 
