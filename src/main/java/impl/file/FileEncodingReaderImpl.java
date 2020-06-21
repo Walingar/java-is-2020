@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.Charset;
 
-public class FileEncodingReaderImpl  implements FileEncodingReader {
+public class FileEncodingReaderImpl implements FileEncodingReader {
     @Override
     public Reader read(File file, Charset fileEncoding) {
         try {

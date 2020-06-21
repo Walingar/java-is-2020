@@ -16,22 +16,24 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
     @Override
     public void write(File file, InputStream data, Charset dataEncoding, Charset fileEncoding) {
 
-        try(Reader input =new BufferedReader(new InputStreamReader(data,dataEncoding)))
-        {
+        try (Reader input = new BufferedReader(new InputStreamReader(data, dataEncoding))) {
             if (!file.exists()) {
-                file.getParentFile().mkdirs();
-                file.createNewFile();
+                if (!file.getParentFile().mkdirs()) {
+                    try {
+                        file.createNewFile();
+                    } catch (IOException e) {
+                        throw new RuntimeException(String.format("error create file %s", e.getMessage()));
+                    }
+                } else {
+                    throw new RuntimeException("error create folder");
+                }
             }
+
             try (Writer output = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), fileEncoding))) {
                 input.transferTo(output);
             }
-
+        } catch (IOException e) {
+            throw new RuntimeException(String.format("error in input stream %s", e.getMessage()));
         }
-        catch (IOException e)
-        {
-            throw new RuntimeException(String.format("error in input stream %s",e.getMessage()));
-        }
-
     }
-
 }
