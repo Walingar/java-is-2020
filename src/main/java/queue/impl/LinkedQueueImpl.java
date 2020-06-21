@@ -60,7 +60,7 @@ public class LinkedQueueImpl extends AbstractQueue<Integer> {
         head = head.getNext();
         size--;
         return value;
-    }
+}
 
     @Override
     public Integer peek() {
