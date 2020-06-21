@@ -42,10 +42,11 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
     }
 
     private class Multiplier implements Runnable {
-        int start;
-        int end;
-        int bColumnNumber;
-        int aColumnNumber;
+        private final int start;
+        private final int end;
+        private final int bColumnNumber;
+        private final int aColumnNumber;
+
         private final double[][] a;
         private final double[][] b;
         private final double[][] result;
