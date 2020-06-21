@@ -10,24 +10,22 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class StudentDB implements  StudentQuery {
-
+public class StudentDB implements StudentQuery {
 
     @Override
     public List<String> getFirstNames(List<Student> students) {
-        return getValueList(students,Student::getFirstName);
+        return getValueList(students, Student::getFirstName);
     }
 
     @Override
     public List<String> getLastNames(List<Student> students) {
-        return getValueList(students,Student::getLastName);
+        return getValueList(students, Student::getLastName);
     }
 
     @Override
     public List<String> getGroups(List<Student> students) {
-        return getValueList(students,Student::getGroup);
+        return getValueList(students, Student::getGroup);
     }
-
 
     @Override
     public List<String> getFullNames(List<Student> students) {
@@ -35,35 +33,32 @@ public class StudentDB implements  StudentQuery {
     }
 
     @Override
-    public Set<String> getDistinctFirstNames(List<Student> students)
-    {
-        return new HashSet<>(getValueList(students,Student::getFirstName));
+    public Set<String> getDistinctFirstNames(List<Student> students) {
+        return new HashSet<>(getValueList(students, Student::getFirstName));
     }
 
     @Override
-    public String getMinStudentFirstName(List<Student> students)
-    {
-        if( getSortedSubSet(students, Comparator.comparingInt(Student::getId)).isEmpty()) return  "";
-      return getSortedSubSet(students, Comparator.comparingInt(Student::getId)).get(0).getFirstName();
+    public String getMinStudentFirstName(List<Student> students) {
+        if (getSortedSubSet(students, Comparator.comparingInt(Student::getId)).isEmpty()) {
+            return "";
+        }
+        return getSortedSubSet(students, Comparator.comparingInt(Student::getId)).get(0).getFirstName();
     }
 
     @Override
-    public List<Student> sortStudentsById (Collection<Student> students)
-    {
-        return   getSortedSubSet((List<Student>) students, Comparator.comparingInt(Student::getId));
+    public List<Student> sortStudentsById(Collection<Student> students) {
+        return getSortedSubSet((List<Student>) students, Comparator.comparingInt(Student::getId));
     }
 
     @Override
-    public List<Student> sortStudentsByName(Collection<Student> students)
-    {
-        return   getSortedSubSet((List<Student>) students, Comparator.comparing(Student::getLastName)
+    public List<Student> sortStudentsByName(Collection<Student> students) {
+        return getSortedSubSet((List<Student>) students, Comparator.comparing(Student::getLastName)
                 .thenComparing(Student::getFirstName)
                 .thenComparing(Student::getId));
     }
 
     @Override
-    public List<Student> findStudentsByFirstName(Collection<Student> students, String name)
-    {
+    public List<Student> findStudentsByFirstName(Collection<Student> students, String name) {
         return sortStudentsByName(getSubList((List<Student>) students, s -> s.getFirstName().equals(name)));
     }
 
@@ -86,27 +81,21 @@ public class StudentDB implements  StudentQuery {
                 );
     }
 
-    private List<String> getValueList(List<Student> students, Function<Student, String> function)
-    {
-        return  students.stream()
+    private List<String> getValueList(List<Student> students, Function<Student, String> function) {
+        return students.stream()
                 .map(function)
                 .collect(Collectors.toList());
     }
 
-    private List<Student> getSubList(List<Student> students, Predicate<Student> predicate)
-    {
+    private List<Student> getSubList(List<Student> students, Predicate<Student> predicate) {
         return students.stream()
                 .filter(predicate)
                 .collect(Collectors.toList());
     }
 
-    private List<Student> getSortedSubSet (List<Student> students, Comparator<Student> comparator) {
+    private List<Student> getSortedSubSet(List<Student> students, Comparator<Student> comparator) {
         return students.stream()
                 .sorted(comparator)
                 .collect(Collectors.toList());
     }
-
-
-
-
 }
