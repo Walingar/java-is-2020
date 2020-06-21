@@ -5,6 +5,6 @@ import api.network.SocialNetwork;
 
 public class FollowersStatsFactory {
     public static FollowersStats getInstance(SocialNetwork network) {
-        return null;
+        return new FollowersStatsRealisation(network);
     }
 }
