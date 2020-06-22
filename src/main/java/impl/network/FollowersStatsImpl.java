@@ -23,7 +23,7 @@ public class FollowersStatsImpl implements FollowersStats {
         return followersCountBy(id, depth, predicate, new HashSet<>());
     }
 
-    private CompletableFuture<Integer> followersCountBy(int id, int depth, Predicate<UserInfo> predicate, Set<Integer> isVisited){
+    private CompletableFuture<Integer> followersCountBy(int id, int depth, Predicate<UserInfo> predicate, Set<Integer> isVisited) {
         if (!isVisited.add(id)) {
             return CompletableFuture.completedFuture(0);
         }
@@ -35,9 +35,9 @@ public class FollowersStatsImpl implements FollowersStats {
 
         return network.getFollowers(id)
                 .thenCompose(followers -> followers.stream()
-                .map(followerId -> followersCountBy(followerId, depth - 1, predicate, isVisited))
-                .reduce((a, b) -> a.thenCombine(b, Integer::sum))
-                .orElse(CompletableFuture.completedFuture(0))
-                .thenCombine(currentUserCompletableFeature, Integer::sum));
+                        .map(followerId -> followersCountBy(followerId, depth - 1, predicate, isVisited))
+                        .reduce((a, b) -> a.thenCombine(b, Integer::sum))
+                        .orElse(CompletableFuture.completedFuture(0))
+                        .thenCombine(currentUserCompletableFeature, Integer::sum));
     }
 }
