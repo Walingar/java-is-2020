@@ -1,63 +1,44 @@
 package impl.network;
 
-
-
 import api.network.FollowersStats;
 import api.network.SocialNetwork;
 import api.network.UserInfo;
 
-import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
-public class FollowersStatsRealisation implements FollowersStats {
+public final class FollowersStatsRealisation implements FollowersStats {
     private SocialNetwork network;
-    private ExecutorService executor;
 
-    public FollowersStatsRealisation(SocialNetwork network){
+    public FollowersStatsRealisation(SocialNetwork network) {
         this.network = network;
-        this.executor = Executors.newSingleThreadExecutor();
     }
 
     @Override
     public Future<Integer> followersCountBy(int id, int depth, Predicate<UserInfo> predicate) {
-        return executor.submit(() -> {
-            ArrayDeque<Integer> activeUsersToView = new ArrayDeque<>();
-            LinkedHashSet<Integer> allUsers = new LinkedHashSet<>();
+        return countFollowers(id, depth, predicate, ConcurrentHashMap.newKeySet());
+    }
 
-            activeUsersToView.add(id);
-            allUsers.add(id);
-            int firstIndex = 1;
+    private CompletableFuture<Integer> countFollowers(int id, int depth, Predicate<UserInfo> predicate,  Set<Integer> visited) {
+        if (visited.add(id)) {
 
-            for (int i = 0; i < depth; ++i){
-                while (!activeUsersToView.isEmpty()){
-                    allUsers.addAll(network.getFollowers(activeUsersToView.poll()).get());
-                }
-
-                int lastIndex = allUsers.size(); // new users
-
-                List<Integer> list = new ArrayList<>(allUsers);
-                activeUsersToView.addAll(list.subList(firstIndex, lastIndex));
-
-                firstIndex = lastIndex;
+            if (depth == 0) {
+                return network.getUserInfo(id)
+                        .thenApply(userInfo -> predicate.test(userInfo) ? 1 : 0);
             }
 
-            return (int) allUsers.stream().filter(studentId -> {
-                try {
-                    return predicate.test(network.getUserInfo(studentId).get());
-                } catch (InterruptedException | ExecutionException e) {
-                    e.printStackTrace();
-                };
-                return false;
-            }).count();
-        });
+            return network.getFollowers(id)
+                    .thenCompose(studentIds -> studentIds.stream()
+                            .map(student -> countFollowers(student, depth - 1, predicate, visited))
+                            .reduce((set1, set2) -> set1.thenCombine(set2, Integer::sum))
+                            .orElse(CompletableFuture.completedFuture(0))
+                            .thenCombine(network.getUserInfo(id)
+                                    .thenApply(userInfo -> predicate.test(userInfo) ? 1 : 0), Integer::sum));
+        }
+
+        return CompletableFuture.completedFuture(0);
     };
-
 }
-
