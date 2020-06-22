@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 public class FollowersStatsImpl implements FollowersStats {
     private final SocialNetwork network;
 
-    public FollowersStatsImpl(SocialNetwork network){
+    public FollowersStatsImpl(SocialNetwork network) {
         this.network = network;
     }
 
@@ -26,7 +26,7 @@ public class FollowersStatsImpl implements FollowersStats {
         );
     }
 
-    private CompletableFuture<Integer> count(int id, int depth, Predicate<UserInfo> predicate, ConcurrentHashMap<Integer, Boolean> visitMap){
+    private CompletableFuture<Integer> count(int id, int depth, Predicate<UserInfo> predicate, ConcurrentHashMap<Integer, Boolean> visitMap) {
         CompletableFuture<Integer> userCountFuture = network.getUserInfo(id)
                 .thenApply(
                         (userInfo) -> predicate.test(userInfo) ? 1 : 0
