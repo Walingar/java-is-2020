@@ -3,7 +3,6 @@ package impl.weather;
 import api.weather.DayTemperatureInfo;
 import api.weather.YearTemperatureStats;
 
-import java.time.LocalDate;
 import java.time.Month;
 import java.util.*;
 
@@ -19,7 +18,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
         Month month = info.getMonth();
         int monthNumber = month.getValue();
 
-        MonthTemperatureStatsImpl monthStat = GetOrCreateMonthTemperatureStat(monthNumber);
+        MonthTemperatureStatsImpl monthStat = getOrCreateMonthTemperatureStat(monthNumber);
 
         monthStat.updateTemperatureInfo(info);
     }
@@ -27,7 +26,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
     @Override
     public Double getAverageTemperature(Month month) {
         int monthNumber = month.getValue();
-        MonthTemperatureStatsImpl monthStat = GetOrCreateMonthTemperatureStat(monthNumber);
+        MonthTemperatureStatsImpl monthStat = getOrCreateMonthTemperatureStat(monthNumber);
 
         return monthStat.getAverageTemperature();
     }
@@ -49,7 +48,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
     @Override
     public List<DayTemperatureInfo> getSortedTemperature(Month month) {
         int monthNumber = month.getValue();
-        MonthTemperatureStatsImpl monthStat = GetOrCreateMonthTemperatureStat(monthNumber);
+        MonthTemperatureStatsImpl monthStat = getOrCreateMonthTemperatureStat(monthNumber);
 
         Collection<DayTemperatureInfo> dayTemperatureInfos = monthStat.getAllValues();
         List<DayTemperatureInfo> listForSorting = new ArrayList<>(dayTemperatureInfos);
@@ -63,12 +62,12 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
     @Override
     public DayTemperatureInfo getTemperature(int day, Month month) {
         int monthNumber = month.getValue();
-        MonthTemperatureStatsImpl monthStat = GetOrCreateMonthTemperatureStat(monthNumber);
+        MonthTemperatureStatsImpl monthStat = getOrCreateMonthTemperatureStat(monthNumber);
 
         return monthStat.getDayTemperatureInfo(day);
     }
 
-    private MonthTemperatureStatsImpl GetOrCreateMonthTemperatureStat(int month) {
+    private MonthTemperatureStatsImpl getOrCreateMonthTemperatureStat(int month) {
         MonthTemperatureStatsImpl monthTemperatureStats = monthlyTemperatures.get(month);
         if (monthTemperatureStats == null) {
             monthTemperatureStats = new MonthTemperatureStatsImpl();
