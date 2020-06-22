@@ -100,8 +100,9 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
         private double calculateElement(int row, int column) {
             double elementValue = 0;
 
-            for (int index = 0; index < firstMatrixWidth; index++)
+            for (int index = 0; index < firstMatrixWidth; index++) {
                 elementValue += firstMatrix[row][index] * secondMatrix[index][column];
+            }
 
             return elementValue;
         }
