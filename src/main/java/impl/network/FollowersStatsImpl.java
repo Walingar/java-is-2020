@@ -45,10 +45,10 @@ public class FollowersStatsImpl implements FollowersStats {
                                                        CompletableFuture<Integer> currentUserIsFollower) {
         return network.getFollowers(userId).
                 thenCompose(followers -> followers.stream().
-                map(followerId -> calculateFollowersRecursiveAsync(followerId, depth, condition, discoveredUsers)).
-                reduce((first, second) -> first.thenCombine(second, Integer::sum)).
-                orElse(CompletableFuture.completedFuture(0)).
-                thenCombine(currentUserIsFollower, Integer::sum));
+                        map(followerId -> calculateFollowersRecursiveAsync(followerId, depth, condition, discoveredUsers)).
+                        reduce((first, second) -> first.thenCombine(second, Integer::sum)).
+                        orElse(CompletableFuture.completedFuture(0)).
+                        thenCombine(currentUserIsFollower, Integer::sum));
     }
 
     private CompletableFuture<Integer> IsUserFollow(int userId, Predicate<UserInfo> condition) {
