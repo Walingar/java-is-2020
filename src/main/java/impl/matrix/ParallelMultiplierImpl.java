@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ParallelMultiplierImpl implements ParallelMultiplier {
-    private int maxThreadsCount;
+    private final int maxThreadsCount;
 
     public ParallelMultiplierImpl(int maxThreadsCount) {
         this.maxThreadsCount = maxThreadsCount;
@@ -63,16 +63,16 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
 
 
     private class Multiplicator implements Runnable {
-        private double[][] firstMatrix;
-        private double[][] secondMatrix;
+        private final double[][] firstMatrix;
+        private final double[][] secondMatrix;
 
         private double[][] resultMatrix;
 
-        private int firstMatrixWidth;
-        private int secondMatrixWidth;
+        private final int firstMatrixWidth;
+        private final int secondMatrixWidth;
 
-        private int start;
-        private int end;
+        private final int start;
+        private final int end;
 
         public Multiplicator(double[][] firstMatrix, double[][] secondMatrix, double[][] result, int start, int end) {
             this.firstMatrix = firstMatrix;
