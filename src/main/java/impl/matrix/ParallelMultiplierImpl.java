@@ -23,7 +23,7 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
         int aRowsMulBColumns = aRowsCount * bColumnsCount;
 
         long step = (int) Math.ceil((double) aRowsMulBColumns / maxThreadsCount);
-        long  startI = 0;
+        long startI = 0;
         long finishI = startI + step;
         for (int i = 0; i < maxThreadsCount; i++) {
             t[i] = new Thread(new RunnableImpl(a, b, c, startI, finishI));
