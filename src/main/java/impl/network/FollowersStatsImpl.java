@@ -20,20 +20,22 @@ public class FollowersStatsImpl implements FollowersStats {
 
     @Override
     public Future<Integer> followersCountBy(int id, int depth, Predicate<UserInfo> predicate) {
-        return doCountFollowersBy(id, depth, predicate,
+        return countFollowersBy(id, depth, predicate,
                 new ConcurrentHashMap<>() {{
                     put(id, false);
                 }});
     }
 
-    private CompletableFuture<Integer> doCountFollowersBy(int id,
-                                                          int depth,
-                                                          Predicate<UserInfo> predicate,
-                                                          ConcurrentHashMap<Integer, Boolean> visited) {
+    private CompletableFuture<Integer> countFollowersBy(int id,
+                                                        int depth,
+                                                        Predicate<UserInfo> predicate,
+                                                        ConcurrentHashMap<Integer, Boolean> visited) {
         var userCountFuture = network.getUserInfo(id)
                 .thenApply((userInfo) -> predicate.test(userInfo) ? 1 : 0);
 
-        if (depth == 0) return userCountFuture;
+        if (depth == 0) {
+            return userCountFuture;
+        }
 
         return network.getFollowers(id)
                 .thenCompose((followers) -> followers
@@ -42,7 +44,7 @@ public class FollowersStatsImpl implements FollowersStats {
                             if (Objects.nonNull(visited.putIfAbsent(follower, true))) {
                                 return CompletableFuture.completedFuture(0);
                             }
-                            return doCountFollowersBy(follower, depth - 1, predicate, visited);
+                            return countFollowersBy(follower, depth - 1, predicate, visited);
                         })
                         .reduce(CompletableFuture.completedFuture(0), (l, r) -> l.thenCombine(r, Integer::sum)))
                 .thenCombine(userCountFuture, Integer::sum);
