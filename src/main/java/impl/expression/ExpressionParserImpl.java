@@ -91,8 +91,8 @@ public class ExpressionParserImpl implements ExpressionParser {
     private int[] parseValues(String[] values) {
         int[] parsedValues = new int[values.length];
         for (int i = 0; i < values.length; i++) {
-                parsedValues[i] = Integer.parseInt(values[i]);
-            }
+            parsedValues[i] = Integer.parseInt(values[i]);
+        }
 
         return parsedValues;
     }
