@@ -19,7 +19,7 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
     }
 
     @Override
-    public double[][] mul(double[][] a, double[][] b){
+    public double[][] mul(double[][] a, double[][] b) {
         int aWidth = a.length;
         int aHeight = a[0].length;
         int bWidth = b.length;
@@ -89,6 +89,4 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
             }
         }
     }
-
-
 }
