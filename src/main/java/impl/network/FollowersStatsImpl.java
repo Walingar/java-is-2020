@@ -31,16 +31,16 @@ public class FollowersStatsImpl implements FollowersStats {
         }
 
         //Check current user (root included)
-        CompletableFuture<Integer> currentUserIsFollower = IsUserFollow(userId, condition);
+        CompletableFuture<Integer> currentUserIsFollower = isUserFollow(userId, condition);
 
         if (currentDepth == 0) {
             return currentUserIsFollower;
         }
 
-        return VisitChildNodes(userId, currentDepth - 1, condition, discoveredUsers, currentUserIsFollower);
+        return visitChildNodes(userId, currentDepth - 1, condition, discoveredUsers, currentUserIsFollower);
     }
 
-    private CompletableFuture<Integer> VisitChildNodes(int userId, int depth, Predicate<UserInfo> condition,
+    private CompletableFuture<Integer> visitChildNodes(int userId, int depth, Predicate<UserInfo> condition,
                                                        HashSet<Integer> discoveredUsers,
                                                        CompletableFuture<Integer> currentUserIsFollower) {
         return network.getFollowers(userId).
@@ -51,7 +51,7 @@ public class FollowersStatsImpl implements FollowersStats {
                         thenCombine(currentUserIsFollower, Integer::sum));
     }
 
-    private CompletableFuture<Integer> IsUserFollow(int userId, Predicate<UserInfo> condition) {
+    private CompletableFuture<Integer> isUserFollow(int userId, Predicate<UserInfo> condition) {
         return network.getUserInfo(userId).thenApply(userInfo -> condition.test(userInfo) ? 1 : 0);
     }
 }
