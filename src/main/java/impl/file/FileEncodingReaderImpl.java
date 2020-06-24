@@ -4,7 +4,6 @@ import api.file.FileEncodingReader;
 
 import java.io.*;
 import java.nio.charset.Charset;
-import java.util.Objects;
 
 public class FileEncodingReaderImpl implements FileEncodingReader {
     @Override

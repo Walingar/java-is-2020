@@ -8,7 +8,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Objects;
 
 public class FileEncodingWriterImpl implements FileEncodingWriter {
     @Override
@@ -28,10 +27,11 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
 
         try (var reader = new InputStreamReader(data, dataEncoding);
              var fileWriter = new FileWriter(file, fileEncoding)) {
-            char[] charArray = new char[2048];
+            var charArrayLength = 2048;
+            char[] charArray = new char[charArrayLength];
             int numRead = 0;
-            while((numRead = reader.read(charArray,0,2048)) >= 0){
-                fileWriter.write(charArray,0,numRead);
+            while ((numRead = reader.read(charArray, 0, charArrayLength)) >= 0) {
+                fileWriter.write(charArray, 0, numRead);
             }
         } catch (IOException e) {
             System.err.println("Error occurred during the file writing");
