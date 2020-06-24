@@ -13,23 +13,25 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
     @Override
     public double[][] mul(double[][] a, double[][] b) {
 
-        double[][] result = new double[a.length][b[0].length];
-        int operationsCnt = a.length * b[0].length;
+        int aRowsCnt = a.length;
+        int bColumnsCnt = b[0].length;
+        double[][] result = new double[aRowsCnt][bColumnsCnt];
+        int operationsCnt = aRowsCnt * bColumnsCnt;
         int partSize = operationsCnt / maxThreadCount;
         Thread[] threads = new Thread[maxThreadCount - 1];
 
         for (int i = 0; i < threads.length; i++) {
             int partBegin = i * partSize;
             int partEnd = partBegin + partSize;
-            threads[i] = new Thread(() -> calulatePart(a, b, result, partBegin, partEnd));
+            threads[i] = new Thread(() -> calculatePart(a, b, result, partBegin, partEnd));
             threads[i].start();
         }
 
-        calulatePart(a, b, result, threads.length * partSize, operationsCnt);
+        calculatePart(a, b, result, threads.length * partSize, operationsCnt);
 
-        for (int i = 0; i < threads.length; i++) {
+        for (Thread thread : threads) {
             try {
-                threads[i].join();
+                thread.join();
             } catch (InterruptedException ignored) {
             }
         }
@@ -37,13 +39,14 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
         return result;
     }
 
-    private void calulatePart(double[][] a, double[][] b, double[][] res, int partBegin, int partEnd) {
+    private void calculatePart(double[][] a, double[][] b, double[][] res, int partBegin, int partEnd) {
 
         int rowSize = res[0].length;
+        int commonSideLength = b.length;
         for (int element = partBegin; element < partEnd; element++) {
             int i = element / rowSize;
             int j = element % rowSize;
-            for (int k = 0; k < b.length; k++) {
+            for (int k = 0; k < commonSideLength; k++) {
                 res[i][j] += a[i][k] * b[k][j];
             }
         }
