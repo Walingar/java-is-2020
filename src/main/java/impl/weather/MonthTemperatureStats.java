@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class MonthTemperatureStats {
-    private final Map<Integer, DayTemperatureInfo> dayTemperatureMap = new HashMap<Integer, DayTemperatureInfo>();
+    private final Map<Integer, DayTemperatureInfo> dayTemperatureMap = new LinkedHashMap<Integer, DayTemperatureInfo>();
     private Double avgTemperature;
     private Integer maxTemperature;
 
