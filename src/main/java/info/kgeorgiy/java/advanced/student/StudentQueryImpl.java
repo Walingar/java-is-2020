@@ -68,8 +68,7 @@ public class StudentQueryImpl implements StudentQuery {
     public List<Student> findStudentsByFirstName(Collection<Student> students, String name) {
         return students.stream()
                 .filter(x -> x.getFirstName().equals(name))
-                .sorted(Comparator.comparing(Student::getLastName)
-                        .thenComparing(Student::getFirstName))
+                .sorted(compareByLastFirstName())
                 .collect(Collectors.toList());
     }
 
@@ -84,8 +83,7 @@ public class StudentQueryImpl implements StudentQuery {
     public List<Student> findStudentsByGroup(Collection<Student> students, String group) {
         return students.stream()
                 .filter(x -> x.getGroup().equals(group))
-                .sorted(Comparator.comparing(Student::getLastName)
-                        .thenComparing(Student::getFirstName))
+                .sorted(compareByLastFirstName())
                 .collect(Collectors.toList());
     }
 
@@ -100,5 +98,10 @@ public class StudentQueryImpl implements StudentQuery {
 
     private String getFullName(Student student) {
         return String.format("%s %s", student.getFirstName(), student.getLastName());
+    }
+
+    private Comparator<Student> compareByLastFirstName(){
+        return Comparator.comparing(Student::getLastName)
+                .thenComparing(Student::getFirstName);
     }
 }
