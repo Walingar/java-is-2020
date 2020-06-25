@@ -1,15 +1,15 @@
 package impl.matrix;
 
 public class Multiplier implements Runnable {
-    int start, end;
-    int bColumns, bRows;
-    double[][] a, b, result;
+    private final int start;
+    private final int end;
+    private final double[][] a;
+    private final double[][] b;
+    private final double[][] result;
 
-    public Multiplier(int start, int end, int bColumns, int bRows, double[][] a, double[][] b, double[][] result) {
+    public Multiplier(int start, int end, double[][] a, double[][] b, double[][] result) {
         this.start = start;
         this.end = end;
-        this.bColumns = bColumns;
-        this.bRows = bRows;
         this.a = a;
         this.b = b;
         this.result = result;
@@ -17,11 +17,13 @@ public class Multiplier implements Runnable {
 
     @Override
     public void run() {
-        for (int i = start; i < end; i++) {
-            for (int j = 0; j < bColumns; j++) {
-                for (int inner = 0; inner < bRows; inner++) {
-                    result[i][j] += a[i][inner] * b[inner][j];
-                }
+        int bRows = b.length;
+        int bColumns = bRows == 0 ? 0 : b[0].length;
+        for (long i = start; i < end * bColumns; i++) {
+            int row = (int) (i / bColumns);
+            int column = (int) (i % end);
+            for (int inner = 0; inner < bRows; inner++) {
+                result[row][column] += a[row][inner] * b[inner][column];
             }
         }
     }
