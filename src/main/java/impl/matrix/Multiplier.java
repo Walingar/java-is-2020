@@ -3,7 +3,7 @@ package impl.matrix;
 public class Multiplier implements Runnable {
     private final double[][] a;
     private final double[][] b;
-    private double[][] c;
+    private final double[][] c;
     private final long startI;
     private final long finishI;
 
