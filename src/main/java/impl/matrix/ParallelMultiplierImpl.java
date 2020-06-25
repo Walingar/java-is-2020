@@ -37,7 +37,7 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
             try {
                 worker.join();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.out.println("Unable To Join");
             }
         }
         return res;
@@ -49,7 +49,7 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
         int remainIterations = totalIterations % usedThreads;
         List<Thread> workers = new ArrayList<>();
         int curBlock = 0;
-        for (int threadID = 0; threadID < usedThreads; threadID++) {
+        for (int threadId = 0; threadId < usedThreads; threadId++) {
             int blockEnd = curBlock + iterationPerWorker;
             if (remainIterations > 0) {
                 remainIterations--;
@@ -63,8 +63,8 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
     }
 
     private static class Worker extends Thread {
-        private double[][] a;
-        private double[][] b;
+        private final double[][] a;
+        private final double[][] b;
         private int start;
         private int end;
 
