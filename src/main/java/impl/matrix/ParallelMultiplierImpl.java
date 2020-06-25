@@ -3,6 +3,7 @@ package impl.matrix;
 import api.matrix.ParallelMultiplier;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ParallelMultiplierImpl implements ParallelMultiplier {
     private final int maxThreadsCount;
@@ -17,55 +18,54 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
         int columnCount = b[0].length;
         double[][] resultMatrix = new double[rowCount][columnCount];
 
-        ArrayList<Thread> threads = new ArrayList<>();
+        int elementCount = rowCount * columnCount;
 
-        int startRowNumber = 0;
-        int rowOffset = (rowCount + maxThreadsCount - 1) / maxThreadsCount;
+        List<Thread> threads = new ArrayList<>();
+
+        int startElementNumber = 0;
 
         for (int i = 0; i < maxThreadsCount; i++) {
-            int endRowNumber = startRowNumber + rowOffset - 1;
-            Thread thread = new Thread(new Task(a, b, resultMatrix, startRowNumber, endRowNumber));
+            int offset = elementCount / maxThreadsCount + (elementCount % maxThreadsCount > i ? 1 : 0);
+            int endElementNumber = startElementNumber + offset - 1;
+            Thread thread = new Thread(new Task(a, b, resultMatrix, startElementNumber, endElementNumber));
             threads.add(thread);
             thread.start();
-            startRowNumber = endRowNumber + 1;
+            startElementNumber = endElementNumber + 1;
         }
 
         for (var thread : threads) {
             try {
                 thread.join();
             } catch (InterruptedException e) {
-                System.out.println(e);
+                System.out.println("Thread Error");
             }
         }
         return resultMatrix;
     }
 
-    private class Task implements Runnable {
-        private final int startRowNumber;
-        private final int endRowNumber;
-        private final int bColumnNumber;
-        private final int aColumnNumber;
+    private static class Task implements Runnable {
+        private final int start;
+        private final int end;
         private final double[][] aMatrix;
         private final double[][] bMatrix;
         private final double[][] resultMatrix;
 
-        public Task(double[][] aMatrix, double[][] bMatrix, double[][] resultMatrix, int startRowNumber, int endRowNumber) {
+        public Task(double[][] aMatrix, double[][] bMatrix, double[][] resultMatrix, int start, int end) {
             this.aMatrix = aMatrix;
             this.bMatrix = bMatrix;
             this.resultMatrix = resultMatrix;
-            this.startRowNumber = startRowNumber;
-            this.endRowNumber = endRowNumber;
-            this.bColumnNumber = bMatrix[0].length;
-            this.aColumnNumber = aMatrix[0].length;
+            this.start = start;
+            this.end = end;
         }
 
         @Override
         public void run() {
-            for (int i = startRowNumber; i <= endRowNumber; i++) {
-                for (var j = 0; j < bColumnNumber; j++) {
-                    for (var k = 0; k < aColumnNumber; k++) {
-                        resultMatrix[i][j] += aMatrix[i][k] * bMatrix[k][j];
-                    }
+            int rowLength = resultMatrix[0].length;
+            for (int i = start; i <= end; i++) {
+                int rowNumber = i / rowLength;
+                int columnNumber = i % rowLength;
+                for (var j = 0; j < bMatrix.length; j++) {
+                    resultMatrix[rowNumber][columnNumber] += aMatrix[rowNumber][j] * bMatrix[j][columnNumber];
                 }
             }
         }
