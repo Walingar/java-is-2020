@@ -3,6 +3,7 @@ package impl.matrix;
 import api.matrix.ParallelMultiplier;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ParallelMultiplierImpl implements ParallelMultiplier {
 
@@ -17,18 +18,19 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
         int aRowNumber = a.length;
         int bColumnNumber = b[0].length;
         double[][] result = new double[aRowNumber][bColumnNumber];
+        var numberOfResultElements = aRowNumber * bColumnNumber;
 
-        ArrayList<Thread> threadList = new ArrayList<>();
+        List<Thread> threadList = new ArrayList<>();
 
-        int startRow = 0;
-        int rowStep = (aRowNumber + maxThreads - 1) / maxThreads;
+        int start = 0;
 
         for (int i = 0; i < maxThreads; i++) {
-            var endRow = startRow + rowStep - 1;
-            var thread = new Thread(new Multiplier(startRow, endRow, a, b, result));
+            int currentStep = numberOfResultElements / maxThreads + (numberOfResultElements % maxThreads > i ? 1 : 0);
+            var end = start + currentStep - 1;
+            var thread = new Thread(new Multiplier(start, end, a, b, result));
             threadList.add(thread);
             thread.start();
-            startRow = endRow + 1;
+            start = end + 1;
         }
 
         for (var thread : threadList) {
@@ -41,11 +43,9 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
         return result;
     }
 
-    private class Multiplier implements Runnable {
+    private static class Multiplier implements Runnable {
         private final int start;
         private final int end;
-        private final int bColumnNumber;
-        private final int aColumnNumber;
 
         private final double[][] a;
         private final double[][] b;
@@ -57,17 +57,16 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
             this.result = result;
             this.start = start;
             this.end = end;
-            this.bColumnNumber = b[0].length;
-            this.aColumnNumber = a[0].length;
         }
 
         @Override
         public void run() {
+            int columnNumber = b[0].length;
             for (int i = start; i <= end; i++) {
-                for (var j = 0; j < bColumnNumber; j++) {
-                    for (var k = 0; k < aColumnNumber; k++) {
-                        result[i][j] += a[i][k] * b[k][j];
-                    }
+                int row = i / columnNumber;
+                int column = i % columnNumber;
+                for (int k = 0; k < b.length; k++) {
+                    result[row][column] += a[row][k] * b[k][column];
                 }
             }
         }
