@@ -21,7 +21,7 @@ public class Multiplier implements Runnable {
         int bColumns = bRows == 0 ? 0 : b[0].length;
         for (long i = start; i < end * bColumns; i++) {
             int row = (int) (i / bColumns);
-            int column = (int) (i % end);
+            int column = (int) (i % bColumns);
             for (int inner = 0; inner < bRows; inner++) {
                 result[row][column] += a[row][inner] * b[inner][column];
             }
