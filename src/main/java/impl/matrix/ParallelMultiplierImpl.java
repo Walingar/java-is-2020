@@ -20,21 +20,21 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
             return c;
         }
 
-        int aRowsMulBColumns = aRowsCount * bColumnsCount;
+        int cElementsCount = aRowsCount * bColumnsCount;
 
-        long step = (int) Math.ceil((double) aRowsMulBColumns / maxThreadsCount);
+        long step = (int) Math.ceil((double) cElementsCount / maxThreadsCount);
         long startI = 0;
         long finishI = startI + step;
         for (int i = 0; i < maxThreadsCount; i++) {
-            t[i] = new Thread(new RunnableImpl(a, b, c, startI, finishI));
+            t[i] = new Thread(new Multiplier(a, b, c, startI, finishI));
             t[i].start();
 
-            if (finishI == aRowsMulBColumns) {
+            if (finishI == cElementsCount) {
                 maxThreadsCount = i + 1;
                 break;
             }
             startI += step;
-            finishI = Math.min(finishI + startI, aRowsMulBColumns);
+            finishI = Math.min(finishI + startI, cElementsCount);
         }
 
         try {

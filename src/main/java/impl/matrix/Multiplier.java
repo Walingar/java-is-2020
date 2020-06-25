@@ -1,13 +1,13 @@
 package impl.matrix;
 
-public class RunnableImpl implements Runnable {
-    double[][] a;
-    double[][] b;
-    double[][] c;
-    long startI;
-    long finishI;
+public class Multiplier implements Runnable {
+    private final double[][] a;
+    private final double[][] b;
+    private double[][] c;
+    private final long startI;
+    private final long finishI;
 
-    RunnableImpl(double[][] a, double[][] b, double[][] c, long startI, long finishI) {
+    Multiplier(double[][] a, double[][] b, double[][] c, long startI, long finishI) {
         this.a = a;
         this.b = b;
         this.c = c;
