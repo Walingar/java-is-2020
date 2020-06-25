@@ -12,23 +12,29 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
 
     @Override
     public double[][] mul(double[][] a, double[][] b) {
+        Thread[] threads = new Thread[maxThreads];
         int aRows = a.length;
         int bRows = b.length;
         int bColumns = bRows == 0 ? 0 : b[0].length;
-        int nBar = aRows / maxThreads;
+        int partSize = aRows / maxThreads;
         int residue = aRows % maxThreads;
         double[][] result = new double[aRows][bColumns];
-        for (int threadCurrent = 0; threadCurrent < maxThreads; threadCurrent++) {
-            int start = threadCurrent * nBar;
-            int end = (threadCurrent != maxThreads - 1) ? (threadCurrent + 1) * nBar : (threadCurrent + 1) * nBar + residue;
-            Thread thread = new Thread(new Multiplier(start, end, bColumns, bRows, a, b, result));
-            thread.start();
-            try {
-                thread.join();
-            } catch (InterruptedException e) {
-                System.err.println(e.getMessage());
-            }
+        for (int currentThread = 0; currentThread < maxThreads; currentThread++) {
+            int start = currentThread * partSize;
+            int numberPart = currentThread + 1;
+            int end = numberPart * partSize + (currentThread != maxThreads - 1 ? 0 : residue);
+            threads[currentThread] = new Thread(new Multiplier(start, end, a, b, result));
+            threads[currentThread].start();
         }
+
+        try {
+            for (int i = 0; i < maxThreads; i++) {
+                threads[i].join();
+            }
+        } catch (InterruptedException e) {
+            System.err.println(e.getMessage());
+        }
+
         return result;
     }
 }
