@@ -13,7 +13,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
     private final Map<Month, Double> averageData = new HashMap<Month, Double>();
     private final Map<Month, Integer> maxTemperatureData = new HashMap<Month, Integer>();
 
-    private void UpdateMax(Month month, Integer newTemperature) {
+    private void updateMax(Month month, Integer newTemperature) {
         var monthData = yearData.get(month);
         if (maxTemperatureData.containsKey(month)) {
             if (maxTemperatureData.get(month) < newTemperature) {
@@ -25,13 +25,13 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
         }
     }
 
-    private void UpdateAverage(Month month, Integer newTemperature) {
+    private void updateAverage(Month month, Integer newTemperature) {
         var average = averageData.get(month);
         average = (average * (yearData.get(month).size() - 1) + newTemperature) / yearData.get(month).size();
         averageData.replace(month, average);
     }
 
-    private HashMap<Integer, DayTemperatureInfo> AddMonth(Month month) {
+    private HashMap<Integer, DayTemperatureInfo> addMonth(Month month) {
         LinkedHashMap<Integer, DayTemperatureInfo> monthData = new LinkedHashMap<Integer, DayTemperatureInfo>();
         yearData.put(month, monthData);
         return monthData;
@@ -46,13 +46,13 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
                 throw new IllegalArgumentException("Day is already in stats");
             } else {
                 monthData.put(info.getDay(), info);
-                UpdateAverage(info.getMonth(), info.getTemperature());
-                UpdateMax(info.getMonth(), info.getTemperature());
+                updateAverage(info.getMonth(), info.getTemperature());
+                updateMax(info.getMonth(), info.getTemperature());
             }
         } else {
-            var monthData = AddMonth(info.getMonth());
+            var monthData = addMonth(info.getMonth());
             monthData.put(info.getDay(), info);
-            UpdateMax(info.getMonth(), info.getTemperature());
+            updateMax(info.getMonth(), info.getTemperature());
             averageData.put(info.getMonth(), (double) info.getTemperature());
         }
     }
