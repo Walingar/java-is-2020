@@ -5,13 +5,16 @@ import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class StudentDB implements StudentQuery {
     private final static String DEFAULT_LAST_NAME = "";
-    private static final Comparator<Student> STUDENT_COMPARATOR =
+    private static final Comparator<Student> STUDENT_NAME_COMPARATOR =
             Comparator.comparing(Student::getLastName)
                     .thenComparing(Student::getFirstName)
                     .thenComparing(Student::getId);
+
+    private static final Comparator<Student> STUDENT_ID_COMPARATOR = Comparator.comparingInt(Student::getId);
 
     @Override
     public List<String> getFirstNames(List<Student> students) {
@@ -42,19 +45,19 @@ public class StudentDB implements StudentQuery {
     @Override
     public String getMinStudentFirstName(List<Student> students) {
         return students.stream()
-                .min(Comparator.comparingInt(Student::getId))
+                .min(STUDENT_ID_COMPARATOR)
                 .map(Student::getFirstName)
                 .orElse(DEFAULT_LAST_NAME);
     }
 
     @Override
     public List<Student> sortStudentsById(Collection<Student> students) {
-        return sortStudentsByKey(students, Comparator.comparingInt(Student::getId));
+        return sortStudentsByKey(students, STUDENT_ID_COMPARATOR);
     }
 
     @Override
     public List<Student> sortStudentsByName(Collection<Student> students) {
-        return sortStudentsByKey(students, STUDENT_COMPARATOR);
+        return sortStudentsByKey(students, STUDENT_NAME_COMPARATOR);
     }
 
     @Override
@@ -84,17 +87,21 @@ public class StudentDB implements StudentQuery {
     }
 
     private List<String> mapStudentsToStrings(Collection<Student> students, Function<Student, String> mapper) {
-        return students.stream().map(mapper).collect(Collectors.toList());
+        return getStringStreamFromStudents(students, mapper).collect(Collectors.toList());
     }
 
     private Set<String> mapStudentsToDistinctStrings(Collection<Student> students, Function<Student, String> mapper) {
-        return students.stream().map(mapper).collect(Collectors.toSet());
+        return getStringStreamFromStudents(students, mapper).collect(Collectors.toSet());
+    }
+
+    private Stream<String> getStringStreamFromStudents(Collection<Student> students, Function<Student, String> mapper) {
+        return students.stream().map(mapper);
     }
 
     private List<Student> filterStudentsByField(Collection<Student> students, Predicate<Student> condition) {
         return students.stream()
                 .filter(condition)
-                .sorted(STUDENT_COMPARATOR)
+                .sorted(STUDENT_NAME_COMPARATOR)
                 .collect(Collectors.toList());
     }
 
