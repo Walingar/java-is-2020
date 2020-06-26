@@ -13,13 +13,12 @@ import static java.util.Comparator.comparingInt;
 
 public class MonthTemperatureStatsImpl implements MonthTemperatureStats {
     private final Month month;
-    private Map<Integer, DayTemperatureInfo> dayTemperatureInfoMap;
+    private final Map<Integer, DayTemperatureInfo> dayTemperatureInfoMap = new LinkedHashMap<>();
     private Integer maxTemperature;
     private Double averageTemperature;
 
     public MonthTemperatureStatsImpl(Month month) {
         this.month = month;
-        dayTemperatureInfoMap = new LinkedHashMap<>();
     }
 
     @Override
