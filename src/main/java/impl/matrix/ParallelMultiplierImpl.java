@@ -22,7 +22,7 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
 
         double[][] resultMatrix = new double[resultMatrixHeight][resultMatrixWidth];
 
-        //double cycle -> single cycle
+        // double cycle -> single cycle
         int iterationsCount = resultMatrixWidth * resultMatrixHeight;
         int partitionSize = iterationsCount / maxThreadsCount;
 
@@ -34,12 +34,12 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
             int start = index * partitionSize;
             int end = (index + 1) * partitionSize;
 
-            //Check if we have too much threads
+            // Check if we have too much threads
             if (start > iterationsCount) {
                 break;
             }
 
-            //Check boundary case
+            // Check boundary case
             if (index == maxThreadsCount - 1) {
                 end = iterationsCount;
             }
@@ -49,24 +49,23 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
             thread.start();
         }
 
-        //Wait for threads
+        // Wait for threads
         for (Thread thread : threads) {
             try {
                 thread.join();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                // Ignore
             }
         }
 
         return resultMatrix;
     }
 
-
-    private class Multiplicator implements Runnable {
+    private static final class Multiplicator implements Runnable {
         private final double[][] firstMatrix;
         private final double[][] secondMatrix;
 
-        private double[][] resultMatrix;
+        private final double[][] resultMatrix;
 
         private final int firstMatrixWidth;
         private final int secondMatrixWidth;
@@ -74,7 +73,7 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
         private final int start;
         private final int end;
 
-        public Multiplicator(double[][] firstMatrix, double[][] secondMatrix, double[][] result, int start, int end) {
+        private Multiplicator(double[][] firstMatrix, double[][] secondMatrix, double[][] result, int start, int end) {
             this.firstMatrix = firstMatrix;
             this.secondMatrix = secondMatrix;
 
