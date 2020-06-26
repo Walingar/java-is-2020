@@ -3,9 +3,11 @@ package impl.expression;
 import api.expression.ExpressionParser;
 import api.expression.ParseException;
 
-import java.util.ArrayList;
-
 public class ExpressionParserImpl implements ExpressionParser {
+    private static final char ADD = '+';
+    private static final char SUBTRACT = '-';
+
+    private static final int NO_INDEX = -1;
 
     @Override
     public int parse(String expression) throws ParseException {
@@ -13,138 +15,72 @@ public class ExpressionParserImpl implements ExpressionParser {
             throw new IllegalArgumentException();
         }
 
-        String expressionWithoutEmptySpaces = getStringWithoutEmptySpace(expression);
+        int calculationResult = 0;
+        char currentOperation = ADD;
 
-        String[] operations = getOperations(expressionWithoutEmptySpaces);
-        String[] values = getValues(expressionWithoutEmptySpaces);
+        int numberStartIndex = NO_INDEX;
+        int numberEndIndex = NO_INDEX;
 
-        int numberOfValues = values.length;
-        int numberOfOperations = operations.length;
-
-        if (!isOperationsAndValuesMatch(numberOfValues, numberOfOperations)) {
-            throw new ParseException("Too much operations!");
-        }
-
-        if (!canParseValues(values)) {
-            throw new ParseException("Can't parse values!");
-        }
-
-        if (!canParseOperations(operations)) {
-            throw new ParseException("Can't parse operations!");
-        }
-
-        int[] parsedValues = parseValues(values);
-
-        boolean firstValueHaveSign = numberOfOperations == numberOfValues;
-        int result = getFirstValue(parsedValues[0], firstValueHaveSign, operations);
-
-        for (int valueNumber = 1; valueNumber < parsedValues.length; valueNumber++) {
-            String operation = getCurrentOperation(operations, valueNumber, firstValueHaveSign);
-            if (operation.equals("+")) {
-                result = Math.addExact(result, parsedValues[valueNumber]);
-            } else {
-                result = Math.subtractExact(result, parsedValues[valueNumber]);
-            }
-        }
-
-        return result;
-    }
-
-    private String getCurrentOperation(String[] operations, int valueNumber, boolean firstValueHaveSign) {
-        if (firstValueHaveSign) {
-            return operations[valueNumber];
-        } else {
-            return operations[valueNumber - 1];
-        }
-    }
-
-    private int getFirstValue(int firstValue, boolean firstValueHaveSign, String[] operations) {
-        int result = firstValue;
-
-        if (firstValueHaveSign && operations[0].equals("-")) {
-            result *= -1;
-        }
-
-        return result;
-    }
-
-    private boolean canParseOperations(String[] operations) {
-        for (int i = 1; i < operations.length; i++) {
-            if (!operations[i].equals("+") && !operations[i].equals("-")) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private boolean canParseValues(String[] values) {
-        for (String value : values) {
-            if (!canParseInt(value)) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    private int[] parseValues(String[] values) {
-        int[] parsedValues = new int[values.length];
-        for (int i = 0; i < values.length; i++) {
-            parsedValues[i] = Integer.parseInt(values[i]);
-        }
-
-        return parsedValues;
-    }
-
-    private boolean isOperationsAndValuesMatch(int numberOfValues, int numberOfOperations) {
-        return numberOfOperations == numberOfValues || numberOfOperations == numberOfValues - 1;
-    }
-
-    private boolean canParseInt(String integer) {
         try {
-            Integer.parseInt(integer);
-            return true;
+            for (int index = 0; index < expression.length(); index++) {
+                char currentSymbol = expression.charAt(index);
+
+                if (Character.isWhitespace(currentSymbol)) {
+                    continue;
+                }
+
+                if (currentSymbol == ADD) {
+                    calculationResult = tryDoOperation(calculationResult, currentOperation, expression,
+                            numberStartIndex, numberEndIndex);
+
+                    currentOperation = ADD;
+
+                    numberStartIndex = NO_INDEX;
+                    numberEndIndex = NO_INDEX;
+                } else if (currentSymbol == SUBTRACT) {
+                    calculationResult = tryDoOperation(calculationResult, currentOperation, expression,
+                            numberStartIndex, numberEndIndex);
+
+                    currentOperation = SUBTRACT;
+
+                    numberStartIndex = NO_INDEX;
+                    numberEndIndex = NO_INDEX;
+                } else if (Character.isDigit(currentSymbol)) {
+                    if (numberStartIndex == NO_INDEX) {
+                        numberStartIndex = index;
+                    }
+
+                    numberEndIndex = index + 1;
+                } else {
+                    throw new ParseException("Cannot parse character");
+                }
+            }
+
+            calculationResult = tryDoOperation(calculationResult, currentOperation, expression, numberStartIndex,
+                    numberEndIndex);
         } catch (NumberFormatException ex) {
-            return false;
+            throw new ParseException("Number format exception");
+        }
+
+        return calculationResult;
+    }
+
+    private int tryDoOperation(int total, char operation, String expression,
+                               int startPosition, int endPosition) {
+        int value = getInt(expression, startPosition, endPosition);
+        if (operation == ADD) {
+            return Math.addExact(total, value);
+        } else {
+            return Math.subtractExact(total, value);
         }
     }
 
-    private String[] getValues(String source) {
-        String[] values = source.split("[+-]");
-        return removeEmptyStrings(values);
-    }
-
-    private String[] getOperations(String source) {
-        String[] operations = source.split("[\\d]+");
-        return removeEmptyStrings(operations);
-    }
-
-    private String[] removeEmptyStrings(String[] strings) {
-        ArrayList<String> result = new ArrayList<>();
-        for (String string : strings) {
-            if (!string.isEmpty()) {
-                result.add(string);
-            }
+    private int getInt(String expression, int startPosition, int endPosition) {
+        if (startPosition == NO_INDEX) {
+            return 0;
         }
 
-        String[] resultArray = new String[result.size()];
-        result.toArray(resultArray);
-
-        return resultArray;
-    }
-
-    private String getStringWithoutEmptySpace(String source) {
-        String[] substrings = source.split("[\\s]+");
-
-        StringBuilder stringBuilder = new StringBuilder();
-        for (String substring : substrings) {
-            if (substring.isEmpty() || substring.isBlank()) {
-                continue;
-            }
-            stringBuilder.append(substring);
-        }
-
-        return stringBuilder.toString();
+        String number = expression.substring(startPosition, endPosition);
+        return Integer.parseInt(number);
     }
 }
