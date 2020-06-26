@@ -7,8 +7,7 @@ import java.time.Month;
 public final class DayTemperatureInfoImpl implements DayTemperatureInfo {
     private final int day;
     private final Month month;
-
-    private int temperature;
+    private final int temperature;
 
     public DayTemperatureInfoImpl(int day, int month, int temperature) {
         this.day = day;

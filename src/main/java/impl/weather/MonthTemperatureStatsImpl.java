@@ -7,14 +7,10 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public final class MonthTemperatureStatsImpl {
-    private final Map<Integer, DayTemperatureInfo> dailyTemperatures;
+    private final Map<Integer, DayTemperatureInfo> dailyTemperatures = new LinkedHashMap<>();
 
     private Integer maxTemperature;
     private Double averageTemperature;
-
-    public MonthTemperatureStatsImpl() {
-        dailyTemperatures = new LinkedHashMap<>();
-    }
 
     public void updateTemperatureInfo(DayTemperatureInfo info) {
         int day = info.getDay();
