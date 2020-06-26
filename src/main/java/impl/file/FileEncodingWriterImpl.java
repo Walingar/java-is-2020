@@ -18,11 +18,9 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
 
         try (Reader input = new BufferedReader(new InputStreamReader(data, dataEncoding))) {
             if (!file.exists()) {
-                if (!file.getParentFile().mkdirs()) {
-                    try {
-                        file.createNewFile();
-                    } catch (IOException e) {
-                        throw new RuntimeException(String.format("error create file %s", e.getMessage()));
+                if (file.getParentFile().mkdirs()) {
+                    if (!file.createNewFile()) {
+                        throw new RuntimeException(String.format("error create file"));
                     }
                 } else {
                     throw new RuntimeException("error create folder");
