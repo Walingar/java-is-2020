@@ -37,8 +37,8 @@ public class LinkedQueueImpl extends AbstractQueue<Integer> {
     }
 
     @Override
-    public boolean offer(Integer Item) {
-        Item newItem = new Item(null, Item);
+    public boolean offer(Integer item) {
+        Item newItem = new Item(null, item);
         if (head == null) {
             head = newItem;
             tail = head;
