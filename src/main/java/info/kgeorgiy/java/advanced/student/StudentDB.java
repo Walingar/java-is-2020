@@ -1,10 +1,6 @@
 package info.kgeorgiy.java.advanced.student;
 
 import java.util.*;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -39,10 +35,10 @@ public class StudentDB implements StudentQuery {
 
     @Override
     public String getMinStudentFirstName(List<Student> students) {
-        if (getSortedSubSet(students, Comparator.comparingInt(Student::getId)).isEmpty()) {
-            return "";
-        }
-        return getSortedSubSet(students, Comparator.comparingInt(Student::getId)).get(0).getFirstName();
+        return students.stream()
+                .min(Comparator.comparingInt(Student::getId))
+                .map(Student::getFirstName)
+                .orElse("");
     }
 
     @Override
