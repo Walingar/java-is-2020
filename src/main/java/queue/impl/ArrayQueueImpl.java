@@ -67,12 +67,12 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
         boolean exceedsCyclicCapacity = (lastElementIndex < firstElementIndex) && (lastElementIndex + 1 >= firstElementIndex);
 
         if (exceedsLinearCapacity || exceedsCyclicCapacity) {
-            int extendedCapacity = capacity * CAPACITY_MULTIPLIER;
+            capacity = capacity * CAPACITY_MULTIPLIER;
 
             if (exceedsLinearCapacity) {
-                changeCapacityLinear(extendedCapacity);
+                changeCapacityLinear();
             } else {
-                changeCapacityCyclic(extendedCapacity);
+                changeCapacityCyclic();
             }
         }
 
@@ -130,18 +130,16 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
         boolean isLinear = (lastElementIndex > firstElementIndex);
         boolean isCyclic = (lastElementIndex < firstElementIndex);
 
-        int shrinkedCapacity = capacity / CAPACITY_MULTIPLIER;
+        capacity = capacity / CAPACITY_MULTIPLIER;
 
         if (isLinear) {
-            changeCapacityLinear(shrinkedCapacity);
+            changeCapacityLinear();
         } else if (isCyclic) {
-            changeCapacityCyclic(shrinkedCapacity);
+            changeCapacityCyclic();
         }
     }
 
-    private void changeCapacityCyclic(int newCapacity) {
-        capacity = newCapacity;
-
+    private void changeCapacityCyclic() {
         Integer[] newArray = new Integer[capacity];
 
         if (firstElementIndex + 1 - lastElementIndex >= 0) {
@@ -165,9 +163,7 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
         elements = newArray;
     }
 
-    private void changeCapacityLinear(int newCapacity) {
-        capacity = newCapacity;
-
+    private void changeCapacityLinear() {
         Integer[] newArray = new Integer[capacity];
 
         if (lastElementIndex + 1 - firstElementIndex >= 0) {
