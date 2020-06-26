@@ -11,11 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 public class YearTemperatureStatsImpl implements YearTemperatureStats {
-    private Map<Month, MonthTemperatureStats> monthTemperatureStatsMap;
-
-    public YearTemperatureStatsImpl() {
-        monthTemperatureStatsMap = new HashMap<>();
-    }
+    private final Map<Month, MonthTemperatureStats> monthTemperatureStatsMap = new HashMap<>();
 
     @Override
     public void updateStats(DayTemperatureInfo info) {
