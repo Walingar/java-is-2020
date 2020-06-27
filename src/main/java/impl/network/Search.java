@@ -4,9 +4,9 @@ import api.network.SocialNetwork;
 import api.network.UserInfo;
 
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 
 import static java.util.Collections.emptyList;
@@ -22,7 +22,7 @@ public class Search {
     private final Set<Integer> visitedNodes;
 
     public Search(int userId, int maxDepth, Predicate<UserInfo> filter, SocialNetwork network) {
-        this(userId, 0, maxDepth, filter, network, new HashSet<>());
+        this(userId, 0, maxDepth, filter, network, ConcurrentHashMap.newKeySet());
     }
 
     private Search(int userId, int depth, int maxDepth, Predicate<UserInfo> filter,
