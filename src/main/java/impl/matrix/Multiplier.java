@@ -19,13 +19,55 @@ public class Multiplier implements Runnable {
     public void run() {
         int bRows = b.length;
         int bColumns = bRows == 0 ? 0 : b[0].length;
-        for (long i = start; i < end * bColumns; i++) {
-            int row = (int) (i / bColumns);
-            int column = (int) (i % bColumns);
-            System.out.println(row+" " + column);
-            for (int inner = 0; inner < bRows; inner++) {
-                result[row][column] += a[row][inner] * b[inner][column];
+//        for (long i = start; i < (long) end * bColumns; i++) {
+//            int row = (int) (i / bColumns);
+//            int column = (int) (i % bColumns);
+//            System.out.println(row+" " + column);
+//            for (int inner = 0; inner < bRows; inner++) {
+//                result[row][column] += a[row][inner] * b[inner][column];
+//            }
+//        }
+        for (int i = start; i < end; i++) {
+            for (int j = 0; j < bColumns; j++) {
+                for (int inner = 0; inner < bRows; inner++) {
+                    result[i][j] += a[i][inner] * b[inner][j];
+                }
             }
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
