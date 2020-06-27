@@ -1,6 +1,7 @@
 package queue.impl;
 
-import java.util.*;
+import java.util.AbstractQueue;
+import java.util.Iterator;
 
 public class LinkedQueueImpl extends AbstractQueue<Integer> {
 
@@ -69,8 +70,8 @@ public class LinkedQueueImpl extends AbstractQueue<Integer> {
         return head.getValue();
     }
 
-    private final class Item {
-        private Integer value;
+    private final static class Item {
+        private final Integer value;
         private Item nextItem;
 
         Item(Item next, int value) {
