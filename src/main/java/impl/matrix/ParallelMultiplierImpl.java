@@ -28,11 +28,11 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
         var flatIndexDelta = (aNumRows * bNumColumns + maxNumThreads - 1) / maxNumThreads;
 
         for (var i = 0; i < maxNumThreads; i++) {
-            var endFlatIndex = startFlatIndex + flatIndexDelta - 1;
+            var endFlatIndex = Math.min(startFlatIndex + flatIndexDelta, aNumRows * bNumColumns);
             var thread = new Thread(new ConcurrentWorker(a, b, result, startFlatIndex, endFlatIndex));
             threads.add(thread);
             thread.start();
-            startFlatIndex = endFlatIndex + 1;
+            startFlatIndex = endFlatIndex;
         }
 
         for (var thread : threads) {
@@ -67,7 +67,7 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
             var bNumRows = b.length;
             var bNumColumns = b[0].length;
 
-            for (var i = startFlatIndex; i <= endFlatIndex; i++) {
+            for (var i = startFlatIndex; i < endFlatIndex; i++) {
                 var row = i / bNumColumns;
                 var column = i % bNumColumns;
                 result[row][column] = 0;
