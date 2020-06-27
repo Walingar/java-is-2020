@@ -85,13 +85,13 @@ public class LinkedQueueImpl extends AbstractQueue<Integer> {
         return firstElement.getValue();
     }
 
-    private class QueueNodeImpl {
-        private Integer value;
+    private static class QueueNodeImpl {
+        private final Integer value;
 
         private QueueNodeImpl next;
         private QueueNodeImpl previous;
 
-        public QueueNodeImpl(Integer value) {
+        private QueueNodeImpl(Integer value) {
             this.value = value;
         }
 
