@@ -37,7 +37,7 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
     }
 
     @Override
-    public Iterator iterator() {
+    public Iterator<Integer> iterator() {
         return new ArrayQueueIterator();
     }
 
