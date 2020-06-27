@@ -19,6 +19,9 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
         int partSize = aRows / maxThreads;
         int residue = aRows % maxThreads;
         double[][] result = new double[aRows][bColumns];
+
+       // int cElementsCount = aRowsCount * bColumnsCount;
+
         for (int currentThread = 0; currentThread < maxThreads; currentThread++) {
             int start = currentThread * partSize;
             int numberPart = currentThread + 1;
