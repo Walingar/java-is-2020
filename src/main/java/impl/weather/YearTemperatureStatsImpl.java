@@ -5,89 +5,101 @@ import api.weather.YearTemperatureStats;
 
 import java.time.Month;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
-    List<DayTemperatureInfo> list = new ArrayList<>();
-    private Double avgTemperature = null;
-    Map<Month, Integer> map = new HashMap<>();
-    private boolean dataHasChanged = false;
+    HashMap<Month, MonthInfo> months = new HashMap<>();
 
     @Override
     public void updateStats(DayTemperatureInfo info) {
-        list.add(info);
-        dataHasChanged = true;
+        Month currentMonth = info.getMonth();
+
+        if (months.get(currentMonth) == null){
+            months.put(currentMonth, new MonthInfo());
+        }
+
+        months.get(currentMonth).updateMonth(info);
     }
 
     @Override
     public Double getAverageTemperature(Month month) {
-
-        if (dataHasChanged) {
-            double sumTemperature = 0;
-            int numberOfDays = 0;
-
-            for (int i = 0; i < list.size(); i++) {
-                if (list.get(i).getMonth() == month) {
-                    sumTemperature += list.get(i).getTemperature();
-                    numberOfDays++;
-                }
-            }
-
-            avgTemperature = (numberOfDays != 0) ? (sumTemperature / numberOfDays) : null;
-            dataHasChanged = false;
-        }
-
-        return avgTemperature;
-
+        MonthInfo currentMonth = months.get(month);
+        return (currentMonth == null) ? null : currentMonth.avgTemperature;
     }
 
     @Override
     public Map<Month, Integer> getMaxTemperature() {
+        Map<Month, Integer> maxTemperatures = new HashMap<>();
 
-        if (dataHasChanged) {
-
-            for (int i = 0; i < list.size(); i++) {
-
-                int temperature = map.getOrDefault(list.get(i).getMonth(), Integer.MIN_VALUE);
-                if (temperature < list.get(i).getTemperature()) {
-                    map.put(list.get(i).getMonth(), list.get(i).getTemperature());
-                }
-            }
-
-            dataHasChanged = false;
+        for (Month month : months.keySet()){
+            int maxTemperature = months.get(month).maxTemperature;
+            maxTemperatures.put(month, maxTemperature);
         }
 
-        return map;
+        return maxTemperatures;
     }
 
     @Override
     public List<DayTemperatureInfo> getSortedTemperature(Month month) {
-        List<DayTemperatureInfo> listTemperature = new ArrayList<>();
+        ArrayList<DayTemperatureInfo> result = new ArrayList<>();
 
-        for (int i = 0; i < list.size(); i++) {
-            if (month == list.get(i).getMonth()) {
-                listTemperature.add(list.get(i));
-            }
+        if (months.get(month) != null){
+            result = (ArrayList<DayTemperatureInfo>) months.get(month).days.clone();
+
+            result.sort(new Comparator<DayTemperatureInfo>() {
+                @Override
+                public int compare(DayTemperatureInfo dayTemperatureInfo, DayTemperatureInfo t1) {
+                    return dayTemperatureInfo.getTemperature() - t1.getTemperature();
+                }
+            });
         }
 
-        Comparator<DayTemperatureInfo> comparator = new Comparator<DayTemperatureInfo>() {
-            @Override
-            public int compare(DayTemperatureInfo object1, DayTemperatureInfo object2) {
-                return object1.getTemperature() - object2.getTemperature();
-            }
-        };
-        listTemperature.sort(comparator);
-        return listTemperature;
+        return result;
     }
 
     @Override
     public DayTemperatureInfo getTemperature(int day, Month month) {
+        MonthInfo currentMonth = months.get(month);
 
-        for (int i = 0; i < list.size(); i++) {
-            if ((list.get(i).getMonth() == month) && (list.get(i).getDay() == day)) {
-                return list.get(i);
+        if (currentMonth != null) {
+            for (DayTemperatureInfo currentDay : currentMonth.days) {
+                if (currentDay.getDay() == day)
+                    return currentDay;
             }
         }
+
         return null;
     }
+
+
+    private class MonthInfo {
+        Double avgTemperature;
+        Integer maxTemperature;
+        ArrayList<DayTemperatureInfo> days;
+
+        public MonthInfo(){
+            avgTemperature = null;
+            maxTemperature = null;
+            days = new ArrayList<>();
+        }
+
+        private void updateMonth(DayTemperatureInfo info){
+            int currentTemperature = info.getTemperature();
+
+            if (days.isEmpty()){
+                maxTemperature = currentTemperature;
+                avgTemperature = (double)currentTemperature;
+            } else {
+                if (currentTemperature > maxTemperature) {
+                    maxTemperature = currentTemperature;
+                }
+
+                avgTemperature = (avgTemperature * days.size() + currentTemperature) / (days.size() + 1);
+            }
+
+            days.add(info);
+        }
+    }
+
 };
