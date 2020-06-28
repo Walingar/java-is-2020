@@ -3,7 +3,8 @@ package impl.pair;
 import api.pair.Pair;
 
 public class NumberPairFactory {
+
     public static <K extends Number, T extends Number> Pair<K, T> of(K first, T second) {
-        return new PairImpl<K,T>(first,second);
+        return new NumberPairImpl<>(first, second);
     }
 }
