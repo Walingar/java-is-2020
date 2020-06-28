@@ -37,7 +37,7 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
             try {
                 thread.join();
             } catch (InterruptedException e) {
-                System.out.println("Thread error: " + e);
+                Thread.currentThread().interrupt();
             }
         }
         return result;
