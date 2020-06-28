@@ -6,28 +6,40 @@ import api.weather.YearTemperatureStatsParser;
 
 import java.time.Month;
 import java.util.Collection;
+import java.util.regex.Pattern;
+
+import static java.lang.Integer.parseInt;
 
 public class YearTemperatureStatsParserImpl implements YearTemperatureStatsParser {
 
+    private static final Pattern PATTERN = Pattern.compile("([\\d]+).([\\d]+) (-?[\\d]+)");
+
     @Override
     public YearTemperatureStats parse(Collection<String> rawData) {
-        var stats = new YearTemperatureStatsImpl();
+        var stats = YearTemperatureStatsFactory.getInstance();
         rawData.forEach(entry -> {
-            var dayTemperature = entry.split(" ");
-            var day = Integer.parseInt(dayTemperature[0].split("\\.")[0]);
-            var month = Month.of(Integer.parseInt(dayTemperature[0].split("\\.")[1]));
-            var temperature = Integer.parseInt(dayTemperature[1]);
-            stats.updateStats(new DayTemperatureInfoImpl(day, month, temperature));
+            var info = parseEntry(entry);
+            stats.updateStats(info);
         });
-
         return stats;
     }
 
-    private class DayTemperatureInfoImpl implements DayTemperatureInfo {
+    private DayTemperatureInfo parseEntry(String entry) {
+        var matcher = PATTERN.matcher(entry);
+        if (!matcher.find()) {
+            throw new RuntimeException("Invalid entry");
+        }
+        var day = parseInt(matcher.group(1));
+        var month = Month.of(parseInt(matcher.group(2)));
+        var temperature = parseInt(matcher.group(3));
+        return new DayTemperatureInfoImpl(day, month, temperature);
+    }
 
-        private int day;
-        private Month month;
-        private int temperature;
+    private static class DayTemperatureInfoImpl implements DayTemperatureInfo {
+
+        private final int day;
+        private final Month month;
+        private final int temperature;
 
         public DayTemperatureInfoImpl(int day, Month month, int temperature) {
             this.day = day;
@@ -51,4 +63,3 @@ public class YearTemperatureStatsParserImpl implements YearTemperatureStatsParse
         }
     }
 }
-

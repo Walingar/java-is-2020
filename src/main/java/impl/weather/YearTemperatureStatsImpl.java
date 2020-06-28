@@ -6,6 +6,8 @@ import api.weather.YearTemperatureStats;
 import java.time.Month;
 import java.util.*;
 
+import static java.util.Collections.emptyList;
+
 public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
     private LinkedHashMap<Month, MonthTemperatureInfo> monthData = new LinkedHashMap<>();
@@ -29,7 +31,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
     @Override
     public Map<Month, Integer> getMaxTemperature() {
-        Map<Month, Integer> result = new HashMap<Month, Integer>();
+        Map<Month, Integer> result = new HashMap<>();
         monthData.forEach((key, value) -> result.put(key, value.getMaxTemperature()));
         return result;
     }
@@ -37,7 +39,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
     @Override
     public List<DayTemperatureInfo> getSortedTemperature(Month month) {
         var monthTemp = monthData.get(month);
-        return monthTemp != null ? monthTemp.getSortedTemperature() : new LinkedList<DayTemperatureInfo>();
+        return monthTemp != null ? monthTemp.getSortedTemperature() : emptyList();
     }
 
     @Override

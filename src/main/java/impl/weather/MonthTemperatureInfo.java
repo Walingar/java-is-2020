@@ -4,27 +4,28 @@ import api.weather.DayTemperatureInfo;
 
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import static java.util.Comparator.comparingDouble;
 
 public class MonthTemperatureInfo {
 
-    private LinkedHashMap<Integer, DayTemperatureInfo> dayInfos = new LinkedHashMap<>();
+    private final Map<Integer, DayTemperatureInfo> dayInfos = new LinkedHashMap<>();
+    private Integer max = -273;
+    private Double average = 0.0;
 
     public void updateMonthStats(DayTemperatureInfo dayInfo) {
         dayInfos.putIfAbsent(dayInfo.getDay(), dayInfo);
+        updateAverage(dayInfo.getTemperature(), dayInfos.size());
+        updateMax(dayInfo.getTemperature());
     }
 
     public double getAverageTemperature() {
-        return dayInfos.values().stream().mapToDouble(x-> x.getTemperature()).sum() / dayInfos.size();
+        return average;
     }
 
     public Integer getMaxTemperature() {
-        if (!dayInfos.isEmpty())
-        {
-            return (int)dayInfos.values().stream().mapToDouble(x-> x.getTemperature()).max().getAsDouble();
-        }
-        return 0;
+        return max;
     }
 
     public List<DayTemperatureInfo> getSortedTemperature() {
@@ -33,5 +34,19 @@ public class MonthTemperatureInfo {
 
     public DayTemperatureInfo getTemperature(int day) {
         return dayInfos.get(day);
+    }
+
+    private void updateMax(int temperature) {
+        if (temperature > max) {
+            max = temperature;
+        }
+    }
+
+    private void updateAverage(int temperature, int days) {
+        if (average == 0.0) {
+            average = (double) temperature;
+        } else {
+            average = (average * (days - 1) + temperature) / days;
+        }
     }
 }
