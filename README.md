@@ -1,6 +1,5 @@
 # Домашние задания по курсу "Язык программирования Java"
 
-<<<<<<< HEAD
 # Домашнее задание 1. Обработка изображений
 
 Ваша задача разработать реализации интерфейсов `ImageConverter` и `ConvolutionProvider` и
@@ -58,8 +57,6 @@
 `YearTemperatureStatsParser` должен уметь возвращать `YearTemperatureStats` из сырых данных - `Collection<String>`.
 Каждая строка имеет вид `day.month temperature`.
 
-=======
->>>>>>> 9478725... [task-4] Introduce README with task description
 # Домашнее задание 4. Очередь
 
 Ваша задача разработать реализации интерфейса `java.util.Queue<Integer>` и 
