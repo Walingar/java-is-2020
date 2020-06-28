@@ -22,14 +22,14 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
             Files.createDirectories(path);
             file.createNewFile();
         } catch (IOException e) {
-            System.out.println("Cannot create new file");
+            return;
         }
 
         try (var reader = new InputStreamReader(data, dataEncoding);
              var fileWriter = new FileWriter(file, fileEncoding)) {
             var charArrayLength = 2048;
             char[] charArray = new char[charArrayLength];
-            int numRead = 0;
+            int numRead;
             while ((numRead = reader.read(charArray, 0, charArrayLength)) >= 0) {
                 fileWriter.write(charArray, 0, numRead);
             }
