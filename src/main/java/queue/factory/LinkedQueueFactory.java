@@ -1,7 +1,7 @@
 package queue.factory;
 
 import java.util.Queue;
-import queue.impl.linked.LinkedQueueImpl;
+import queue.impl.LinkedQueueImpl;
 
 public class LinkedQueueFactory {
     public static Queue<Integer> getInstance() {

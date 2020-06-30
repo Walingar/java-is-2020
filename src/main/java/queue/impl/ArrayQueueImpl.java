@@ -37,11 +37,11 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
   @Override
   public boolean offer(Integer integer) {
     if (isFull()) {
-      resize();
+      resize(items.length * 2);
     }
 
     items[tail] = integer;
-    tail = (tail + 1) % items.length;
+    tail = getNextIndex(tail);
     size += 1;
 
     return true;
@@ -53,10 +53,17 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
       return null;
     }
 
-    int item = items[head];
-    head = (head + 1) % items.length;
-    size -= 1;
+    if (isLowItems()) {
+      resize(items.length / 2);
+    }
 
+    return pollNextItem();
+  }
+
+  private int pollNextItem() {
+    int item = items[head];
+    head = getNextIndex(head);
+    size -= 1;
     return item;
   }
 
@@ -73,17 +80,25 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
     return size == items.length;
   }
 
-  private void resize() {
-    ArrayQueueImpl newQueue = new ArrayQueueImpl(items.length * 2, 0);
+  private boolean isLowItems() {
+    return size < items.length / 3;
+  }
+
+  private void resize(int newSize) {
+    ArrayQueueImpl newQueue = new ArrayQueueImpl(newSize, 0);
 
     while (!isEmpty()) {
-      newQueue.add(poll());
+      newQueue.add(pollNextItem());
     }
 
     head = newQueue.head;
     tail = newQueue.tail;
     items = newQueue.items;
     size = newQueue.size;
+  }
+
+  private int getNextIndex(int currentIndex) {
+    return (currentIndex + 1) % items.length;
   }
 
   private class ArrayIterator implements Iterator<Integer> {
@@ -99,7 +114,7 @@ public class ArrayQueueImpl extends AbstractQueue<Integer> {
     public Integer next() {
       if (hasNext()) {
         int next = items[current];
-        current = (current + 1) % items.length;
+        current = getNextIndex(current);
         return next;
       }
 
