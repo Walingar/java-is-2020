@@ -4,7 +4,8 @@ import api.network.FollowersStats;
 import api.network.SocialNetwork;
 
 public class FollowersStatsFactory {
-    public static FollowersStats getInstance(SocialNetwork network) {
-        return new FollowersStatsImpl(network);
-    }
+
+  public static FollowersStats getInstance(SocialNetwork network) {
+    return new FollowersStatsImpl(network);
+  }
 }
