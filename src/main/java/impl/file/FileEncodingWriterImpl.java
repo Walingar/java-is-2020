@@ -6,6 +6,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
@@ -33,13 +34,16 @@ public class FileEncodingWriterImpl implements FileEncodingWriter {
           new InputStreamReader(data, dataEncoding)
       );
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new UncheckedIOException(e);
     }
   }
 
   private void createFile(File file) throws IOException {
     file.getParentFile().mkdirs();
-    file.createNewFile();
+
+    if (!file.createNewFile()) {
+      throw new IOException("Unable to create new file");
+    }
   }
 
   private void fillFileFromInputStream(File file, Charset fileEncoding, char[] buffer, InputStreamReader inputStream) throws IOException {
