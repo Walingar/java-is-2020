@@ -6,6 +6,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.io.UncheckedIOException;
 import java.nio.charset.Charset;
 
 public class FileEncodingReaderImpl implements FileEncodingReader {
@@ -15,7 +16,7 @@ public class FileEncodingReaderImpl implements FileEncodingReader {
     try {
       return new BufferedReader(new FileReader(file, fileEncoding));
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      throw new UncheckedIOException(e);
     }
   }
 }
