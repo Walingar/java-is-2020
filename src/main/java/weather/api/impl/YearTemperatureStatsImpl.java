@@ -15,7 +15,7 @@ import weather.api.YearTemperatureStats;
 public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
   private final Map<Month, List<DayTemperatureInfo>> temperatureInfo = new HashMap<>();
-  private Map<Month, MonthStats> monthStats = new HashMap<>();
+  private final Map<Month, MonthStats> monthStats = new HashMap<>();
 
   @Override
   public void updateStats(DayTemperatureInfo info) {
