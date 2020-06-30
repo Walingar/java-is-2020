@@ -14,7 +14,7 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
       return new double[0][0];
     }
 
-    return new Executor(
+    return new ParallelMultiplierExecutor(
         calculateNumberOfThreads(maxThreadsCount, firstMatrix.length * secondMatrix[0].length),
         firstMatrix,
         secondMatrix
