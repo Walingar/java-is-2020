@@ -14,7 +14,7 @@ public class YearTemperatureStatsParserImpl implements YearTemperatureStatsParse
         YearTemperatureStats yearTemperatureStats = YearTemperatureStatsFactory.getInstance();
 
         for (String dateStr : rawData) {
-            String[] processingData = dateStr.replace('.', ' ').split(" ");
+            String[] processingData = dateStr.split("[ \\.]");
             yearTemperatureStats.updateStats(
                 DayTemperatureInfoFactory.getInstance(
                     Integer.parseInt(processingData[0]),
