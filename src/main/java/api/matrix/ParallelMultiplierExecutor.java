@@ -3,13 +3,14 @@ package api.matrix;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Executor {
+public class ParallelMultiplierExecutor {
 
-  private List<Worker> workers;
-  private double[][] result;
+  private final List<Worker> workers;
+  private final double[][] result;
   private int[] tasks;
 
-  public Executor(int numberOfThreads, double[][] firstMatrix, double[][] secondMatrix) {
+  public ParallelMultiplierExecutor(int numberOfThreads, double[][] firstMatrix,
+      double[][] secondMatrix) {
     this.workers = new ArrayList<>(numberOfThreads);
     int resultHeight = firstMatrix.length;
     int resultWidth = secondMatrix[0].length;
@@ -65,9 +66,9 @@ public class Executor {
 
   private static class Worker extends Thread {
 
-    private double[][] firstMatrix;
-    private double[][] secondMatrix;
-    private double[][] result;
+    private final double[][] firstMatrix;
+    private final double[][] secondMatrix;
+    private final double[][] result;
     private int taskBegin;
     private int taskEnd;
 
