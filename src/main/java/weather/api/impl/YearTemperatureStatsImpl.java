@@ -1,10 +1,10 @@
 package weather.api.impl;
 
 import java.time.Month;
-import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -14,7 +14,7 @@ import weather.api.YearTemperatureStats;
 
 public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
-  private final Map<Month, List<DayTemperatureInfo>> temperatureInfo = new HashMap<>();
+  private final Map<Month, Map<Integer, DayTemperatureInfo>> temperatureInfo = new HashMap<>();
   private final Map<Month, MonthStats> monthStats = new HashMap<>();
 
   @Override
@@ -26,11 +26,11 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
     monthStats.updateMonthStats(info);
     this.monthStats.put(info.getMonth(), monthStats);
 
-    List<DayTemperatureInfo> dayTemperatureInfos = temperatureInfo.get(info.getMonth());
+    Map<Integer, DayTemperatureInfo> dayTemperatureInfos = temperatureInfo.get(info.getMonth());
     if (Objects.isNull(dayTemperatureInfos)) {
-      dayTemperatureInfos = new ArrayList<>(Collections.nCopies(32, null));
+      dayTemperatureInfos = new LinkedHashMap<>();
     }
-    dayTemperatureInfos.set(info.getDay() - 1, info);
+    dayTemperatureInfos.put(info.getDay(), info);
     temperatureInfo.put(info.getMonth(), dayTemperatureInfos);
   }
 
@@ -56,15 +56,8 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
       return Collections.emptyList();
     }
 
-    return temperatureInfo.get(month).stream()
-        .filter(obj -> !Objects.isNull(obj))
-        .sorted((a1, a2) -> {
-          if (a1.getTemperature() == a2.getTemperature()) {
-            return this.monthStats.get(month).compareEquals(a1, a2);
-          }
-
-          return a1.getTemperature() - a2.getTemperature();
-        })
+    return temperatureInfo.get(month).values().stream()
+        .sorted(Comparator.comparing(DayTemperatureInfo::getTemperature))
         .collect(Collectors.toList());
   }
 
@@ -74,7 +67,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
       return null;
     }
 
-    return temperatureInfo.get(month).get(day - 1);
+    return temperatureInfo.get(month).get(day);
   }
 
   private static class MonthStats {
@@ -82,13 +75,11 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
     private double summarizedTemperature = 0;
     private int maxTemperature = Integer.MIN_VALUE;
     private int days = 0;
-    private LinkedList<DayTemperatureInfo> queue = new LinkedList<>();
 
     public void updateMonthStats(DayTemperatureInfo averageTemperature) {
       summarizedTemperature += averageTemperature.getTemperature();
       days += 1;
       maxTemperature = Math.max(maxTemperature, averageTemperature.getTemperature());
-      queue.add(averageTemperature);
     }
 
     public int getMaxTemperature() {
@@ -97,10 +88,6 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
     public double getAverageTemperature() {
       return summarizedTemperature / days;
-    }
-
-    public int compareEquals(DayTemperatureInfo d1, DayTemperatureInfo d2) {
-      return queue.indexOf(d1) - queue.indexOf(d2);
     }
   }
 }
