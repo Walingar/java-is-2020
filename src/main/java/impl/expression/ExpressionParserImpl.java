@@ -9,35 +9,31 @@ public class ExpressionParserImpl implements ExpressionParser {
     @Override
     public int parse(String expression) throws ParseException {
         if (expression == null) {
-            throw new IllegalArgumentException("Expression is null");
+            throw new IllegalArgumentException("Input is null");
         }
-        int sum = 0;
-        var number = new StringBuilder();
-
-        for (var character : expression.toCharArray()) {
-            if (character == '+' || character == '-') {
-                if (number.toString().equals("")) {
-                    number.append(character);
-                    continue;
+        int currentNumber = 0;
+        int result = 0;
+        int previousSign = 1;
+        for (char aChar : expression.toCharArray()) {
+            if (aChar == '+' || aChar == '-') {
+                currentNumber *= previousSign;
+                result = Math.addExact(result, currentNumber);
+                currentNumber = 0;
+                if ((aChar == '+')) {
+                    previousSign = 1;
+                } else {
+                    previousSign = -1;
                 }
-                sum = inRangeSum(sum, number);
-                number.setLength(0);
-                number.append(character);
-            } else if (java.lang.Character.isWhitespace(character)) {
-                continue;
-            } else  {
-                number.append(character);
+            } else if (Character.isDigit(aChar)) {
+                try {
+                    currentNumber = Math.addExact(Math.multiplyExact(currentNumber, 10), Character.getNumericValue(aChar));
+                } catch (ArithmeticException ex) {
+                    throw new ParseException("OverFlow");
+                }
+            } else if (!Character.isWhitespace(aChar)) {
+                throw new ParseException("Invalid Symbols");
             }
         }
-        sum = inRangeSum(sum, number);
-        return sum;
-    }
-
-    private Integer inRangeSum(int sum, StringBuilder value) throws ParseException {
-        try {
-            return Math.addExact(sum, Integer.parseInt(value.toString()));
-        } catch (NumberFormatException e) {
-            throw new ParseException(e.getMessage());
-        }
+        return Math.addExact(result, previousSign * currentNumber);
     }
 }
