@@ -10,7 +10,7 @@ import static java.util.Collections.emptyList;
 
 public class YearTemperatureStatsImpl implements YearTemperatureStats {
 
-    private LinkedHashMap<Month, MonthTemperatureInfo> monthData = new LinkedHashMap<>();
+    private final Map<Month, MonthTemperatureInfo> monthData = new LinkedHashMap<>();
 
     @Override
     public void updateStats(DayTemperatureInfo info) {
@@ -19,7 +19,7 @@ public class YearTemperatureStatsImpl implements YearTemperatureStats {
         } else {
             var monthInfo = new MonthTemperatureInfo();
             monthInfo.updateMonthStats(info);
-            monthData.putIfAbsent(info.getMonth(), monthInfo);
+            monthData.put(info.getMonth(), monthInfo);
         }
     }
 
