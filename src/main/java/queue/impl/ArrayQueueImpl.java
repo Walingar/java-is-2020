@@ -1,107 +1,118 @@
 package queue.impl;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.AbstractQueue;
 import java.util.Iterator;
 import java.util.Objects;
 
 public class ArrayQueueImpl extends AbstractQueue<Integer> {
 
+    private static final int MIN_CAPACITY = 100;
+
     private int[] values;
     private int head;
     private int tail;
 
     public ArrayQueueImpl() {
-        this(100);
+        this(MIN_CAPACITY);
     }
 
-    public ArrayQueueImpl(int size) {
-        values = new int[size];
+    public ArrayQueueImpl(int capacity) {
+        values = new int[capacity];
     }
 
     @Override
     public int size() {
-        return head > tail ? values.length - head + tail : tail - head;
+        int diff = tail - head;
+        return diff >= 0 ? diff : diff + values.length;
     }
 
     @Override
-    public boolean offer(Integer integer) {
-        Objects.requireNonNull(integer);
-        if (isFull()) {
-            if (!extendValues()) {
-                return false;
-            }
-        }
-        values[tail] = integer;
-        tail = (tail + 1) % values.length;
-        return true;
+    public Integer peek() {
+        return isEmpty() ? null : values[head];
     }
 
     @Override
     public Integer poll() {
         if (isEmpty()) {
             return null;
-        } else {
-            var element = values[head];
-            head = (head + 1) % values.length;
-            return element;
+        }
+        int value = values[head];
+        decreaseValuesCapacityIfNeeded();
+        head = getNextPositionOfValuesPointer(head);
+        return value;
+    }
+
+    private void decreaseValuesCapacityIfNeeded() {
+        if (size() <= values.length / 2) {
+            int newCapacity = values.length * 2 / 3;
+            if (newCapacity >= MIN_CAPACITY) {
+                changeValuesCapacity(newCapacity);
+            }
         }
     }
 
     @Override
-    public Integer peek() {
-        return !isEmpty() ? values[head] : null;
+    public boolean offer(Integer element) {
+        Objects.requireNonNull(element);
+        increaseValuesCapacityIfNeeded();
+        values[tail] = element;
+        tail = getNextPositionOfValuesPointer(tail);
+        return true;
+    }
+
+    private void increaseValuesCapacityIfNeeded() {
+        if (size() == values.length - 1) {
+            int newCapacity = values.length * 2;
+            changeValuesCapacity(newCapacity);
+        }
+    }
+
+    private void changeValuesCapacity(int newCapacity) {
+        int newTail = 0;
+        int[] newValues = new int[newCapacity];
+        for (int element : this) {
+            newValues[newTail++] = element;
+        }
+        head = 0;
+        tail = newTail;
+        values = newValues;
     }
 
     @Override
     public void clear() {
-        tail = 0;
         head = 0;
+        tail = 0;
     }
 
-    private boolean isFull() {
-        return size() == values.length - 1;
-    }
-
-    private boolean extendValues() {
-        ArrayQueueImpl newQueue;
-        try {
-            int newSize = values.length * 2;
-            newQueue = new ArrayQueueImpl(newSize);
-        } catch (Exception e) {
-            return false;
-        }
-        Integer value;
-        while ((value = poll()) != null) {
-            newQueue.add(value);
-        }
-        head = newQueue.head;
-        tail = newQueue.tail;
-        values = newQueue.values;
-        return true;
-    }
-
+    @NotNull
     @Override
     public Iterator<Integer> iterator() {
-        return new QueueIterator();
+        return new ArrayQueueIterator();
     }
 
-    private class QueueIterator implements Iterator<Integer> {
+    private int getNextPositionOfValuesPointer(int currentPosition) {
+        return (currentPosition + 1) % values.length;
+    }
+
+    private class ArrayQueueIterator implements Iterator<Integer> {
 
         private int current = head;
 
         @Override
         public boolean hasNext() {
-            return tail != current;
+            return current != tail;
         }
 
         @Override
         public Integer next() {
-            if (!hasNext()) {
+            if (current == tail) {
                 return null;
             }
-            var next = values[current];
-            current = (current + 1) % values.length;
-            return next;
+            int value = values[current];
+            current = getNextPositionOfValuesPointer(current);
+            return value;
         }
     }
 }
