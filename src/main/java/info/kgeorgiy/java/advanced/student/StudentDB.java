@@ -28,8 +28,7 @@ public class StudentDB implements StudentQuery {
 
     @Override
     public List<String> getFullNames(List<Student> students) {
-        var closure = (Function<Student, String>) student -> student.getFirstName() + " " + student.getLastName();
-        return get(students, closure);
+        return get(students, student -> student.getFirstName() + " " + student.getLastName());
     }
 
     @Override
@@ -39,9 +38,7 @@ public class StudentDB implements StudentQuery {
 
     @Override
     public String getMinStudentFirstName(List<Student> students) {
-        var minIdStudent = students.stream().min(Comparator.comparingInt(Student::getId))
-                .orElse(null);
-        return minIdStudent != null ? minIdStudent.getFirstName() : "";
+        return students.stream().min(Student::compareTo).map(Student::getFirstName).orElse("");
     }
 
     @Override
