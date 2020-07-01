@@ -3,8 +3,6 @@ package impl.expression;
 import api.expression.ExpressionParser;
 import api.expression.ParseException;
 
-import java.util.concurrent.atomic.AtomicInteger;
-
 public class ExpressionParserImpl implements ExpressionParser {
     @Override
     public int parse(String expression) throws ParseException {
