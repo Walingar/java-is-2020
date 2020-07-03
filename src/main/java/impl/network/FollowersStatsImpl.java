@@ -5,7 +5,9 @@ import api.network.SocialNetwork;
 import api.network.UserInfo;
 
 import java.util.AbstractMap;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -22,13 +24,13 @@ public class FollowersStatsImpl implements FollowersStats {
     @Override
     public Future<Integer> followersCountBy(int id, int depth, Predicate<UserInfo> predicate) {
         return count(id, depth, predicate,
-                new ConcurrentHashMap<>() {{
-                    put(id, true);
+                new HashSet<>() {{
+                    add(id);
                 }}
         );
     }
 
-    private CompletableFuture<Integer> count(int id, int depth, Predicate<UserInfo> predicate, ConcurrentMap<Integer, Boolean> visitMap) {
+    private CompletableFuture<Integer> count(int id, int depth, Predicate<UserInfo> predicate, Set<Integer> visitSet) {
         CompletableFuture<Integer> userCountFuture = network.getUserInfo(id)
                 .thenApply((userInfo) -> predicate.test(userInfo) ? 1 : 0);
         if (depth == 0) {
@@ -39,10 +41,11 @@ public class FollowersStatsImpl implements FollowersStats {
                 .thenCompose((followers) -> followers
                         .stream()
                         .map(follower -> {
-                                    if (Objects.nonNull(visitMap.putIfAbsent(follower, true))) {
+                                    if (visitSet.contains(follower)) {
                                         return CompletableFuture.completedFuture(0);
                                     }
-                                    return count(follower, depth - 1, predicate, visitMap);
+                                    visitSet.add(follower);
+                                    return count(follower, depth - 1, predicate, visitSet);
                                 })
                         .reduce(CompletableFuture.completedFuture(0),
                                 (subtotalFuture, additionFuture) -> subtotalFuture.thenCombine(additionFuture, Integer::sum))
