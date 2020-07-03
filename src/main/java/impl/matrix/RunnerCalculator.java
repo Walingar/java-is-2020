@@ -1,6 +1,6 @@
 package impl.matrix;
 
-public class Runner implements Runnable {
+public class RunnerCalculator implements Runnable {
     private final double[][] a;
     private final double[][] b;
     private final double[][] result;
@@ -8,7 +8,7 @@ public class Runner implements Runnable {
     private final int tasksCount;
     private final int maxThreadsCount;
 
-    Runner(double[][] a, double[][] b, double[][] result, int workerIndex, int maxThreadsCount) {
+    RunnerCalculator(double[][] a, double[][] b, double[][] result, int workerIndex, int maxThreadsCount) {
         this.a = a;
         this.b = b;
         this.result = result;

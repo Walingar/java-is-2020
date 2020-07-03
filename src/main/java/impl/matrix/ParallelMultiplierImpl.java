@@ -19,7 +19,7 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
         var columnsLength = b[0].length;
         var result = new double[rowsLength][columnsLength];
         var threads = range(0, maxThreadsCount)
-                .mapToObj(i -> new Runner(a, b, result, i, maxThreadsCount))
+                .mapToObj(i -> new RunnerCalculator(a, b, result, i, maxThreadsCount))
                 .map(Thread::new)
                 .collect(toList());
 
