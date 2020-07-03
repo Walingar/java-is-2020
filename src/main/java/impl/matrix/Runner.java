@@ -1,6 +1,6 @@
 package impl.matrix;
 
-public class Worker implements Runnable {
+public class Runner implements Runnable {
     private final double[][] a;
     private final double[][] b;
     private final double[][] result;
@@ -8,7 +8,7 @@ public class Worker implements Runnable {
     private final int tasksCount;
     private final int maxThreadsCount;
 
-    Worker(double[][] a, double[][] b, double[][] result, int workerIndex, int maxThreadsCount) {
+    Runner(double[][] a, double[][] b, double[][] result, int workerIndex, int maxThreadsCount) {
         this.a = a;
         this.b = b;
         this.result = result;
@@ -22,9 +22,9 @@ public class Worker implements Runnable {
     @Override
     public void run() {
         for (var i = 0; i < tasksCount; i++) {
-            var tackNum = i * maxThreadsCount + workerIndex;
-            var row = tackNum / b[0].length;
-            var column = tackNum % b[0].length;
+            var taskNum = i * maxThreadsCount + workerIndex;
+            var row = taskNum / b[0].length;
+            var column = taskNum % b[0].length;
             result[row][column] = calculate(row, column);
         }
     }
