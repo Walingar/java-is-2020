@@ -4,9 +4,11 @@ import api.network.FollowersStats;
 import api.network.SocialNetwork;
 import api.network.UserInfo;
 
+import java.util.AbstractMap;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.Future;
 import java.util.function.Predicate;
 
@@ -26,24 +28,24 @@ public class FollowersStatsImpl implements FollowersStats {
         );
     }
 
-    private CompletableFuture<Integer> count(int id, int depth, Predicate<UserInfo> predicate, ConcurrentHashMap<Integer, Boolean> visitMap) {
+    private CompletableFuture<Integer> count(int id, int depth, Predicate<UserInfo> predicate, ConcurrentMap<Integer, Boolean> visitMap) {
         CompletableFuture<Integer> userCountFuture = network.getUserInfo(id)
-                .thenApply(
-                        (userInfo) -> predicate.test(userInfo) ? 1 : 0
-                );
-        if (depth == 0) return userCountFuture;
+                .thenApply((userInfo) -> predicate.test(userInfo) ? 1 : 0);
+        if (depth == 0) {
+            return userCountFuture;
+        }
 
         return network.getFollowers(id)
                 .thenCompose((followers) -> followers
                         .stream()
-                        .map(
-                                follower -> {
+                        .map(follower -> {
                                     if (Objects.nonNull(visitMap.putIfAbsent(follower, true))) {
                                         return CompletableFuture.completedFuture(0);
                                     }
                                     return count(follower, depth - 1, predicate, visitMap);
                                 })
-                        .reduce(CompletableFuture.completedFuture(0), (subtotalFuture, additionFuture) -> subtotalFuture.thenCombine(additionFuture, Integer::sum))
+                        .reduce(CompletableFuture.completedFuture(0),
+                                (subtotalFuture, additionFuture) -> subtotalFuture.thenCombine(additionFuture, Integer::sum))
                 )
                 .thenCombine(userCountFuture, Integer::sum);
     }
