@@ -4,9 +4,7 @@ import api.network.FollowersStats;
 import api.network.SocialNetwork;
 import api.network.UserInfo;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
@@ -22,29 +20,25 @@ public class FollowersStatsImpl implements FollowersStats {
 
     @Override
     public Future<Integer> followersCountBy(int id, int depth, Predicate<UserInfo> predicate) {
-        return doCountFollowersBy(id, depth, predicate, new ConcurrentHashMap<>() {{
-            put(id, false);
-        }});
+        return doFollowersCountBy(id, depth, predicate, ConcurrentHashMap.newKeySet());
     }
 
-    private CompletableFuture<Integer> doCountFollowersBy(int id, int depth,
-                                                          Predicate<UserInfo> predicate,
-                                                          Map<Integer, Boolean> visited) {
-        var userCountFuture = network.getUserInfo(id)
-                .thenApply((userInfo) -> predicate.test(userInfo) ? 1 : 0);
+    private CompletableFuture<Integer> doFollowersCountBy(int currentId, int currentDepth,
+                                                          Predicate<UserInfo> predicate, Set<Integer> usedUsers) {
+        if (!usedUsers.add(currentId)) {
+            return CompletableFuture.completedFuture(0);
+        }
 
-        if (depth == 0) return userCountFuture;
+        var currentUser = network.getUserInfo(currentId).thenApply(userInfo -> predicate.test(userInfo) ? 1 : 0);
+        if (currentDepth == 0) {
+            return currentUser;
+        }
 
-        return network.getFollowers(id)
-                .thenCompose((followers) -> followers
-                        .stream()
-                        .map(follower -> {
-                            if (Objects.nonNull(visited.putIfAbsent(follower, true))) {
-                                return CompletableFuture.completedFuture(0);
-                            }
-                            return doCountFollowersBy(follower, depth - 1, predicate, visited);
-                        })
-                        .reduce(CompletableFuture.completedFuture(0), (l, r) -> l.thenCombine(r, Integer::sum)))
-                .thenCombine(userCountFuture, Integer::sum);
+        return network.getFollowers(currentId)
+                .thenCompose(followers -> followers.stream()
+                        .map(followerId -> doFollowersCountBy(followerId, currentDepth - 1, predicate, usedUsers))
+                        .reduce((f1, f2) -> f1.thenCombine(f2, Integer::sum))
+                        .orElse(CompletableFuture.completedFuture(0)))
+                .thenCombine(currentUser, Integer::sum);
     }
 }
