@@ -6,6 +6,7 @@ import api.network.UserInfo;
 
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.Future;
 import java.util.function.Predicate;
@@ -20,7 +21,7 @@ public class FollowersStatsImpl implements FollowersStats {
     @Override
     public Future<Integer> followersCountBy(int id, int depth, Predicate<UserInfo> predicate) {
         return count(id, depth, predicate,
-                new CopyOnWriteArraySet<>() {{
+                new ConcurrentSkipListSet<>() {{
                     add(id);
                 }}
         );
