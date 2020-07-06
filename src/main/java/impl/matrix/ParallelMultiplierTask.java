@@ -1,6 +1,6 @@
 package impl.matrix;
 
-public class RunnerCalculator implements Runnable {
+public class ParallelMultiplierTask implements Runnable {
     private final double[][] a;
     private final double[][] b;
     private final double[][] result;
@@ -8,7 +8,7 @@ public class RunnerCalculator implements Runnable {
     private final int tasksCount;
     private final int maxThreadsCount;
 
-    RunnerCalculator(double[][] a, double[][] b, double[][] result, int workerIndex, int maxThreadsCount) {
+    ParallelMultiplierTask(double[][] a, double[][] b, double[][] result, int workerIndex, int maxThreadsCount) {
         this.a = a;
         this.b = b;
         this.result = result;
@@ -23,8 +23,9 @@ public class RunnerCalculator implements Runnable {
     public void run() {
         for (var i = 0; i < tasksCount; i++) {
             var taskNum = i * maxThreadsCount + workerIndex;
-            var row = taskNum / b[0].length;
-            var column = taskNum % b[0].length;
+            var bColumnsLength = b[0].length;
+            var row = taskNum / bColumnsLength;
+            var column = taskNum % bColumnsLength;
             result[row][column] = calculate(row, column);
         }
     }
