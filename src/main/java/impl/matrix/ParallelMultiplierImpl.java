@@ -20,9 +20,9 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
             int start = count * size;
             int end = (count + 1) * size;
             if (count == maxThreadsCount - 1) {
-                end = (count + 1) * size + heightA * widthB % maxThreadsCount;
+                end += heightA * widthB % maxThreadsCount;
             }
-            threads[count] = new Thread(new RunMultiplyThread(a, b, resultMatrix, start, end));
+            threads[count] = new Thread(new Multiplier(a, b, resultMatrix, start, end));
             threads[count].start();
         }
         try {
@@ -35,14 +35,14 @@ public class ParallelMultiplierImpl implements ParallelMultiplier {
         return resultMatrix;
     }
 
-    private static final class RunMultiplyThread implements Runnable {
-        double[][] a;
-        double[][] b;
-        double[][] resultMatrix;
-        int start;
-        int end;
+    private static class Multiplier implements Runnable {
+        private final double[][] a;
+        private final double[][] b;
+        private final double[][] resultMatrix;
+        private final int start;
+        private final int end;
 
-        public RunMultiplyThread(double[][] a, double[][] b, double[][] resultMatrix, int start, int end) {
+        public Multiplier(double[][] a, double[][] b, double[][] resultMatrix, int start, int end) {
             this.a = a;
             this.b = b;
             this.resultMatrix = resultMatrix;
